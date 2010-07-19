@@ -4,7 +4,8 @@
 import rapidsms
 from rapidsms.parsers.keyworder import Keyworder
 from django.utils.translation import ugettext as _
-from scheduler.models import EventSchedule
+from rapidsms.contrib.scheduler.models import EventSchedule
+from rapidsms.apps.base import AppBase
 
 from groupmessaging.utils import *
 
@@ -23,12 +24,12 @@ def loop2mn(loop):
     return mn
 
 
-class App(rapidsms.app.App):
+class App(AppBase):
 
     keyword = Keyworder()
 
     def configure(self, interval=5, *args, **kwargs):
-
+        self.log.debug('configure')
         # convert (and store) minutes from config
         self.minutes = loop2mn(interval)
 

@@ -11,9 +11,6 @@ from rapidsms.djangoproject.settings import *
 
 DEBUG = True
 
-DATABASE_ENGINE = "sqlite3"
-DATABASE_NAME = "db.sqlite3"
-
 INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.contenttypes",
@@ -26,6 +23,7 @@ INSTALLED_APPS = [
     "rapidsms.contrib.echo",
     "rapidsms.contrib.messagelog",
     "rapidsms.contrib.messaging",
+    "rapidsms.contrib.scheduler",
 
     # enable the django admin using a little shim app (which includes
     # the required urlpatterns)
@@ -33,6 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     'djangotables',
     'groupmessaging',
+    'rclickatell',
 ]
 
 TABS = [
@@ -42,3 +41,8 @@ TABS = [
     ('rapidsms.contrib.messaging.views.messaging', 'Messaging'),
     ('groupmessaging.views.index.index', 'Group Messaging'),
 ]
+
+INSTALLED_BACKENDS = {
+    "clickatell": {"ENGINE": "rclickatell.backend"},
+    "message_tester" : {"ENGINE": "rapidsms.backends.bucket" } 
+}
