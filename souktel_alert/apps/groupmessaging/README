@@ -1,0 +1,55 @@
+Group messaging
+
+Contents :
+	• Brief description.
+	• Functionalities.
+	• System setup
+	• Sending message.
+	• Installation.
+
+
+Brief description :
+---------------------------------------------------------------------------------------
+Group messaging is a web interface that enble you to send a pre saved message as well as free  text message, to a group of recipients in a selected site.
+
+
+Functionalities :
+----------------------------------------------------------------------------------------
+	the system supports the following modles :
+		-Dashboard :  
+			- provides information about the latest sent messages, the sender, group/groups, the text sent and the date of sending.   
+			- Statistics about  total number of the recipients, total number of groups, the number of sent messages and the number of failed messages
+			- Group management : provide information about the group such as group name, group code, group manager , if the group is active or not, and the recipients in the group.
+			
+	Through this model you can add/update/delete group as well as list all the groups
+			- Recipients : this model enable you to manage recipients, add/update/delete recipient , in addition to the previous basic operations, you can insert multi recipients as bulk and assign them to a group at the same time in one transaction.
+			- Manage template message: this model contains to functions, maintain a template add/delete /update and the other functionality is to send the template message to a group of recipients.
+
+
+System setup :
+------------------------------------------------------------------------------------------
+	1. Through  Django admin create web user and give him all the permition in order to be able to create the sites.
+	2. created, web user should log in to the system ‘web interface’, to create groups as well as recipients and assign the recipients to group/groups.
+
+
+Installation :
+-------------------------------------------------------------------------------------------
+	1. copy this App onside the Apps folder.
+	2. install the database    ./rapidsms syncdb
+	3. clone git://github.com/dimagi/rapidsms.git into source folder         
+			git  clone git://github.com/dimagi/rapidsms.git source/dimagi
+	4. make simple link for the schaduler Apps from dimagi Apps
+	5. add schaduler into apps list on the local.ini
+	6. clone git://github.com/rapidsms/pygsm.git into source folder
+			git git://github.com/rapidsms/pygsm.git source/pygsm
+	7. install the pygsm models
+			.../source/pygsm/python ./setup.py install
+	8. run the webserver
+	9. run the rote
+
+
+Sending a message :
+--------------------------------------------------------------------------------------------
+	To send a template message or free text message go to Manage template message module and choose a template from template list , then select a group or groups from the list of active groups and at last click send. The message will be saved as queued in the database. The system scheduler will work after an interval of time,then the scheduler check the status of the queued messages and send them to their destination. 
+
+

@@ -1,0 +1,98 @@
+﻿{% extends "base.html" %}
+
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+
+{% block javascript %}
+<script>
+function deleteRecipient(url){
+ if (confirm("{% trans 'Do you really want to delete this recipient ??' %}")) {
+   window.location=url;
+ } 
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<h2>{% trans "Outgoing log" %}</h2>
+ 
+<form action="{% url outgoinglog_filter %}" method="POST" class="pretty">
+<fieldset> 
+<legend>
+search
+</legend>
+
+<table>
+ 
+<tr><td>status</td>
+<td>
+<select name="status" id="id_status" >
+    <option value="" selected="selected">---------</option>
+        {% for log in logs %}
+            <option value="{{ log.status|escape }}">{{ log.status_text|escape }}</option>
+        {% endfor %} 
+</select>
+</td>
+</tr>
+</table>
+
+<p class="buttons"> 
+<button type="submit" class="button positive icon tick">{% trans "Search" %}</button>
+</p> 
+</fieldset> 
+</form>
+<table class='list'>
+<colgroup> 
+    <col class='name' />
+    <col class='number' />
+    <col class='name' />
+    <col class='name' />
+</colgroup> 
+<tr class='secondRow doNotFilter'>
+<th class='name' > {% trans "Sort text" %}</th>
+<th class='name' > {% trans "sender" %}</th>
+<th class='number' > {% trans "identity" %}</th>
+<th class='name' > {% trans "text" %} </th>
+<th class='name' >{% trans "status" %}</th>
+
+</tr>
+{% for log in outgoinglog.object_list %}
+<tr {% if forloop.last %} class=""{% endif %}>
+<td class='name'>{{log.short_text}}</td>
+<td class='name'>{{log.sender}}</td>
+<td class='number'>{{log.identity}}</td>
+<td class='name'>{{log.text}}</td>
+<td class='name'>{{log.status_text}}</td>
+</tr>
+{% endfor %}
+
+<tr class="">
+<td colspan="5"><span>
+        {% if outgoinglog.has_previous %}
+            <a href="?page={{ outgoinglog.previous_page_number }}">{% trans "previous" %}</a>
+        {% endif %}
+
+        <span class="current">
+            {% trans "Page" %} {{ outgoinglog.number }} {% trans "of" %} {{ outgoinglog.paginator.num_pages }}.
+        </span>
+
+        {% if outgoinglog.has_next %}
+            <a href="?page={{ outgoinglog.next_page_number }}">{% trans "next" %}</a>
+        {% endif %}
+    </span> &nbsp;&nbsp; |&nbsp;&nbsp;<span> {% trans "Total number" %} = {{ count }}</span> </td>
+  
+</tr>
+</table>
+<p> {{ validationMsg }} </p>
+{% endblock %}
+
+{% block submenu %}
+<!--ul>
+<li><a href = "{% url recipient_add %}" >{% trans " Add new recipient" %}</a></li>
+<li><a href = "{% url manage_recipients %}" >{% trans " Add bulk recipients" %}</a></li>
+</ul-->
+{% endblock %}

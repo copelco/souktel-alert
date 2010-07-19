@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load i18n %}
+
+<form action="{% url manage_recipients %}" method="POST" class="pretty">
+<fieldset> 
+    
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset.forms %}
+            <table>
+            <tr>{% if forloop.first %}{% for field in form %}<td>{{ field.label_tag }}</td>{% endfor %}{% endif %}
+            </tr>
+            <tr>
+                {% for field in form %}
+                    <td>{{ field }} 
+                        {%if field.errors %}
+                            <div class='djangoerrors'>
+                            {% for error in field.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        </table>
+        {% endfor %}
+    </table>
+{% trans "Assign inserted recipients to a group :" %}
+ <select name="group">
+        <option label="", value=""></option>
+    {% for group in groups %}
+        <option label="{{ group.name }}", value="{{ group.id }}">{{ group.name }}</option>
+    {% endfor %}
+</select>
+<p class="buttons"> 
+<button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+<a class="button negative icon cross" href="{% url recipients_list %}">{% trans "Cancel" %}</a>
+</p> 
+</fieldset> 
+</form>
+{% endblock %}
+
+{% block submenu %}
+<ul><li><a href = "{% url recipients_list %}" >{% trans "Back to recipient list" %}</a></li></ul>
+<ul><li>{{ validationMsg }}</li></ul>
+{% endblock %}

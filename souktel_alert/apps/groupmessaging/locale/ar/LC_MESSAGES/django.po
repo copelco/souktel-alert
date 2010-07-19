@@ -1,0 +1,487 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-01 16:48+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: app.py:61
+#, python-format
+msgid "System Error: %s"
+msgstr ""
+
+#: app.py:67
+msgid "Launching queue..."
+msgstr ""
+
+#: app.py:69
+msgid "Queue processed"
+msgstr ""
+
+#: models.py:17 models.py:59 templates/messages.html:26
+msgid "Name"
+msgstr "الاسم"
+
+#: models.py:19 models.py:62 models.py:92
+msgid "Enabled?"
+msgstr "مفعل"
+
+#: models.py:21
+msgid "Units"
+msgstr "وحدات"
+
+#: models.py:24
+msgid "Manager"
+msgstr "مدير"
+
+#: models.py:27 models.py:69 models.py:121
+#, python-format
+msgid "%(name)s"
+msgstr ""
+
+#: models.py:39
+msgid "Recipient"
+msgstr "مستقبل"
+
+#: models.py:41 models.py:60 models.py:94
+msgid "Site"
+msgstr "موقع"
+
+#: models.py:44
+msgid "Comment"
+msgstr "ملاحظة"
+
+#: models.py:57 templates/messages.html:25
+msgid "Code"
+msgstr "رمز"
+
+#: models.py:64 models.py:132
+msgid "Recipients"
+msgstr "مستلمين"
+
+#: models.py:66
+msgid "Managers"
+msgstr "مدراء"
+
+#: models.py:81 views/recipients.py:105 views/recipients.py:114
+msgid "First Name"
+msgstr "الاسم الاول"
+
+#: models.py:83 views/recipients.py:106 views/recipients.py:115
+msgid "Last Name"
+msgstr "اسم العائلة"
+
+#: models.py:86
+msgid "Phone Number"
+msgstr "رقم التلفون"
+
+#: models.py:88 models.py:190
+msgid "Backend"
+msgstr "الخلفية"
+
+#: models.py:89
+msgid "Leave Default."
+msgstr ""
+
+#: models.py:97
+#, python-format
+msgid "%(full_name)s"
+msgstr ""
+
+#: models.py:101
+#, python-format
+msgid "%(first)s %(last)s"
+msgstr ""
+
+#: models.py:116 models.py:140 models.py:205
+#, python-format
+msgid "%(striptext)s..."
+msgstr ""
+
+#: models.py:118 models.py:142 models.py:207
+#, python-format
+msgid "%(text)s"
+msgstr ""
+
+#: models.py:128 models.py:186
+msgid "Sender"
+msgstr "مرسل"
+
+#: models.py:130 templates/groups.html:3 views/messages.py:127
+msgid "Groups"
+msgstr "المجموعات"
+
+#: models.py:134 templates/index.html:21
+msgid "Date"
+msgstr "التاريخ"
+
+#: models.py:135 models.py:191
+msgid "Content"
+msgstr "المحتوى"
+
+#: models.py:148
+msgid ", "
+msgstr ""
+
+#: models.py:151
+#, python-format
+msgid "From %(from)s to %(groups)s on %(date)s: %(text)s"
+msgstr ""
+
+#: models.py:168
+msgid "Sent (pending)"
+msgstr "ارسلت )متوقفة("
+
+#: models.py:169
+msgid "Delivered"
+msgstr "وصلت"
+
+#: models.py:170
+msgid "Timed Out"
+msgstr "انتهئ الوقت"
+
+#: models.py:171
+msgid "Failed"
+msgstr "فشلت"
+
+#: models.py:172
+msgid "Queued"
+msgstr "سجلت"
+
+#: models.py:188 views/recipients.py:107 views/recipients.py:116
+msgid "Identity"
+msgstr "الهوية"
+
+#: models.py:193
+msgid "Status"
+msgstr "الحالة"
+
+#: models.py:195
+msgid "Send Date"
+msgstr "تاريخ الارسال"
+
+#: models.py:197
+msgid "Reception Date"
+msgstr "تاريخ الاستقبال"
+
+#: models.py:217
+#, python-format
+msgid "%(text)s to %(identity)s: %(status)s"
+msgstr ""
+
+#: templates/base.html:8
+msgid "Souktel Group Messaging System"
+msgstr "نظام سوقتل للتراسل"
+
+#: templates/base.html:20
+msgid "ltr"
+msgstr "rtl"
+
+#: templates/base.html:22 templates/index.html:42 templates/index.html.py:43
+#: templates/index.html:47 templates/index.html.py:48
+msgid "left;"
+msgstr "right;"
+
+#: templates/base.html:22
+msgid "Souktel Group Messaging"
+msgstr "نظام سوقتل للتراسل"
+
+#: templates/base.html:24
+msgid "right;"
+msgstr "left;"
+
+#: templates/base.html:24
+msgid "Logged in as"
+msgstr "دخول ب"
+
+#: templates/base.html:29 templates/index.html:4
+msgid "Dashboard"
+msgstr "اللوحة الرئيسية"
+
+#: templates/base.html:30
+msgid "Manage Groups"
+msgstr "ادراة المجموعات"
+
+#: templates/base.html:31
+msgid "Manage Recipients"
+msgstr "ادارة المستلمين"
+
+#: templates/base.html:32
+msgid "Manage Message Templates"
+msgstr "ادارة نماذج الرسائل"
+
+#: templates/base.html:33
+msgid "View Logs"
+msgstr "مشاهدة السجلات"
+
+#: templates/groups.html:15
+msgid "Groups List"
+msgstr "قائمة المجموعات"
+
+#: templates/groups.html:27
+msgid "Group Code"
+msgstr "رمز المجموعة"
+
+#: templates/groups.html:28
+msgid "Group Name"
+msgstr "اسم المجموعة"
+
+#: templates/groups.html:29
+msgid "Group Manager"
+msgstr "مدير المجموعة"
+
+#: templates/groups.html:30
+msgid "# Recipients"
+msgstr "عدد المستلمين"
+
+#: templates/groups.html:45
+msgid "No group"
+msgstr "المجموعات"
+
+#: templates/groups.html:51 templates/recipients_list.html:53
+msgid "previous"
+msgstr "السابق"
+
+#: templates/groups.html:55 templates/recipients_list.html:57
+msgid "Page"
+msgstr "صفحة"
+
+#: templates/groups.html:55 templates/recipients_list.html:57
+msgid "of"
+msgstr "من"
+
+#: templates/groups.html:59 templates/recipients_list.html:61
+msgid "next"
+msgstr "التالي"
+
+#: templates/groups.html:61
+msgid "No. of the Groups"
+msgstr "عدد المجموعات"
+
+#: templates/groups.html:70
+msgid "Add New Group"
+msgstr "اضافة مجموعة"
+
+#: templates/index.html:8
+msgid "Latest Messages"
+msgstr "الرسائل الاخيرة"
+
+#: templates/index.html:18
+msgid "From"
+msgstr "من"
+
+#: templates/index.html:19
+msgid "To (Groups)"
+msgstr "المجموعات"
+
+#: templates/index.html:20
+msgid "Message"
+msgstr "الرسالة"
+
+#: templates/index.html:34
+msgid "Statistics"
+msgstr "احصائيات"
+
+#: templates/index.html:42
+msgid "Description"
+msgstr "الوصف"
+
+#: templates/index.html:43
+msgid "Value"
+msgstr "القيمة"
+
+#: templates/manage_recipients.html:29
+msgid "Assign inserted recipients to a group :"
+msgstr "اضافة المستلمين الى مجموعة"
+
+#: templates/manage_recipients.html:37 templates/messages_form.html:28
+#: templates/new_group.html:18 templates/recipient.html:24
+#: templates/update_group.html:18
+msgid "Save"
+msgstr "احفظ"
+
+#: templates/manage_recipients.html:38 templates/messages_form.html:29
+#: templates/messages_send.html:49 templates/new_group.html:19
+#: templates/recipient.html:25 templates/update_group.html:19
+msgid "Cancel"
+msgstr "الغاء"
+
+#: templates/manage_recipients.html:45 templates/recipient.html:32
+msgid "Back to recipient list"
+msgstr "العودة الى القائمة الرئيسية"
+
+#: templates/messages.html:6 templates/messages_send.html:6
+msgid "Do you really want to delete this Message ??"
+msgstr "هل تريد فعلا حذف هذا النموذج؟؟"
+
+#: templates/messages.html:16
+msgid "Message Templates"
+msgstr "ادارة نماذج الرسائل"
+
+#: templates/messages.html:27 templates/recipients_list.html:34
+msgid "Edit"
+msgstr "تحرير"
+
+#: templates/messages.html:28 templates/recipients_list.html:35
+msgid "Delete"
+msgstr "حذف"
+
+#: templates/messages.html:57
+msgid "Total Messages"
+msgstr "مجموع الرسائل"
+
+#: templates/messages.html:64
+msgid "Create a new Message Template"
+msgstr "انشاء نموذج جديد"
+
+#: templates/messages.html:65
+msgid "Send Message Template"
+msgstr "ارسال نموذج الرسالة"
+
+#: templates/messages_form.html:10
+msgid "Message Update Form"
+msgstr "نموذج تعديل رسالة"
+
+#: templates/messages_form.html:12
+msgid "New Message Form"
+msgstr "نموذج اضافة رسالة"
+
+#: templates/messages_form.html:38 templates/messages_send.html:58
+msgid "Back to Messages list"
+msgstr "العودة الى القائمة الرئيسية"
+
+#: templates/messages_send.html:24
+msgid "Message Sending Form"
+msgstr "نموذج ارسال رسالة"
+
+#: templates/messages_send.html:29
+msgid "Message Templates:"
+msgstr "نماذج الرسائل:"
+
+#: templates/messages_send.html:48
+msgid "Send"
+msgstr "ارسل"
+
+#: templates/new_group.html:8
+msgid "New Group Form"
+msgstr "اضافة مجموعة"
+
+#: templates/new_group.html:29 templates/update_group.html:29
+msgid "Back to Group list"
+msgstr "العودة الى القئمة الرئيسية"
+
+#: templates/recipient.html:9
+msgid "Recipient Update Form"
+msgstr "نموذج تعديل مستلم"
+
+#: templates/recipient.html:11
+msgid "New Recipient Form"
+msgstr "نموذج اضافة مستلم"
+
+#: templates/recipients_list.html:13
+msgid "Do you really want to delete this recipient ??"
+msgstr "هل تريد فعلا حذف هذا المستلم؟؟"
+
+#: templates/recipients_list.html:21
+msgid "Recipients list"
+msgstr "قائمة المستلمين"
+
+#: templates/recipients_list.html:31
+msgid "Recipient name"
+msgstr "اسم المستلم"
+
+#: templates/recipients_list.html:32
+msgid "Recipient identity"
+msgstr "رمز المستلم"
+
+#: templates/recipients_list.html:33 views/recipients.py:108
+#: views/recipients.py:117
+msgid "Active"
+msgstr "فعال"
+
+#: templates/recipients_list.html:63
+msgid "No. of the recipients"
+msgstr "عدد المستلمين"
+
+#: templates/recipients_list.html:72
+msgid " Add new recipient"
+msgstr "اضافة مستلم"
+
+#: templates/recipients_list.html:73
+msgid " Add bulk recipients"
+msgstr "اضافة مجموعة مستلمين"
+
+#: templates/update_group.html:8
+msgid "Update Group Form"
+msgstr "تعديل مجموعة"
+
+#: views/groups.py:30
+msgid "Group code"
+msgstr "رمز المجموعة"
+
+#: views/groups.py:31
+msgid "Group name"
+msgstr "اسم المجموعة"
+
+#: views/groups.py:32
+msgid "active"
+msgstr "فعال"
+
+#: views/groups.py:33
+msgid "Group recipients"
+msgstr "مستلمين"
+
+#: views/groups.py:34
+msgid "Group managers"
+msgstr "مدير المجموعة"
+
+#: views/index.py:27
+msgid "Total Number of Recipients"
+msgstr "العدد الاجمالي للمستلمين"
+
+#: views/index.py:31
+msgid "Total Number of Groups"
+msgstr "العددالاجمالي للمجموعات"
+
+#: views/index.py:35
+msgid "Total Number of Messages sent"
+msgstr "العدد الاجمالي للرسائل المرسلة"
+
+#: views/index.py:39
+msgid "Total Number of individual SMS sent"
+msgstr "عدد الرسائل المرسلة للافراد"
+
+#: views/messages.py:112
+msgid "Message code"
+msgstr "رمز الرسالة"
+
+#: views/messages.py:113
+msgid "Message name"
+msgstr "اسم الرسالة"
+
+#: views/messages.py:114
+msgid "Message text"
+msgstr "نص الرسالة"
+
+#: views/messages.py:115
+msgid "Please enter your message here"
+msgstr "الرجاء ادخال النص هنا"
+
+#: views/messages.py:128
+msgid "Text"
+msgstr "النص"
+
+#: views/recipients.py:55
+msgid "You have successfully updated the recipient"
+msgstr "لقد تمت عملية التعديل بنجاح"

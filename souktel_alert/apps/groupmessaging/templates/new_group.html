@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load i18n %}
+<form action="{% url new_group %}" method="POST" class="pretty">
+    <fieldset>
+        <legend>
+            {% trans "New Group Form" %}
+        </legend>
+        <table>
+            {% for field in form %}
+            <tr>
+                <td>{{ field.label_tag }}</td><td>{{ field }} {%if field.errors %}<div class='djangoerrors'>{% for error in field.errors %}{{ error }}{% endfor %}</div>{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+<p class="buttons">
+<button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+<a class="button negative icon cross" href="{% url groups %}">{% trans "Cancel" %}</a>
+</p>
+    </fieldset>
+</form>
+
+
+
+{% endblock %}
+
+{% block submenu %}
+<ul><li><a href = "{% url groups %}" >{% trans "Back to Group list" %}</a></li></ul>
+<ul><li>{{ validationMsg }}</li></ul>
+{% endblock %}

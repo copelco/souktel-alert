@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+{% load i18n %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr"> 
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+    <meta http-equiv="Content-Style-Type" content="text/css" /> 
+    <title>{% trans "Souktel Group Messaging System" %}</title> 
+
+    <link rel="stylesheet" href="/static/groupmessaging/blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/static/groupmessaging/blueprint/plugins/buttons/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/static/groupmessaging/lueprint/print.css" type="text/css" media="print">	
+    <!--[if lt IE 8]><link rel="stylesheet" href="/static/groupmessaging/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+
+    <link rel="stylesheet" media="screen" type="text/css" href="/static/groupmessaging/chrome.css" title="Default" />
+    <link rel="stylesheet" media="screen" type="text/css" href="/static/groupmessaging/main.css" title="Default" />
+    <script src="/static/groupmessaging/ui.js"></script>
+    {% block javascript %}{% endblock %}
+</head> 
+<body dir="{% trans 'ltr' %}"> 
+<div id='header'>
+<h1 style="text-align:{% trans 'left;' %}">{{ user.site }} - {% trans "Souktel Group Messaging" %}</h1>
+<p>{% block title %}{% endblock %}</p>
+<p class='login' style="float: {% trans 'right;' %}">{% trans "Logged in as" %} <a href="/accounts/logout/" title="logout or sign-in as a different user.">{{ user.get_full_name }}</a></p>
+</div>
+
+<div id='menu'>
+<ul class='mainmenu'>
+<li><a href="{% url index %}">{% trans "Dashboard" %}</a> {% include "help_menu_dashboard.html" %}</li>
+<li><a href="{% url groups %}">{% trans "Manage Groups" %}</a> {% include "help_menu_groups.html" %}</li>
+<li><a href="{% url recipients_list %}">{% trans "Manage Recipients" %}</a> {% include "help_menu_recipients.html" %}</li>
+<li><a href="{% url messages_list %}">{% trans "Manage Message Templates" %}</a> {% include "help_menu_messages.html" %} </li>
+<li><a href="{% url outgoinglog_list %}">{% trans "View Logs" %}</a> {% include "help_menu_logs.html" %}</li>
+</ul>
+{% block submenu %}{% endblock %}
+</div>
+
+<div id='content'>
+{% block content %}
+<h2>Hello World</h2>
+{% endblock %}
+</div>
+</body>
+<script> 
+  enableHelpTooltips();
+</script> 
+</html> 
