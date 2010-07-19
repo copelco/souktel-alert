@@ -25,7 +25,7 @@ if __name__ == "__main__":
                                  "rapidsms")
     libs = [project_root, os.path.join(rapidsms_root, "lib")]
     libs += [os.path.join(rapidsms_root, "submodules", "django-app-settings")]
-    libs += [os.path.join(rapidsms_root, "submodules", "django-tables")]
+    libs += [os.path.join(rapidsms_root, "submodules", "django-tables", "lib")]
     for lib in libs:
         sys.path.insert(0, lib)
 
