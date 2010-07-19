@@ -1,0 +1,5 @@
+from souktel_alert.settings import *
+
+
+DATABASE_ENGINE = 'sqlite3'
+DATABASE_NAME = 'souktel.db'
