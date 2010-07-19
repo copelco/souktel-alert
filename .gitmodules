@@ -1,0 +1,3 @@
+[submodule "souktel_alert/submodules/rapidsms"]
+	path = souktel_alert/submodules/rapidsms
+	url = git://github.com/rapidsms/rapidsms-core-dev.git
