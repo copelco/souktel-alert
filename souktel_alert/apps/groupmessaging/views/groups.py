@@ -7,7 +7,7 @@ from groupmessaging.models import Group
 from groupmessaging.models import Site
 from groupmessaging.models import Recipient
 from groupmessaging.models import WebUser
-from rapidsms.webui.utils import render_to_response
+from rapidsms.utils import render_to_response
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect

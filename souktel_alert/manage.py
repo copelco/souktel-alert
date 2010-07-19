@@ -20,12 +20,14 @@ if __name__ == "__main__":
     # with the PROJECT_NAME prefix)
     sys.path.pop(0)
 
-    project_root = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-    rapidsms_root = os.path.join(project_root, PROJECT_NAME, "submodules",
-                                 "rapidsms")
-    libs = [project_root, os.path.join(rapidsms_root, "lib")]
-    libs += [os.path.join(rapidsms_root, "submodules", "django-app-settings")]
-    libs += [os.path.join(rapidsms_root, "submodules", "django-tables", "lib")]
+    project = os.path.abspath(os.path.dirname(__file__))
+    project_parent = os.path.dirname(project)
+    local_apps = os.path.join(project, "apps")
+    libs = [project_parent, local_apps]
+    rapidsms = os.path.join(project, "submodules", "rapidsms")
+    libs += [os.path.join(rapidsms, 'lib')]
+    libs += [os.path.join(rapidsms, "submodules", "django-app-settings")]
+    libs += [os.path.join(rapidsms, "submodules", "django-tables", "lib")]
     for lib in libs:
         sys.path.insert(0, lib)
 

@@ -2,7 +2,7 @@
 # encoding=utf-8
 
 from django.http import HttpResponseRedirect
-from rapidsms.webui.utils import render_to_response
+from rapidsms.utils import render_to_response
 from groupmessaging.models import Recipient
 from groupmessaging.models import Site
 from groupmessaging.models import Group
