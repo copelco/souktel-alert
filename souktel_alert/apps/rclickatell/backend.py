@@ -1,7 +1,9 @@
 import urllib
+import urllib2
 import urlparse
 import pprint
 import datetime
+import time
 
 from django.http import QueryDict
 from django.db import DatabaseError
@@ -26,12 +28,12 @@ class ClickatellBackend(BackendBase):
             'user': self.user,
             'password': self.password,
             'api_id': self.api_id,
-            'to': message.contact,
+            'to': message.connection.identity,
             'text': message.text,
         }
 
     def send(self, message):
-        self.debug('send: {0}'.format(message))
         data = self._prepare_message(message)
-        response = urllib2.urlopen(self.url, data)
+        self.debug('send: {0} {1}'.format(message, data))
+        response = urllib2.urlopen(self.url, urllib.urlencode(data))
         self.debug('response: {0}'.format(response))
