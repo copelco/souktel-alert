@@ -46,3 +46,6 @@ INSTALLED_BACKENDS = {
     "clickatell": {"ENGINE": "rclickatell.backend"},
     "message_tester" : {"ENGINE": "rapidsms.backends.bucket" } 
 }
+
+
+TEST_RUNNER = "django_nose.run_tests"

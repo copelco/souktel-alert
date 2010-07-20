@@ -13,46 +13,28 @@ from rapidsms.backends.base import BackendBase
 class ClickatellBackend(BackendBase):
     '''A RapidSMS backend for Clickatell'''
 
+    url = 'https://api.clickatell.com/http/sendmsg'
+
     def _logger_name(self):
         return 'clickatell-backend'
 
-    def configure(self, *args, **kwargs):
+    def configure(self, user, password, api_id):
         self.debug('Registered')
-    
+        self.user = user
+        self.password = password
+        self.api_id = api_id
+
+    def _prepare_message(self, message):
+        return {
+            'user': self.user,
+            'password': self.password,
+            'api_id': self.api_id,
+            'to': message.contact,
+            'text': message.text,
+        }
+
     def send(self, message):
         self.debug('send: {0}'.format(message))
-
-
-# class ClickatellHandler(RapidBaseHttpHandler, LoggerMixin):
-#     '''An HttpHandler for the Clickatell mobile gateway'''  
-#     
-#     # This is the format of the post string
-#     # http://api.clickatell.com/http/sendmsg?user=xxxxx&password=xxxxx&api_id=xxxxx&to=xxxxxxxxx&from=xxxxxxx&text=Meet+me+outside 
-#     # user: clickatell username
-#     # password: clickatell password
-#     # api_id: unique id for account on clickatel api
-#     # to: number of the sms receiver
-#     # from: number of the sms sender
-#     # text: short message text
-#     
-#     param_text = "text"
-#     param_sender = "from"
-#     
-#     outgoing_url = "https://api.clickatell.com/http/sendmsg"
-#     # api_id (customer identification number)
-#     # user: clickatell username
-#     # password: clickatell password
-#     # to: number of the sms receiver
-#     # text: short message text
-#     outgoing_params = {"api_id" : "add", 
-#                        "user" : "defaults", 
-#                        "password" : "here",
-#                      "from" : "from_number"
-#                        }
-#     param_text_outgoing = "text"
-#     param_dst_outgoing = "to"
-#     param_sender_outgoing = "from"
-# 
-#     @classmethod
-#     def outgoing(class_, message):
-#         class_.backend.info("outgoing: {0}".format(message))
+        data = self._prepare_message(message)
+        response = urllib2.urlopen(self.url, data)
+        self.debug('response: {0}'.format(response))
