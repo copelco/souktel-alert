@@ -15,14 +15,11 @@ class ClickatellBackend(BackendBase):
 
     url = 'https://api.clickatell.com/http/sendmsg'
 
-    def _logger_name(self):
-        return 'clickatell-backend'
-
     def configure(self, user, password, api_id):
-        self.debug('Registered')
         self.user = user
         self.password = password
         self.api_id = api_id
+        self.debug('configured ({0}/{1})'.format(self.user, self.api_id))
 
     def _prepare_message(self, message):
         return {
