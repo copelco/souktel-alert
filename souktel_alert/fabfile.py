@@ -24,7 +24,7 @@ def _setup_path():
 
 
 def staging():
-    """ Run commands on the remote staging environment """
+    """ run commands on the remote staging environment """
     env.environment = 'staging'
     env.hosts = ['208.109.191.99']
     env.user = 'souktel2010'
@@ -34,7 +34,7 @@ def staging():
 
 
 def production():
-    """ Run commands on the remote production environment """
+    """ run commands on the remote production environment """
     utils.abort('Production environment is currently disabled.')
 
 

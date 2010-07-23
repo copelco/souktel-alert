@@ -40,15 +40,15 @@ Deployment uses `fabric <http://docs.fabfile.org/>`_. To see a list of the avail
 
         bootstrap          bootstrap environment on remote machine
         clone              clone github repository on remote machine
-        production         Run commands on the remote production environment
+        production         run commands on the remote production environment
         pull               pull latest code to remote environment
-        staging            Run commands on the remote staging environment
+        staging            run commands on the remote staging environment
         update_submodules  update git submodules in remote environment
 
-To bootstrap the remote environment (clone and update submodules), just run::
+To bootstrap the remote staging environment (clone and update submodules), just run::
 
     ~/souktel-alert/souktel_alert/$ fab staging bootstrap
 
-To update the code on a preexisting environment (you'll do this regularly), run::
+To update the code on the preexisting staging environment (you'll do this regularly), run::
 
     ~/souktel-alert/souktel_alert/$ fab staging pull
