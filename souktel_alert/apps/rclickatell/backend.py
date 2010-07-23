@@ -21,7 +21,7 @@ class ClickatellBackend(BackendBase):
         self.user = user
         self.password = password
         self.api_id = api_id
-        self.debug('configured ({0}/{1})'.format(self.user, self.api_id))
+        self.debug('configured (%s/%s)' % (self.user, self.api_id))
 
     def _prepare_message(self, message):
         return {
@@ -34,6 +34,6 @@ class ClickatellBackend(BackendBase):
 
     def send(self, message):
         data = self._prepare_message(message)
-        self.debug('send: {0} {1}'.format(message, data))
+        self.debug('send: %s %s' % (message, data))
         response = urllib2.urlopen(self.url, urllib.urlencode(data))
-        self.debug('response: {0}'.format(response))
+        self.debug('response: %s' % response)

@@ -16,9 +16,9 @@ def test(request):
         contact_id = request.GET['contact_id']
         text = request.GET['message']
         contact = Contact.objects.get(pk=contact_id)
-        logging.debug('Contact: {0} ({1})'.format(contact, contact.default_connection))
+        logging.debug('Contact: %s (%s)' % (contact, contact.default_connection))
         message = OutgoingMessage(contact.default_connection, text)
-        logging.debug('Message: {0}'.format(message))
+        logging.debug('Message: %s' % message)
         router.add_app('rclickatell')
         config = settings.INSTALLED_BACKENDS['clickatell']
         module = config.pop('ENGINE')
