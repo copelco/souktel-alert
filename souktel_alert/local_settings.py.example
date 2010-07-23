@@ -9,3 +9,5 @@ INSTALLED_BACKENDS['clickatell'].update({
     'password': '',
     'api_id': '',
 })
+
+LOG_FILE = '/tmp/rapidsms.log'
