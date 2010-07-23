@@ -29,3 +29,26 @@ Create local_settings.py file, syncdb, and runserver::
     ~/souktel-alert/souktel_alert$ ./manage.py runserver
 
 Visit http://localhost:8000/ in your browser.
+
+Deployment
+----------
+
+Deployment uses `fabric <http://docs.fabfile.org/>`_. To see a list of the available fab commands, run::
+
+    ~/souktel-alert/souktel_alert/$ fab --list
+    Available commands:
+
+        bootstrap          bootstrap environment on remote machine
+        clone              clone github repository on remote machine
+        production         Run commands on the remote production environment
+        pull               pull latest code to remote environment
+        staging            Run commands on the remote staging environment
+        update_submodules  update git submodules in remote environment
+
+To bootstrap the remote environment (clone and update submodules), just run::
+
+    ~/souktel-alert/souktel_alert/$ fab staging bootstrap
+
+To update the code on a preexisting environment (you'll do this regularly), run::
+
+    ~/souktel-alert/souktel_alert/$ fab staging pull
