@@ -21,7 +21,7 @@ def test(request):
         logging.debug('Message: %s' % message)
         router.add_app('rclickatell')
         config = settings.INSTALLED_BACKENDS['clickatell']
-        module = config.pop('ENGINE')
+        module = config.pop('ENGINE', None)
         router.add_backend('clickatell', module, config)
         logging.debug(message.send())
 
