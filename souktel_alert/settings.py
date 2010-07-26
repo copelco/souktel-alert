@@ -27,6 +27,7 @@ INSTALLED_APPS = [
 
     # enable the django admin using a little shim app (which includes
     # the required urlpatterns)
+    # This is just a comment
     "rapidsms.contrib.djangoadmin",
     "django.contrib.admin",
     'djangotables',
