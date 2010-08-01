@@ -33,7 +33,16 @@ INSTALLED_APPS = [
     'djangotables',
     'groupmessaging',
     'rclickatell',
+    'xforms',
+    'uni_form',
+    
 ]
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+)
 
 TABS = [
     ('rapidsms.views.dashboard', 'Dashboard'),
@@ -41,6 +50,7 @@ TABS = [
     ('rapidsms.contrib.messagelog.views.message_log', 'Message Log'),
     ('rapidsms.contrib.messaging.views.messaging', 'Messaging'),
     ('groupmessaging.views.index.index', 'Group Messaging'),
+    ('xforms.views.xforms', 'XForms'),
 ]
 
 INSTALLED_BACKENDS = {
@@ -48,5 +58,5 @@ INSTALLED_BACKENDS = {
     "message_tester" : {"ENGINE": "rapidsms.backends.bucket" } 
 }
 
-
+XFORMS_HOST="192.168.10.20:8000"
 TEST_RUNNER = "django_nose.run_tests"
