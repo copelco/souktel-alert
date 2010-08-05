@@ -57,7 +57,8 @@ TABS = [
 
 INSTALLED_BACKENDS = {
     "clickatell": {"ENGINE": "rclickatell.backend"},
-    "message_tester" : {"ENGINE": "rapidsms.backends.bucket" } 
+    "javna": {"ENGINE": "rjavna.backend"},
+    "message_tester" : {"ENGINE": "rapidsms.backends.bucket"},
 }
 
 XFORMS_HOST="192.168.10.20:8000"
