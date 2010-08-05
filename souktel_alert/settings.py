@@ -63,3 +63,7 @@ INSTALLED_BACKENDS = {
 
 XFORMS_HOST="192.168.10.20:8000"
 TEST_RUNNER = "django_nose.run_tests"
+
+REROUTE = {
+    'javna': 'clickatell',
+}
