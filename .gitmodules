@@ -1,3 +1,9 @@
 [submodule "souktel_alert/submodules/rapidsms"]
 	path = souktel_alert/submodules/rapidsms
 	url = git://github.com/rapidsms/rapidsms-core-dev.git
+[submodule "souktel_alert/submodules/rclickatell"]
+	path = souktel_alert/submodules/rclickatell
+	url = git://github.com/caktus/rapidsms-clickatell.git
+[submodule "souktel_alert/submodules/rerouter"]
+	path = souktel_alert/submodules/rerouter
+	url = git://github.com/caktus/rapidsms-rerouter.git

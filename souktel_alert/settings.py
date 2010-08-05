@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'rclickatell',
     'xforms',
     'uni_form',
-    
+    "rclickatell",
+    "rerouter",
 ]
 
 MIDDLEWARE_CLASSES = (
@@ -51,6 +52,7 @@ TABS = [
     ('rapidsms.contrib.messaging.views.messaging', 'Messaging'),
     ('groupmessaging.views.index.index', 'Group Messaging'),
     ('xforms.views.xforms', 'XForms'),
+    ('rclickatell.views.test', 'Clickatell'),
 ]
 
 INSTALLED_BACKENDS = {
