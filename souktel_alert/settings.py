@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'uni_form',
     "rclickatell",
     "rerouter",
+
 ]
 
 MIDDLEWARE_CLASSES = (
@@ -61,7 +62,7 @@ INSTALLED_BACKENDS = {
     "message_tester" : {"ENGINE": "rapidsms.backends.bucket"},
 }
 
-XFORMS_HOST="192.168.10.20:8000"
+XFORMS_HOST="127.0.0.1:8000"
 TEST_RUNNER = "django_nose.run_tests"
 
 REROUTE = {
