@@ -43,7 +43,7 @@ class App(AppBase):
 
         schedule = EventSchedule(description=event_desc, \
                      callback="groupmessaging.utils.process_queue_callback", \
-                     minutes=self.minutes, \
+		     minutes=(00,00,00), \
                      callback_args=('self.router'))
         schedule.save()
         self.log('DEBUG', u"Created Event Schedule %s" % event_desc)

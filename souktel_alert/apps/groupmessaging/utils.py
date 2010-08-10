@@ -67,4 +67,4 @@ def send_message(sender, groups, text, date):
                               backend=recipient.backend, text=message.text, \
                               status=OutgoingLog.QUEUED)
             msg.save()
-    
+
