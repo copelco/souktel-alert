@@ -102,14 +102,9 @@ TABS = [
 ]
 
 
-<<<<<<< HEAD
 # -------------------------------------------------------------------- #
 #                         BORING CONFIGURATION                         #
 # -------------------------------------------------------------------- #
-=======
-XFORMS_HOST="127.0.0.1:8000"
-TEST_RUNNER = "django_nose.run_tests"
->>>>>>> cf960946c46b6c3bbc73a92c890c1d1ba2cf50ae
 
 
 # debug mode is turned on as default, since rapidsms is under heavy
