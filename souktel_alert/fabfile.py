@@ -21,6 +21,7 @@ env.shell = '/bin/bash -c'
 def _setup_path():
     env.path = PATH_SEP.join((env.root, env.environment))
     env.code_root = PATH_SEP.join((env.path, env.project))
+    env.virtualenv_root = os.path.join(env.path, env.environment)
 
 
 def staging():
@@ -41,7 +42,8 @@ def production():
 def bootstrap():
     """ bootstrap environment on remote machine """
     clone()
-    update_submodules()
+    create_virtualenv()
+    update_requirements()
 
 
 def clone():
@@ -51,16 +53,23 @@ def clone():
         run('git clone %s %s' % (env.repo, env.environment))
 
 
-def update_submodules():
-    """ update git submodules in remote environment """
+def create_virtualenv():
+    """ Create virtual environment on remote host """
     require('code_root', provided_by=('production', 'staging'))
-    with cd(env.path):
-        run('git submodule init')
-        run('git submodule update')
-    rapidsms = PATH_SEP.join((env.code_root, 'submodules/rapidsms'))
-    with cd(rapidsms):
-        run('git submodule init')
-        run('git submodule update')
+    args = '--clear --distribute'
+    run('virtualenv %s %s' % (args, env.virtualenv_root))
+    run('pip install -E %(virtualenv_root)s -U distribute' % env)
+
+
+def update_requirements():
+    """ Update remote Python environment """
+    require('code_root', provided_by=('production', 'staging'))
+    requirements = os.path.join(env.code_root, 'requirements')
+    with cd(requirements):
+        cmd = ['pip install']
+        cmd += ['-E %(virtualenv_root)s' % env]
+        cmd += ['--requirement %s' % os.path.join(requirements, 'apps.txt')]
+        run(' '.join(cmd))
 
 
 def pull():
