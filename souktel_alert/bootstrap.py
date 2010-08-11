@@ -25,6 +25,8 @@ def main():
         subprocess.call(["virtualenv", "--clear", "--distribute",
                         virtualenv])
     file_path = os.path.dirname(__file__)
+    # install latest distribute
+    subprocess.call(["pip", "install", "-E", virtualenv, "-U", 'distribute'])
     subprocess.call(["pip", "install", "-E", virtualenv, "--requirement",
                      os.path.join(file_path, "requirements/apps.txt")])
 

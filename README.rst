@@ -6,21 +6,12 @@ souktel-alert
 Development Environment Setup
 -----------------------------
 
-Clone project and setup git submodules::
+Clone project and bootstrap virtual environment::
 
     ~$ git clone git@github.com:copelco/souktel-alert.git
-    ~$ cd souktel-alert/
-    ~/souktel-alert$ git submodule init
-    ~/souktel-alert$ git submodule update
-    ~/souktel-alert$ cd souktel_alert/submodules/rapidsms/
-    ~/souktel-alert/souktel_alert/submodule/rapidsms$ git submodule init
-    ~/souktel-alert/souktel_alert/submodule/rapidsms$ git submodule update
-
-Create a virtual environment::
-
-    ~$ mkvirtualenv --distribute alert
-    ~$ pip install django==1.1.2
-    ~$ pip install -e git+http://github.com/akaihola/django-nose.git#egg=django-nose
+    ~$ cd souktel-alert/souktel_alert/
+    ~/souktel-alert/souktel_alert$ mkvirtualenv --distribute souktel
+    ~/souktel-alert/souktel_alert$ ./bootstrap.py
 
 Create local_settings.py file, syncdb, and runserver::
 
