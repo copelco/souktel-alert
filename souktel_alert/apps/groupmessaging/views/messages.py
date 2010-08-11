@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # encoding=utf-8
 
-from rapidsms.utils import render_to_response
 from groupmessaging.views.common import webuser_required
 from django import forms
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render_to_response
 from groupmessaging.models import Message
 from groupmessaging.models import Site
 from groupmessaging.models import Recipient

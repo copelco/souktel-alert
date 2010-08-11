@@ -1,0 +1,5 @@
+django==1.2.1
+rapidsms==0.9.3a
+django-uni-form==0.7
+-e git+http://github.com/caktus/rapidsms-rerouter.git#egg=rerouter
+-e git+http://github.com/caktus/rapidsms-clickatell.git#egg=rclickatell

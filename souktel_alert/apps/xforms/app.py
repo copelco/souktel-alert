@@ -1,4 +1,5 @@
 import rapidsms
+
 from rapidsms.apps.base import AppBase
 from .models import XForm
 

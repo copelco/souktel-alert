@@ -2,12 +2,11 @@
 # encoding=utf-8
 
 from django.http import HttpResponseRedirect
-from rapidsms.utils import render_to_response
 from groupmessaging.models import OutgoingLog
 
 from groupmessaging.views.common import webuser_required
 from django import forms
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.forms.formsets import formset_factory
 from django.utils.translation import ugettext_lazy as _

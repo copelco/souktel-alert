@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # encoding=utf-8
 
-from rapidsms.utils import render_to_response
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
+from django.shortcuts import render_to_response
 
 from groupmessaging.views.common import webuser_required
 from groupmessaging.models import SendingLog, Recipient, Group, OutgoingLog
