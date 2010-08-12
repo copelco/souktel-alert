@@ -77,3 +77,6 @@ def pull():
     require('code_root', provided_by=('production', 'staging'))
     with cd(env.path):
         run('git pull origin master')
+    with cd(env.code_root):
+        run('touch services/staging.wsgi')
+
