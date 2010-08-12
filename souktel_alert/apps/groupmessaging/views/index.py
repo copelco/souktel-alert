@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # encoding=utf-8
+import logging
 
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 from groupmessaging.views.common import webuser_required
 from groupmessaging.models import SendingLog, Recipient, Group, OutgoingLog
@@ -14,7 +16,7 @@ def index(request, context):
 
     # shortcut
     webuser = context['user']
-    print webuser.site
+    logging.debug('webuser site: %s' % webuser.site)
 
     # Latest messages (5)
     latest_messages = SendingLog.objects.all()[:5]
@@ -40,4 +42,5 @@ def index(request, context):
 
     mycontext = {'latest_messages': latest_messages, 'stats': stats}
     context.update(mycontext)
-    return render_to_response(request, 'index.html', context)
+    return render_to_response('index.html', context,
+                              context_instance=RequestContext(request))

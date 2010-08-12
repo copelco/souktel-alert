@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.sessions",
     "django.contrib.contenttypes",
+    "django.contrib.humanize",
     "rapidsms.contrib.djangoadmin",
 
     # the rapidsms contrib apps.
@@ -190,7 +191,6 @@ TEST_DATABASE_NAME = os.path.join(
     "rapidsms.test.sqlite3")
 
 
-DEBUG = True
 XFORMS_HOST="192.168.10.20:8000"
 
 ADMIN_MEDIA_PREFIX = '/admin-media/'
