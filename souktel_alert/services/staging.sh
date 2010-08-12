@@ -33,9 +33,9 @@ WHERE_AM_I=`dirname $ME`
 
 ############### EDIT ME ##################
 NAME="staging-route" # change to your project name
-DAEMON=$WHERE_AM_I/manage.py
+DAEMON=$WHERE_AM_I/../manage.py
 DAEMON_OPTS=""
-RUN_AS=root
+RUN_AS=souktel2010
 APP_PATH=$WHERE_AM_I
 ROUTER_PID_FILE=/var/run/${NAME}_router.pid
 ############### END EDIT ME ##################
@@ -43,7 +43,9 @@ test -x $DAEMON || exit 0
 
 do_start() {
     echo -n "Starting router for $NAME... "
-    start-stop-daemon -d $APP_PATH -c $RUN_AS --start --background --pidfile $ROUTER_PID_FILE  --make-pidfile --exec $DAEMON -- route $DAEMON_OPTS
+    source /home/souktel2010/staging/staging/bin/activate
+    start-stop-daemon -d $APP_PATH -c $RUN_AS --start --background --pidfile $ROUTER_PID_FILE
+  --make-pidfile --exec $DAEMON -- route $DAEMON_OPTS
     echo "Router Started"
 }
 
