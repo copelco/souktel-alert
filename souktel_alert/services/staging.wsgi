@@ -14,7 +14,7 @@ ADMIN_IPS = ('127.0.0.1', )
 UPGRADE_FILE = os.path.join(PROJECT_ROOT, 'media', 'html', 'upgrade.html')
 ERROR_FILE = os.path.join(PROJECT_ROOT, 'media', 'html', 'server_error.html')
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'chicago_hopes.local_settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'souktel_alert.local_settings'
 
 
 try:
