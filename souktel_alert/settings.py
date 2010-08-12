@@ -84,7 +84,7 @@ INSTALLED_APPS = [
     "rjavna",
     "rclickatell",
     "rerouter",
-    "xforms",
+    "rapidsms_xforms",
     "groupmessaging",
 ]
 
@@ -98,7 +98,7 @@ TABS = [
     ('rapidsms.contrib.messagelog.views.message_log', 'Message Log'),
     ('rapidsms.contrib.messaging.views.messaging', 'Messaging'),
     ('groupmessaging.views.index.index', 'Group Messaging'),
-    ('xforms.views.xforms', 'XForms'),
+    ('rapidsms_xforms.views.xforms', 'XForms'),
     ('rclickatell.views.test', 'Clickatell'),
 ]
 

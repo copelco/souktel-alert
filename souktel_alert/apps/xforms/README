@@ -1,9 +1,0 @@
-*Temporary* repository for an app-only quasi-fork of http://github.com/nyaruka/rapidsms-xforms-builder 
-Updated to use current rapidsms core dev repository (http://github.com/rapidsms/rapidsms-core-dev/commit/ddad063e1a14abd969c17e3eaaf05992f87a965a).
-
-Edit settings.py to include:
-INSTALLED_APPS = RAPIDSMS_APPS + ["uni_form", "xforms"]
-TABS = RAPIDSMS_TABS + [("xforms.views.xforms", "XForms")]
-
-Also fixes XFormField creation bug where XFormField's `clean` method conflicts with Django's internals
-(http://code.djangoproject.com/browser/django/trunk/django/forms/models.py#L339).
