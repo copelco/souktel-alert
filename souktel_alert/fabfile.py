@@ -80,3 +80,9 @@ def pull():
     with cd(env.code_root):
         run('touch services/staging.wsgi')
 
+
+def restart():
+    """ restart apache and route """
+    run('sudo -uroot service staging-route restart')
+    with cd(env.code_root):
+        run('touch services/staging.wsgi')
