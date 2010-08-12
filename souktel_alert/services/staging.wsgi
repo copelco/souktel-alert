@@ -8,6 +8,7 @@ site.addsitedir(sp)
 #Calculate the project path based on the location of the WSGI script.
 PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
 sys.path.insert(0, os.path.dirname(PROJECT_ROOT))
+sys.path.insert(0, os.path.join(PROJECT_ROOT, 'apps'))
 
 SHOW_UPGRADE_MESSAGE = False
 ADMIN_IPS = ('127.0.0.1', )
