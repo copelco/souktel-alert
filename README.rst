@@ -25,11 +25,15 @@ Deployment
 ----------
 
 Deployment uses `fabric <http://docs.fabfile.org/>`_. To see a list of the
-available fab commands, run ``fab --list``. To update the code on the staging
-environment (you'll do this regularly), run::
+available fab commands, run ``fab --list``::
 
-    ~/souktel-alert/souktel_alert/$ fab staging pull
+    Available commands:
 
-To restart Apache and the route process, run::
-
-    ~/souktel-alert/souktel_alert/$ fab staging restart
+        bootstrap            bootstrap environment on remote machine
+        clone                clone github repository on remote machine
+        create_virtualenv    create virtual environment on remote host
+        production           run commands on the remote production environment
+        pull                 pull latest code to remote environment
+        restart              restart apache and route
+        staging              run commands on the remote staging environment
+        update_requirements  update remote Python environment

@@ -54,7 +54,7 @@ def clone():
 
 
 def create_virtualenv():
-    """ Create virtual environment on remote host """
+    """ create virtual environment on remote host """
     require('code_root', provided_by=('production', 'staging'))
     args = '--clear --distribute'
     run('virtualenv %s %s' % (args, env.virtualenv_root))
@@ -62,7 +62,7 @@ def create_virtualenv():
 
 
 def update_requirements():
-    """ Update remote Python environment """
+    """ update remote Python environment """
     require('code_root', provided_by=('production', 'staging'))
     requirements = os.path.join(env.code_root, 'requirements')
     with cd(requirements):
