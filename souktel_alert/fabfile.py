@@ -77,8 +77,6 @@ def pull():
     require('code_root', provided_by=('production', 'staging'))
     with cd(env.path):
         run('git pull origin master')
-    with cd(env.code_root):
-        run('touch services/staging.wsgi')
 
 
 def restart():
@@ -86,3 +84,9 @@ def restart():
     run('sudo -uroot service staging-route restart')
     with cd(env.code_root):
         run('touch services/staging.wsgi')
+
+
+def update():
+    """ pull and restart apache and route """
+    pull()
+    restart()

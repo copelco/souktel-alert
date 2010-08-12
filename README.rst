@@ -36,4 +36,5 @@ available fab commands, run ``fab --list``::
         pull                 pull latest code to remote environment
         restart              restart apache and route
         staging              run commands on the remote staging environment
+        update               pull and restart apache and route
         update_requirements  update remote Python environment
