@@ -76,7 +76,7 @@ INSTALLED_APPS = [
     "rapidsms.contrib.messagelog",
     "rapidsms.contrib.messaging",
     # "rapidsms.contrib.registration",
-    # "rapidsms.contrib.scheduler",
+    "rapidsms.contrib.scheduler",
     # "rapidsms.contrib.search",
     "rapidsms.contrib.echo",
     
