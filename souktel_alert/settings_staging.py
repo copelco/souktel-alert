@@ -12,4 +12,9 @@ DATABASES = {
     }
 }
 
-LOG_FILE = '/home/souktel2010/staging/rapidsms.log'
+INSTALLED_BACKENDS['javna'].update({
+    'host': '208.109.191.99',
+    'port': '8083',
+})
+
+LOG_FILE = '/home/souktel2010/staging/log/rapidsms.log'
