@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # IMPORTANT: To use, do the folling:
@@ -41,11 +41,11 @@ ROUTER_PID_FILE=/var/run/${NAME}_router.pid
 ############### END EDIT ME ##################
 test -x $DAEMON || exit 0
 
+. /home/souktel2010/staging/staging/bin/activate
+
 do_start() {
     echo -n "Starting router for $NAME... "
-    source /home/souktel2010/staging/staging/bin/activate
-    start-stop-daemon -d $APP_PATH -c $RUN_AS --start --background --pidfile $ROUTER_PID_FILE
-  --make-pidfile --exec $DAEMON -- route $DAEMON_OPTS
+    start-stop-daemon -d $APP_PATH -c $RUN_AS --start --background --pidfile $ROUTER_PID_FILE --make-pidfile --exec $DAEMON -- route $DAEMON_OPTS
     echo "Router Started"
 }
 
