@@ -192,3 +192,6 @@ TEST_DATABASE_NAME = os.path.join(
 
 DEBUG = True
 XFORMS_HOST="192.168.10.20:8000"
+
+ADMIN_MEDIA_PREFIX = '/admin-media/'
+
