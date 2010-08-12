@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     # "rapidsms.contrib.search",
     "rapidsms.contrib.echo",
     
+    "uni_form",
     "rjavna",
     "rclickatell",
     "rerouter",
