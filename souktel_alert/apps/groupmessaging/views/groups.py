@@ -1,17 +1,22 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # encoding=utf-8
+import logging
 
 from django import forms
+from django.http import HttpResponse
+from django.shortcuts import redirect, render_to_response
+from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.template import RequestContext
+
 from groupmessaging.views.common import webuser_required
 from groupmessaging.models import Group
 from groupmessaging.models import Site
 from groupmessaging.models import Recipient
 from groupmessaging.models import WebUser
-from django.http import HttpResponse
-from django.shortcuts import redirect, render_to_response
-from django.http import HttpResponseRedirect
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.utils.translation import ugettext_lazy as _
+
 
 class GroupForm(forms.Form):
 
@@ -62,7 +67,7 @@ def list(request, context):
 
     mycontext = {'title': 'regyo', 'Glist': Group_list,'count':Groups_obj.count()}
     context.update(mycontext)
-    return render_to_response(request, 'groups.html', context)
+    return render_to_response('groups.html', context, context_instance=RequestContext(request))
 
 
 @webuser_required
@@ -99,7 +104,7 @@ def add(request, context):
         mycontext = {'form': form}
         context.update(mycontext)
 
-    return render_to_response(request, 'new_group.html', context)
+    return render_to_response('new_group.html', context, context_instance=RequestContext(request))
 
 
 @webuser_required
@@ -166,4 +171,4 @@ def update(request, context, group_id):
         mycontext = {'form': form, 'group': Groups_obj}
         context.update(mycontext)
 
-    return render_to_response(request, 'update_group.html', context)
+    return render_to_response('update_group.html', context, context_instance=RequestContext(request))

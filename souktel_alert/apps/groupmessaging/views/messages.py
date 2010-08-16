@@ -1,16 +1,22 @@
 #!/usr/bin/env python
 # encoding=utf-8
+import logging
+
+from django import forms
+from django.http import HttpResponse
+from django.utils.translation import ugettext as _
+from django.shortcuts import redirect, render_to_response
+from django.template import RequestContext
+from django.utils.translation import ugettext_lazy as _
 
 from groupmessaging.views.common import webuser_required
-from django import forms
-from django.shortcuts import redirect, render_to_response
 from groupmessaging.models import Message
 from groupmessaging.models import Site
 from groupmessaging.models import Recipient
 from groupmessaging.models import Group
 from groupmessaging.utils import send_message
 from datetime import datetime
-from django.utils.translation import ugettext_lazy as _
+
 
 
 @webuser_required
@@ -21,7 +27,7 @@ def list(request, context):
     mycontext = {'messages': messages, 'count': count}
     context.update(mycontext)
 
-    return render_to_response(request, 'messages.html', context)
+    return render_to_response('messages.html', context, context_instance=RequestContext(request))
 
 
 @webuser_required
@@ -67,7 +73,7 @@ def messageform(request, context, messageid=None):
     
     mycontext = {'mess': mess, 'form': form, 'messageid': messageid}
     context.update(mycontext)
-    return render_to_response(request, "messages_form.html", context)
+    return render_to_response("messages_form.html", context, context_instance=RequestContext(request))
 
 
 @webuser_required    
@@ -103,7 +109,7 @@ def send(request, context):
     mycontext = {'messages': messages, 'form': form}
     context.update(mycontext)
     
-    return render_to_response(request, "messages_send.html", context)  
+    return render_to_response("messages_send.html", context, context_instance=RequestContext(request))
 
     
 class MessageForm(forms.Form):

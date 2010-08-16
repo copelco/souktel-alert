@@ -1,15 +1,20 @@
 #!/usr/bin/env python
 # encoding=utf-8
+import logging
 
-from django.http import HttpResponseRedirect
-from groupmessaging.models import OutgoingLog
-
-from groupmessaging.views.common import webuser_required
 from django import forms
+from django.http import HttpResponse
 from django.shortcuts import redirect, render_to_response
+from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.forms.formsets import formset_factory
+from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _
+from django.template import RequestContext
+from django.forms.formsets import formset_factory
+
+from groupmessaging.models import OutgoingLog
+from groupmessaging.views.common import webuser_required
+
 
 
 @webuser_required
@@ -31,7 +36,7 @@ def list(request, context):
 
     mycontext = {'outgoinglog': outgoinglog_list,'form':LogForm() , 'logs':outgoinglog , 'count':outgoinglog.count()}
     context.update(mycontext)
-    return render_to_response(request, 'outgoing_log.html', context)
+    return render_to_response('outgoing_log.html', context, context_instance=RequestContext(request))
 
 
 @webuser_required
@@ -74,7 +79,7 @@ def filter(request, context):
      
     mycontext = {'outgoinglog': outgoinglog_list,'form':form ,'count':0,'logs':outgoinglog2}
     context.update(mycontext)
-    return render_to_response(request, 'outgoing_log.html', context )
+    return render_to_response('outgoing_log.html',context , context_instance=RequestContext(request))
 
 class LogForm(forms.Form):
 
