@@ -1,16 +1,23 @@
 #!/usr/bin/env python
 # encoding=utf-8
+import logging
+
+from django import forms
+from django.http import HttpResponse
+from django.shortcuts import redirect, render_to_response
+from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.template import RequestContext
+from django.forms.formsets import formset_factory
 
 from django.http import HttpResponseRedirect
 from groupmessaging.models import Recipient
 from groupmessaging.models import Site
 from groupmessaging.models import Group
 from groupmessaging.views.common import webuser_required
-from django import forms
-from django.shortcuts import redirect, render_to_response
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.forms.formsets import formset_factory
-from django.utils.translation import ugettext_lazy as _
+
 
 
 @webuser_required
@@ -32,7 +39,7 @@ def list(request, context):
 
     mycontext = {'recipients': recipient_list,'count':recipients.count()}
     context.update(mycontext)
-    return render_to_response(request, 'recipients_list.html', context)
+    return render_to_response('recipients_list.html', context, context_instance=RequestContext(request))
 
 @webuser_required
 def recipient(request, context, recipientid=None):
@@ -83,7 +90,7 @@ def recipient(request, context, recipientid=None):
 
     mycontext = {'recipient':recipient,'form':form, 'recipientid': recipientid,'validationMsg':validationMsg}
     context.update(mycontext)
-    return render_to_response(request, 'recipient.html', context)
+    return render_to_response('recipient.html', context, context_instance=RequestContext(request))
 
 @webuser_required
 def delete(request,context,recipientid):
@@ -156,5 +163,5 @@ def manage_recipients(request,context):
     groups = Group.objects.filter(site=context['user'].site, active=True)
     mycontext = {'formset': formset, 'groups': groups}
     context.update(mycontext)
-    return render_to_response(request, 'manage_recipients.html', context)
+    return render_to_response('manage_recipients.html', context, context_instance=RequestContext(request))
    

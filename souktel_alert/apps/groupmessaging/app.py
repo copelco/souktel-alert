@@ -2,10 +2,12 @@
 # encoding=utf-8
 
 import rapidsms
+import logging
 from rapidsms.parsers.keyworder import Keyworder
 from django.utils.translation import ugettext as _
 from rapidsms.contrib.scheduler.models import EventSchedule
 from rapidsms.apps.base import AppBase
+from django.template import RequestContext
 
 from groupmessaging.utils import *
 
@@ -43,17 +45,17 @@ class App(AppBase):
 
         schedule = EventSchedule(description=event_desc, \
                      callback="groupmessaging.utils.process_queue_callback", \
-		     minutes=(00,00,00), \
+		     minutes=([01,00]), \
                      callback_args=('self.router'))
         schedule.save()
-        self.log('DEBUG', u"Created Event Schedule %s" % event_desc)
+        loging.debug(u"Created Event Schedule %s" % event_desc)
 
     def handle(self, message):
         
         try:
             func, captures = self.keyword.match(self, message.text)
         except TypeError:
-            self.log('DEBUG', 'not captured')
+            loging.debug('not captured')
             return False
 
         try:
