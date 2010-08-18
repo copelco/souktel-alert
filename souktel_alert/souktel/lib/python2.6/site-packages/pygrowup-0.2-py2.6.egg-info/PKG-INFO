@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: pygrowup
+Version: 0.2
+Summary: Calculate z-scores of anthropometric measurements based on the WHO Child Growth Standards
+Home-page: http://github.com/ewheeler/pygrowup
+Author: Evan Wheeler
+Author-email: evanmwheeler@gmail.com
+License: BSD
+Description: UNKNOWN
+Platform: UNKNOWN

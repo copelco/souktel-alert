@@ -1,0 +1,78 @@
+{% extends "xforms/layout.html" %}
+{% block title %}XForms{% endblock %}
+
+{% block content %}
+
+<div class="details">
+<div class="name">{{ xform.name }} Submissions</div>
+<div class="buttons">
+  <a href="/xforms/{{ xform.pk }}/submissions.csv">
+    <img src="{{ MEDIA_URL }}rapidsms_xforms/icons/silk/table_save.png" alt=""/> Export
+  </a>
+  <br/>
+</div>
+</div>
+
+<table width="100%" class="form_table"> 
+  <thead>
+    <tr>
+      <th class="center">Type</th>
+      <th>Date</th>
+      {% for field in fields.all %}
+      <th>{{ field.caption }}</th>
+      {% endfor %}
+      <th></th>
+    </tr>
+  </thead>
+
+  {% if submissions %}
+  {% for submission in submissions %}
+  <tr class="form_table_row">
+    <td class="center">
+      {% ifequal submission.type "odk-www" %}
+      <img src="{{ MEDIA_URL }}rapidsms_xforms/icons/silk/application_form.png" title="XForms Submission" >
+      {% endifequal %}
+      {% ifequal submission.type "sms" %}
+      <img src="{{ MEDIA_URL }}rapidsms_xforms/icons/silk/phone.png" title="SMS Submission" >
+      {% endifequal %}
+    </td>
+    <td>
+      {% if submission.has_errors %}
+      <font color='red'>
+      {% else %}
+      <font color='green'>
+      {% endif %}
+      {{ submission.created|date:"m/j/y G:i:s"}}</td>
+    </font>
+    </td>
+    {% for field in fields.all %}
+    <td>
+      {% for value in submission.values.all %}
+      {% ifequal field value.field %}
+      {{ value.value_string }}
+      {% endifequal %}
+      {% endfor %}
+    </td>
+    {% endfor %}
+    <td>
+      <div class="buttons">
+	<a href="/xforms/submissions/{{ submission.pk }}/edit/">
+          <img src="{{ MEDIA_URL }}rapidsms_xforms/icons/silk/pencil.png" alt=""/> Edit
+	</a>
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+  {% else %}
+  <tr class="form_table_row">
+    <td colspan="10">
+      <i>No submissions for this form.</i>
+    </td>
+  </tr>
+  {% endif %}
+</table>
+<br/>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: RapidSMS
+Version: 0.9.3a
+Summary: Build SMS applications with Python and Django
+Home-page: http://github.com/rapidsms/rapidsms-core-dev
+Author: RapidSMS development community
+Author-email: rapidsms@googlegroups.com
+License: BSD
+Description: UNKNOWN
+Platform: UNKNOWN
