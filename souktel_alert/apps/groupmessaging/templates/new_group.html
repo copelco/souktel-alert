@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load i18n %}
-<form action="{% url new_group %}" method="POST" class="pretty">
+<form action="{% url new_group %}" method="POST" class="pretty">{% csrf_token %}
     <fieldset>
         <legend>
             {% trans "New Group Form" %}

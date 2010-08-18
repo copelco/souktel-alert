@@ -2,7 +2,7 @@
 # encoding=utf-8
 
 from datetime import datetime
-
+from rapidsms.models import Connection, Backend
 from groupmessaging.models import SendingLog, OutgoingLog
 
 def process_queue_callback(router, *args, **kwargs):
@@ -22,10 +22,11 @@ def process_queue(router):
             if hasattr(backend, 'slug') and backend.slug == message.backend \
                or hasattr(backend, 'type') and backend.type == message.backend:
                 back = backend
-
+                
         if not back:
             message.status = message.FAILED
             message.save()
+            print Hello
             continue
 
         # create message object

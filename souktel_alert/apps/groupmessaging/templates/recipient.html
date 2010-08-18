@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load i18n %}
-<form action="{% url recipient recipientid %}" method="POST" class="pretty">
+<form action="{% url recipient recipientid %}" method="POST" class="pretty"> {% csrf_token %}
 <fieldset> 
 <legend>
 {% if recipientid %}

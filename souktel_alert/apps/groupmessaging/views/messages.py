@@ -48,14 +48,14 @@ def messageform(request, context, messageid=None):
                 mess.text = form.cleaned_data['text']
                 mess.site = context['user'].site
                 mess.save()
-                
+                                
             else: 
             
                 mess = Message(code=form.cleaned_data['code'],\
                                            name=form.cleaned_data['name'],\
                                             text=form.cleaned_data['text'],\
-                                            site=context['user'].site)  
-                mess.save()             
+                                            site=context['user'].site)           
+                mess.save()
                 mess = Message.objects.all()
                 mycontext = {'mess': mess}
                 context.update(mycontext)
@@ -91,14 +91,13 @@ def delete(request, context, messageid):
 def send(request, context):
     
     messages = Message.objects.all()
-    
     if request.method == 'POST':
         form = SendMessageForm(context['user'].site, request.POST)
         if form.is_valid():
             text = form.cleaned_data['text']
             date = datetime.now()
             groups = Group.objects.filter(id__in=form.cleaned_data['groups'])
-            print groups
+            logging.debug(groups)
             send_message(context['user'], groups, text, date)
             redirect(list)
         else:

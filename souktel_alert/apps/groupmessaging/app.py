@@ -17,7 +17,7 @@ def loop2mn(loop):
     try:
         loop = int(loop)
     except:
-        loop = 5
+        loop = 1
 
     mn = []
     for num in range(0,60):

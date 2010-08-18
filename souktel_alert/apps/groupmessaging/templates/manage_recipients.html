@@ -3,7 +3,7 @@
 {% block content %}
 {% load i18n %}
 
-<form action="{% url manage_recipients %}" method="POST" class="pretty">
+<form action="{% url manage_recipients %}" method="POST" class="pretty">{% csrf_token %}
 <fieldset> 
     
     {{ formset.management_form }}

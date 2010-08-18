@@ -30,13 +30,15 @@ class GroupForm(forms.Form):
         self.fields['managers'].choices = \
                 [(manager.id, manager.first_name) for manager \
                 in WebUser.objects.filter(site=site)]
-
+    
+    logging.debug('webuser : %s' % WebUser)
+              
     code = forms.CharField(label=_(u"Group code"),max_length='15', required=True)
     name = forms.CharField(label=_(u"Group name"),max_length='50', required=True)
     active = forms.BooleanField(label=_(u"active"),required=False)
     recipients = forms.MultipleChoiceField(label=_(u"Group recipients"))
     managers = forms.MultipleChoiceField(label=_(u"Group managers"),required=True)
-
+    
 
 @webuser_required
 def list(request, context):
@@ -83,7 +85,8 @@ def add(request, context):
             active = form.cleaned_data['active']
             recipients = form.cleaned_data['recipients']
             managers = form.cleaned_data['managers']
-
+           
+            
             try:
                 ins = Group(code=code, name=name,\
                         site=context['user'].site, active=active)
@@ -93,6 +96,7 @@ def add(request, context):
                     ins.recipients.add(recipient)
                 for manager in managers:
                     ins.managers.add(manager)
+                
 
             except Exception, e:
                 return HttpResponse("Error 2 : %s" % e)
