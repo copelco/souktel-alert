@@ -22,8 +22,8 @@ class JavnaBackend(RapidHttpBacked):
         return HttpResponse('OK')
 
     def message(self, data):
-        sms = data.get('from', '')
-        sender = data.get('text', '')
+        sender = data.get('from', '')
+        sms = data.get('text', '')
         if not sms or not sender:
             self.error('Missing from or text: %s' % pprint.pformat(dict(data)))
             return None
