@@ -15,7 +15,7 @@ class JavnaBackend(RapidHttpBacked):
         super(JavnaBackend, self).configure(**kwargs)
 
     def handle_request(self, request):
-        self.debug('Request: %s' % pprint.pformat(dict(request.POST)))
+        self.debug('Request: %s' % pprint.pformat(dict(request.GET)))
         message = self.message(request.GET)
         if message:
             self.route(message)
