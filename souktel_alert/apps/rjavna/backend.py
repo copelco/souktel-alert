@@ -16,7 +16,7 @@ class JavnaBackend(RapidHttpBacked):
 
     def handle_request(self, request):
         self.debug('Request: %s' % pprint.pformat(dict(request.POST)))
-        message = self.message(request.POST)
+        message = self.message(request.GET)
         if message:
             self.route(message)
         return HttpResponse('OK')
