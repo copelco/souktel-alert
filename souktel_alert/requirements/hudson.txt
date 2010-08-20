@@ -1,0 +1,2 @@
+coverage==3.3.1
+pylint==0.21.1

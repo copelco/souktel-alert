@@ -15,15 +15,15 @@ class JavnaBackend(RapidHttpBacked):
         super(JavnaBackend, self).configure(**kwargs)
 
     def handle_request(self, request):
-        self.debug('Request: %s' % pprint.pformat(dict(request.POST)))
-        message = self.message(request.POST)
+        self.debug('Request: %s' % pprint.pformat(dict(request.GET)))
+        message = self.message(request.GET)
         if message:
             self.route(message)
         return HttpResponse('OK')
 
     def message(self, data):
-        sms = data.get('from', '')
-        sender = data.get('text', '')
+        sender = data.get('from', '')
+        sms = data.get('text', '')
         if not sms or not sender:
             self.error('Missing from or text: %s' % pprint.pformat(dict(data)))
             return None
