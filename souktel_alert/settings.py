@@ -88,7 +88,7 @@ INSTALLED_APPS = [
     "rapidsms_xforms",
     "groupmessaging",
     # "questions",
-    "survey",
+    "poll",
 ]
 
 
@@ -103,7 +103,7 @@ TABS = [
     ('groupmessaging.views.index.index', 'Group Messaging'),
     ('rapidsms_xforms.views.xforms', 'XForms'),
     ('rclickatell.views.test', 'Clickatell'),
-    ('survey.views.dashboard', 'Survey'),
+    ('poll.views.dashboard', 'Survey'),
 ]
 
 
