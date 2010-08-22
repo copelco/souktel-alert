@@ -7,8 +7,9 @@ from strings import ENGLISH as STR
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 import rapidsms
-from rapidsms.message import Message
-from rapidsms.connection import Connection
+from rapidsms.apps.base import AppBase
+from rapidsms.messages import OutgoingMessage
+from rapidsms.models import Connection
 from rapidsms.parsers.keyworder import * 
 
 # import poll-specific models as p because
@@ -17,7 +18,7 @@ import models as p
 import graph
 import utils
 
-class App(rapidsms.app.App):
+class App(AppBase):
 
     # lets use the Keyworder parser!
     kw = Keyworder()
