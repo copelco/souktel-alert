@@ -87,7 +87,6 @@ INSTALLED_APPS = [
     "rerouter",
     "rapidsms_xforms",
     "groupmessaging",
-    # "questions",
     "poll",
 ]
 
