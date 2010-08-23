@@ -30,6 +30,7 @@
 <li><a href="{% url groups %}">{% trans "Manage Groups" %}</a> {% include "help_menu_groups.html" %}</li>
 <li><a href="{% url recipients_list %}">{% trans "Manage Recipients" %}</a> {% include "help_menu_recipients.html" %}</li>
 <li><a href="{% url messages_list %}">{% trans "Manage Message Templates" %}</a> {% include "help_menu_messages.html" %} </li>
+<li><a href="{% url poll.views.dashboard %}">{% trans "Survey" %}</a> {% include "help_menu_messages.html" %} </li>
 <li><a href="{% url outgoinglog_list %}">{% trans "View Logs" %}</a> {% include "help_menu_logs.html" %}</li>
 </ul>
 {% block submenu %}{% endblock %}

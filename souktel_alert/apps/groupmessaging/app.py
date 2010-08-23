@@ -30,7 +30,7 @@ class App(AppBase):
 
     keyword = Keyworder()
 
-    def configure(self, interval=5, *args, **kwargs):
+    def configure(self, interval=1, *args, **kwargs):
         self.log.debug('configure')
         # convert (and store) minutes from config
         self.minutes = loop2mn(interval)
@@ -45,17 +45,17 @@ class App(AppBase):
 
         schedule = EventSchedule(description=event_desc, \
                      callback="groupmessaging.utils.process_queue_callback", \
-		     minutes=([01,00]), \
+		     minutes=([00,60]), \
                      callback_args=('self.router'))
         schedule.save()
-        loging.debug(u"Created Event Schedule %s" % event_desc)
+        loggin.DEBUG(u"Created Event Schedule %s" % event_desc)
 
     def handle(self, message):
         
         try:
             func, captures = self.keyword.match(self, message.text)
         except TypeError:
-            loging.debug('not captured')
+            loggin.DEBUG('not captured')
             return False
 
         try:
@@ -68,5 +68,6 @@ class App(AppBase):
     @keyword('')
     def queue(self, message):
         message.respond(_(u"Launching queue..."))
+        loggin.DEBUG("Launching queue...")
         process_queue(self.router)
         message.respond(_(u"Queue processed"))
