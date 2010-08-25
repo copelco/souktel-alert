@@ -69,9 +69,9 @@ def update(request, context, surveyid=None):
 
 class SurveyForm(forms.Form):
     reference_code = forms.CharField(label=("Reference Code"), max_length=50)
-    reg_required  = forms.BooleanField(label=("Regestration Required"),required=True)
-    Status = forms.BooleanField(label=("Active"),required=True)
-
-
+    reg_required  = forms.BooleanField(label=("Registration Required"),required=True)
+    Status = forms.BooleanField(label=("Status"),required=True)
+    Title =  forms.CharField(label=("Title"), max_length=50)
+    Description = forms.CharField(("Description"),widget=forms.Textarea())
     
 

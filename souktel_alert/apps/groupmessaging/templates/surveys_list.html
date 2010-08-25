@@ -27,9 +27,12 @@
 <tr>
 <td class='name'>{{ survey.reference_code }}</td>
 <td class='name'>{{ survey.title }}</td>
+<td class='name'>0</td>
+<td class='name'>{{ survey.addition_date }}</td>
+<td class='name'></td>
 <td class='name'><a  href="{% url survey_form survey.id %}"><img style="border:0px"
     src="/static/groupmessaging/edit-icon.jpeg" width="20" height="20" /> </a></td>
-<td class='name'>{{ survey.addition_date }}</td>
+
 </tr>
 {% endfor %}
 </table>
