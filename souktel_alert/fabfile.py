@@ -90,3 +90,25 @@ def update():
     """ pull and restart apache and route """
     pull()
     restart()
+
+
+def reset_local_db():
+    """ Reset local database from remote host """
+    require('code_root', provided_by=('production', 'staging'))
+    question = 'Are you sure you want to reset your local ' \
+               'database with the %(environment)s database?' % env
+    if not console.confirm(question, default=False):
+        utils.abort('Local database reset aborted.')
+    sys.path.insert(0, '..')
+    if env.environment == 'staging':
+        from souktel_alert.settings_staging import DATABASES as remote
+    else:
+        from souktel_alert.settings_production import DATABASES as remote
+    from souktel_alert.local_settings import DATABASES as loc
+    local_db = loc['default']['NAME']
+    remote_db = remote['default']['NAME']
+    with settings(warn_only=True):
+        local('dropdb %s' % local_db)
+    local('createdb %s' % local_db)
+    host = '%s@%s' % (env.user, env.hosts[0])
+    local('ssh -C %s pg_dump -Ox %s | psql %s' % (host, remote_db, local_db))
