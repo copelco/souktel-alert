@@ -220,133 +220,104 @@ class OutgoingLog(models.Model):
 
 class Survey(models.Model):
 
-    survey_id = models.CharField(max_length=10, primary_key=True,
-            db_column = 'id')
     reference_code = models.CharField(max_length='15')
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(auto_now_add=True)
-    reg_required = models.CharField(max_length=10)
+    reg_required = models.BooleanField(default=True)
     addition_date = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
     site = models.ForeignKey('Site')
+    title = models.CharField(max_length=20)
+    description = models.TextField()
+    mask = models.CharField(max_length=20)
+    shorcode = models.CharField(max_length=20)
+  
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
+class Question(models.Model):
+    QUESTION_TYPES = (
+		('F', 'Free text'),
+		('B', 'Boolean'),
+		('M', 'Multiple choice'),
+	)
 
-class Questions(models.Model):
     class Meta:
-        unique_together = ('question_id', 'survey_id')
+        unique_together = ('question', 'survey')
 
-    question_id = models.CharField(max_length=10, primary_key=True,
+    question = models.CharField(max_length=10, primary_key=True,
             db_column = 'id')
-    survey_id = models.ForeignKey('Survey')
+    survey = models.ForeignKey('Survey')
     fst = models.CharField(max_length=1)
-    qtype = models.CharField(max_length=1)
+    type = models.CharField(max_length=1, choices=QUESTION_TYPES)
     next_sid = models.CharField(max_length=10)
     next_qid = models.CharField(max_length=10)
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
+
 
 class SurveyAnswerE(models.Model):
     class Meta:
-        unique_together = ('survey_id', 'question_id')
-
-    id = models.CharField(max_length=10, primary_key=True,
-            db_column = 'id')
-    survey_id = models.ForeignKey('Survey')
-    question_id = models.ForeignKey('Questions')
+        unique_together = ('survey', 'question')
+    survey = models.ForeignKey('Survey')
+    question = models.ForeignKey('Question')
     mobile = models.CharField(max_length=20)
     ans_text = models.CharField(max_length=160)
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
+    
 
 
 class SurveyAnswerM(models.Model):
 
-    id = models.CharField(max_length=10, primary_key=True, db_column = 'id')
-    survey_id = models.ForeignKey('Survey')
-    question_id = models.ForeignKey('Questions')
-    option_id = models.ForeignKey('SurveyOption')
+    survey = models.ForeignKey('Survey')
+    question = models.ForeignKey('Question')
+    option = models.ForeignKey('SurveyOption')
     mobile = models.CharField(max_length=20)
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
+
 
 class SurveyCurrent(models.Model):
     
-    id = models.CharField(max_length=10, primary_key=True, db_column = 'id')
-    survey_id = models.ForeignKey('Survey')
-    question_id = models.ForeignKey('Questions')
+    survey = models.ForeignKey('Survey')
+    question = models.ForeignKey('Question')
     mobile = models.CharField(max_length=20, unique=True)
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
-
-class SurveyMask(models.Model):
-    
-    id = models.CharField(max_length=10, primary_key=True, db_column = 'id')
-    survey_id = models.ForeignKey('Survey')
-    shortcode = models.CharField(max_length=20)
-    mask = models.CharField(max_length=20)
-
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
     
 class SurveyMembers(models.Model):
 
-    id = models.CharField(max_length=10, primary_key=True, db_column = 'id')
-    survey_id = models.ForeignKey('Survey')
+    survey = models.ForeignKey('Survey')
     mobile = models.CharField(max_length=20, unique=True)
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
-
+ 
 class SurveyOption(models.Model):
 
     class Meta:
-        unique_together = ('option_id','survey_id', 'question_id')
+        unique_together = ('option','survey', 'question')
 
-    option_id =  models.CharField(max_length=20)
-    question_id = models.ForeignKey('Questions')
-    survey_id = models.ForeignKey('Survey')
+    option =  models.CharField(max_length=20)
+    question = models.ForeignKey('Question')
+    survey = models.ForeignKey('Survey')
     next_sid = models.CharField(max_length=20)
     next_qid = models.CharField(max_length=20)
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
 
 class SurveyOptionTitle(models.Model):
 
-    option_id = models.CharField(max_length=20)
-    question_id = models.ForeignKey('Questions')
-    survey_id = models.ForeignKey('Survey')
+    option = models.CharField(max_length=20)
+    question = models.ForeignKey('Question')
+    survey = models.ForeignKey('Survey')
     title = models.CharField(max_length=160)
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
+
 
 class SurveyQuestion(models.Model):
 
     class Meta:
-        unique_together = ('question_id','survey_id')
+        unique_together = ('question','survey')
 
-    question_id = models.ForeignKey('Questions')
-    survey_id = models.ForeignKey('Survey')
+    question = models.ForeignKey('Question')
+    survey = models.ForeignKey('Survey')
     title = models.CharField(max_length=160)
-
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
-
-class SurveyTitle(models.Model):
-    id = models.CharField(max_length=10, primary_key=True, db_column = 'id')
-    survey_id = models.ForeignKey('Survey')
-    title = models.CharField(max_length=160)
-    description = models.TextField()
 
 class System(models.Model):
 
-    sys_id = models.CharField(max_length=10, primary_key=True, db_column = 'id')
+    sysytem = models.CharField(max_length=10, primary_key=True, db_column = 'id')
     prefix = models.CharField(max_length=30, unique=True)
     reference_code = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=160)
@@ -355,5 +326,3 @@ class System(models.Model):
     api_id = models.CharField(max_length=10)
     api_key = models.CharField(max_length=10)
 
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
