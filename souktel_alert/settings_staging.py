@@ -5,7 +5,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "souktel_staging",
-        "USER": "souktel",
+        "USER": "souktel2010",
         'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '5433',
