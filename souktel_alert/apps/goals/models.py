@@ -1,0 +1,47 @@
+import datetime
+
+from django.db import models
+
+from rapidsms.models import Connection, Contact
+
+
+class Goal(models.Model):
+    connection = models.ForeignKey(Connection)
+    date = models.DateTimeField()
+    body = models.TextField()
+
+    def __unicode__(self):
+        return self.body
+
+    def save(self, **kwargs):
+        if not self.pk:
+            self.date = datetime.datetime.now()
+        return super(Goal, self).save(**kwargs)
+
+
+class Session(models.Model):    
+    goal = models.ForeignKey(Goal)
+    date_opened = models.DateTimeField()
+    date_closed = models.DateTimeField(null=True, blank=True)
+
+    # def __unicode__(self):
+    #     return self.goal
+
+    def save(self, **kwargs):
+        if not self.pk:
+            self.date_opened = datetime.datetime.now()
+        return super(Goal, Session).save(**kwargs)
+
+
+class Answer(models.Model):
+    goal = models.ForeignKey(Goal, related_name='answers')
+    date = models.DateTimeField()
+    body = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return self.body
+
+    def save(self, **kwargs):
+        if not self.pk:
+            self.date = datetime.datetime.now()
+        return super(Answer, self).save(**kwargs)
