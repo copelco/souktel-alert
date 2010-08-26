@@ -45,12 +45,12 @@ test -x $DAEMON || exit 0
 
 do_start() {
     echo -n "Starting router for $NAME... "
-    start-stop-daemon -d $APP_PATH -c $RUN_AS --start --background --pidfile $ROUTER_PID_FILE --make-pidfile --exec $DAEMON -- route $DAEMON_OPTS
+    start-stop-daemon -d $APP_PATH -c $RUN_AS --start --background --pidfile $ROUTER_PID_FILE --make-pidfile --exec $DAEMON -- runrouter $DAEMON_OPTS
     echo "Router Started"
 }
 
 hard_stop_router() {
-    for i in `ps aux | grep -i "rapidsms route" | grep -v grep | awk '{print $2}' ` ; do
+    for i in `ps aux | grep -i "rapidsms runrouter" | grep -v grep | awk '{print $2}' ` ; do
         kill -9 $i
     done
     rm $ROUTER_PID_FILE 2>/dev/null
