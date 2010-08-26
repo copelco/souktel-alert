@@ -96,6 +96,7 @@ class Answer(models.Model):
         ('A', 'Answer (exact)'),
         ('R', 'Regular Expression'),
         ('C', 'Custom logic'),
+        ('D', 'Free Test')
     )
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=ANSWER_TYPES)
