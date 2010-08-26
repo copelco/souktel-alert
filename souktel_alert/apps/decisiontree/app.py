@@ -223,6 +223,9 @@ class App(AppBase):
                 return self.registered_functions[answer.answer](message)
             else:
                 raise Exception("Can't find a function to match custom key: %s", answer)
+        elif answer.type == "D":
+             return answer_value.lower() == answer.answer.lower()
         raise Exception("Don't know how to process answer type: %s", answer.type)
+
         
         
