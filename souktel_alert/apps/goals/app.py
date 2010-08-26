@@ -1,3 +1,4 @@
+import re
 import datetime
 
 from rapidsms.apps.base import AppBase
@@ -7,6 +8,7 @@ from rapidsms.contrib.scheduler.models import EventSchedule
 
 SCHEDULE_DESC = 'goals-cron-job'
 CALLBACK = 'goals.app.scheduler_callback'
+number_re = re.compile(r'\d+')
 
 
 def scheduler_callback(router):
@@ -37,11 +39,29 @@ class GoalsApp(AppBase):
         else:
             self.debug('{0} exists'.format(SCHEDULE_DESC))
         self.info('started')
-    
+
+    def handle(self, msg):
+        from goals.models import Goal
+
+        matches = number_re.match(msg.text)
+        if matches:
+            response = int(matches.group(0))
+            try:
+                goal = Goal.objects.get(active=True, connection=msg.connection)
+            except Goal.DoesNotExist:
+                return False
+            goal.answers.create(body=response)
+            goal.active = False
+            goal.save()
+            msg = OutgoingMessage(connection=goal.connection,
+                                  template='Thank you for your response!')
+            msg.send()
+            return True
+
     def status_update(self):
         """ Cron job that's executed every minute """
         from goals.models import Goal
-        
+
         self.debug('{0} running'.format(SCHEDULE_DESC))
         start_date = datetime.datetime.now() - self.notification_treshold
         goals = Goal.objects.filter(date_last_notified__lt=start_date,
