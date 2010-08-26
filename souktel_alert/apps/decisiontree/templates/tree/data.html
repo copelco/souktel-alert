@@ -27,7 +27,7 @@
                 <td>
                     {% for entry in session.entry_set.all %}
                         {% ifequal entry.transition.current_state state %}
-                        {{entry.transition.answer}}
+                        {{entry.transition.answer.answer}}
                         {% endifequal %} 
                     {% endfor %}
                 </td>
