@@ -3,7 +3,7 @@
 
 import rapidsms
 import logging
-from rapidsms.parsers.keyworder import Keyworder
+from parsers.keyworder import Keyworder
 from django.utils.translation import ugettext as _
 from rapidsms.contrib.scheduler.models import EventSchedule
 from rapidsms.apps.base import AppBase

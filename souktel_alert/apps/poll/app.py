@@ -10,7 +10,7 @@ import rapidsms
 from rapidsms.apps.base import AppBase
 from rapidsms.messages import OutgoingMessage
 from rapidsms.models import Connection
-from rapidsms.parsers.keyworder import * 
+from parsers.keyworder import * 
 
 # import poll-specific models as p because
 # poll has a Message class of its own...
