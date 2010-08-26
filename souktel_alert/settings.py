@@ -87,7 +87,8 @@ INSTALLED_APPS = [
     "rerouter",
     "rapidsms_xforms",
     "groupmessaging",
-    "poll",
+    #"poll",
+    "decisiontree",
 ]
 
 
@@ -103,6 +104,8 @@ TABS = [
     #('rapidsms_xforms.views.xforms', 'XForms'),
     ('rclickatell.views.test', 'Clickatell'),
     #('poll.views.dashboard', 'Survey'),
+    #('questions.views.dashboard', 'Questions'),
+    ('decisiontree.views.index', 'Survey'),
 ]
 
 

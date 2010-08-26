@@ -37,6 +37,8 @@ def update(request, context, surveyid=None):
                 surv.reference_code = form.cleaned_data['Reference Code']
                 surv.reg_required = form.cleaned_data['Registration Required']
                 surv.status = form.cleaned_data['Status']
+                surv.title = form.cleaned_data['Title']
+                surv.description = form.cleaned_data['Description']
                 surv.site = context['user'].site
                 surv.save()
 

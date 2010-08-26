@@ -1,0 +1,15 @@
+This application is a generic implementation of a decision tree, which is completely database-configurable. Install this app, populate the db using django's admin UI, and boom: there's your decision tree, interactive poll, whatever you want to call it. Have a look at models.py for details on what each model is for.
+
+EXAMPLE
+user: info
+system: what's your favorite fruit? apple, orange, pear
+user: apple
+system: i love apples too! what kind of apples?
+user: macintosh
+system: thanks for telling me about your fruit preferences. good-bye!
+
+Features
+* support for sessions (i.e. 100 different users can all go through a session at the same time)
+* branching logic
+* tree visualization
+* errors for unrecognized messages (e.g. 'i don't recognize that kind of fruit') and multiple retries before exiting the session

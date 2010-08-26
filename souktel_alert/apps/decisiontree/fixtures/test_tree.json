@@ -1,0 +1,82 @@
+[
+  {
+    "pk": 1, 
+    "model": "decisiontree.question",
+    "fields": {
+      "text": "hello"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "decisiontree.question",
+    "fields": {
+      "text": "Please enter your 4-digit PIN"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "decisiontree.question",
+    "fields": {
+      "text": "Thanks for entering."
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "decisiontree.tree",
+    "fields": {
+      "root_state": 1, 
+      "trigger": "test"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "decisiontree.tree",
+    "fields": {
+      "root_state": 2, 
+      "trigger": "pin"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "decisiontree.answer",
+    "fields": {
+      "answer": "^(\\d{4})$", 
+      "type": "R", 
+      "name": "pin formatting", 
+      "description": "a 4-digit decimal number"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "decisiontree.treestate",
+    "fields": {
+      "question": 1, 
+      "name": "test_root"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "decisiontree.treestate",
+    "fields": {
+      "question": 2, 
+      "name": "test_pin"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "decisiontree.treestate",
+    "fields": {
+      "question": 3, 
+      "name": "pin_success"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "decisiontree.transition",
+    "fields": {
+      "answer": 1, 
+      "current_state": 2, 
+      "next_state": 3
+    }
+  }
+]

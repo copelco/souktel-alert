@@ -39,7 +39,6 @@ class App(AppBase):
 
         # create a scheduled event if not present
         # due to bug in fixture handling in scheduler
-        logging.DEBUG("Start")
         event_desc = 'groupmessaging_main'
         if EventSchedule.objects.filter(description=event_desc).count() > 0:
             return
