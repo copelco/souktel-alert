@@ -4,9 +4,11 @@ from goals import models as goals
 
 
 class GoalAdmin(admin.ModelAdmin):
-    list_display = ('id', 'date', 'connection', 'body')
-    list_filter = ('date',)
+    list_display = ('id', 'connection', 'body', 'date_created',
+                    'date_last_notified')
+    list_filter = ('date_created', 'date_last_notified')
     search_fields = ('body',)
+    ordering = ('-date_created',)
 admin.site.register(goals.Goal, GoalAdmin)
 
 

@@ -1,3 +1,4 @@
+from rapidsms.contrib.scheduler.models import EventSchedule
 from rapidsms.contrib.handlers.handlers.keyword import KeywordHandler
 
 
@@ -10,5 +11,8 @@ class GoalHandler(KeywordHandler):
 
     def handle(self, text):
         from goals.models import Goal
-        goal = Goal.objects.create(connection=self.msg.connection, body=text)
+        connection = self.msg.connection
+        # disable previous goals
+        Goal.objects.filter(connection=connection).update(active=False)
+        goal = Goal.objects.create(connection=connection, body=text)
         self.respond('Your goal has been recorded.')

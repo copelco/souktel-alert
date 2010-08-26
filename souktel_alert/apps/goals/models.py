@@ -7,15 +7,18 @@ from rapidsms.models import Connection, Contact
 
 class Goal(models.Model):
     connection = models.ForeignKey(Connection)
-    date = models.DateTimeField()
+    date_created = models.DateTimeField()
+    date_last_notified = models.DateTimeField()
     body = models.TextField()
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.body
 
     def save(self, **kwargs):
         if not self.pk:
-            self.date = datetime.datetime.now()
+            self.date_created = datetime.datetime.now()
+            self.date_last_notified = datetime.datetime.now()
         return super(Goal, self).save(**kwargs)
 
 
