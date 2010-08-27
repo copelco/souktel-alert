@@ -13,9 +13,9 @@ search
 
 <table>
 
-<tr><td>status</td>
+<tr><td>Field</td>
 <td>
-<select name="status" id="id_entry" >
+<select name="Field" id="id_entry" >
     <option value="" selected="selected">---------</option>
         {% for entry2 in entrys %}
             <option value="{{ entry2.field|escape }}">{{ entry2.field|escape }}</option>
