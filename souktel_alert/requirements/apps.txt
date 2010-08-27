@@ -5,3 +5,4 @@ rapidsms-xforms==0.1.1
 pygooglechart==0.3.0
 -e git+http://github.com/caktus/rapidsms-rerouter.git#egg=rerouter
 -e git+http://github.com/caktus/rapidsms-clickatell.git#egg=rclickatell
+requirements/rapidsms.tar.gz
