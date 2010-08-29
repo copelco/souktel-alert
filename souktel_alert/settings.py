@@ -100,7 +100,7 @@ INSTALLED_APPS = [
 # to add it here, also, to expose it in the rapidsms ui.
 TABS = [
     #('rapidsms.views.dashboard', 'Dashboard'),
-    #('rapidsms.contrib.httptester.views.generate_identity', 'Message Tester'),
+    ('rapidsms.contrib.httptester.views.generate_identity', 'Message Tester'),
     #('rapidsms.contrib.messagelog.views.message_log', 'Message Log'),
     #('rapidsms.contrib.messaging.views.messaging', 'Messaging'),
     ('groupmessaging.views.index.index', 'Group Messaging'),

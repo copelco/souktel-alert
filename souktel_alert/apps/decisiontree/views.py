@@ -128,3 +128,39 @@ def get_tree(id):
             return Tree.objects.all()[len(Tree.objects.all()) - 1]
         else:
             return Tree()  
+
+def filter(request, context):
+
+
+    form = FilterForm(request.POST)
+
+    if form.is_valid():
+            fieldMsg = form.cleaned_data['Field']
+           # senderMsg = form.cleaned_data['sender']
+           # identityMsg  = form.cleaned_data['identity']
+           # textMsg  = form.cleaned_data['text']
+
+    else:
+             print "form is not valid"
+
+
+    entry  = Entry.objects.filter(field=fieldMsg)
+    entry2 = Entry.objects.all()
+    paginator = Paginator(entry,10)
+
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    try:
+        entry_list = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        entry_list = paginator.page(paginator.num_pages)
+
+    mycontext = {'entry': entry_list,'form':form ,'count':0,'entry2':entry2}
+    context.update(mycontext)
+    return render_to_response('data.html',context , context_instance=RequestContext(request))
+
+class FilterForm(forms.Form):
+    Field = forms.CharField(label=("Field"),required=False)

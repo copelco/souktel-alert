@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     
     (r'^tree/data/export$', views.export),
     (r'^tree/data/export/(?P<id>\d+)$', views.export),
+    (r'^tree/data/filter/?$', views.filter),
     # serve the static files for this TREE app
     # TODO: this should be automatic, via WEBUI
     (r'^static/tree/(?P<path>.*)$', "django.views.static.serve",

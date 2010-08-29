@@ -1,12 +1,39 @@
 {% extends "layout.html" %}
-{% block title %}Decision Trees{% endblock %}
+{% block title %}Survey{% endblock %}
 {% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 {% block content %}
 {% load tree-tags %}
+<div class="module">
+    <h2>Filter Panel</h2>
+<form action="{{ filter }}" method="POST" class="pretty">{% csrf_token %}
+<fieldset>
+<legend>
+search
+</legend>
 
+<table>
+
+<tr><td>Field</td>
+<td>
+<select name="Field" id="id_entry" >
+    <option value="" selected="selected">---------</option>
+        {% for entry2 in entrys %}
+            <option value="{{ entry2.field|escape }}">{{ entry2.field|escape }}</option>
+        {% endfor %}
+</select>
+</td>
+</tr>
+</table>
+
+<p class="buttons">
+<button type="submit" class="button positive icon tick">Search</button>
+</p>
+</fieldset>
+</form>
+</div>
 <div class="module">
 	{% if t %}
-	<h2>All Data for Tree: {{ t.trigger }}</h2>
+	<h2>All Data for Survey {{ t.trigger }}</h2>
 	<table>
 		{% if sessions and not loops %}
 		<thead>
@@ -99,7 +126,7 @@
 </div>
 
 <div class="module dt">
-	<h2>Edit a Decision Tree</h2>
+    <h2>View Question Path</h2>
 	{% if t and not loops %}{% render_state t.root_state %}
 	{% else %} 
 	  Sorry this tree has loops.  This is not yet supported!
