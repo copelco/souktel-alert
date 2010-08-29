@@ -92,6 +92,7 @@ INSTALLED_APPS = [
     "groupmessaging",
     #"poll",
     "decisiontree",
+    "goals",
 ]
 
 
