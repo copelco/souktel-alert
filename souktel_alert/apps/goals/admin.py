@@ -13,5 +13,8 @@ admin.site.register(goals.Goal, GoalAdmin)
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'goal', 'body', 'date',)
+    list_filter = ('date',)
+    ordering = ('-date',)
+    search_fields = ('body', 'goal__body')
 admin.site.register(goals.Answer, AnswerAdmin)
