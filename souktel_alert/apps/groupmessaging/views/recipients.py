@@ -108,7 +108,7 @@ def delete(request,context,recipientid):
     return redirect(list)
 
 class RecipientForm(forms.Form):
-    reference_code = forms.CharField(label=_(u"Reference Code"), max_length=50)
+    firstName = forms.CharField(label=_(u"First Name"), max_length=50)
     lastName  = forms.CharField(label=_(u"Last Name"),max_length=50)
     identity  = forms.CharField(label=_(u"Identity"),max_length=30)
     active    = forms.BooleanField(label=_(u"Active"),required=False)
