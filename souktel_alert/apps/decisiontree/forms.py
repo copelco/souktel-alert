@@ -21,8 +21,7 @@ class AnswerForm(forms.ModelForm):
 		return data.lower()
 
 class TreesForm(forms.Form):
-
     trigger = forms.CharField(label=("Keyword"), max_length=50)
-    root_state  = forms.ModelMultipleChoiceField(queryset=Question.objects.all())
+    root_state  = forms.ModelMultipleChoiceField(label=("First Question"), queryset=TreeState.objects.all())
     completion_text  = forms.CharField(label=("Completion Text"),max_length=30)
     

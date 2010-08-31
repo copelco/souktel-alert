@@ -154,22 +154,16 @@ def addtree(request ,context ,treeid=None):
                 tree.save()
                 validationMsg =("You have successfully updated the Survey")
             else:
-                try:
-                    tree = Tree(tigger=form.cleaned_data['trigger'] ,\
-                                           root_state=form.cleaned_data['root_state'],\
-                                           completion_text=form.cleaned_data['completion_text'])
+                try:                    
+                    tree = Tree(trigger=form.cleaned_data['trigger'] ,completion_text=form.cleaned_data['completion_text'])
                     tree.save()
                     validationMsg = "You have successfully inserted a Survey %s." % form.cleaned_data['trigger']
                 except Exception, e :
                     validationMsg = "Failed to add new Survey %s." % e
-
-                #recipients = Recipient.objects.all()
                 mycontext = {'validationMsg':validationMsg}
+                print validationMsg
                 context.update(mycontext)
-                #return render_to_response(request, 'recipients_list.html', context)
                 return redirect(index)
-
-
     else:
         if tree:
             data = {'trigger':tree.trigger,'root_state':tree.root_state,'completion_text':tree.completion_text}
