@@ -1,45 +1,24 @@
-{% extends "layout.html" %}
-{% block title %}Survey{% endblock %}
+{% extends "base.html" %}
+{% block title %}Decision Trees{% endblock %}
 {% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 {% block content %}
 {% load tree-tags %}
+
 <div class="module">
-    <h2>Filter Panel</h2>
-<form action="{{ filter }}" method="POST" class="pretty">{% csrf_token %}
-<fieldset>
-<legend>
-search
-</legend>
-
-<table>
-
-<tr><td>Field</td>
-<td>
-<select name="Field" id="id_entry" >
-    <option value="" selected="selected">---------</option>
-        {% for entry2 in entrys %}
-            <option value="{{ entry2.field|escape }}">{{ entry2.field|escape }}</option>
-        {% endfor %}
-</select>
-</td>
-</tr>
-</table>
-
-<p class="buttons">
-<button type="submit" class="button positive icon tick">Search</button>
-</p>
-</fieldset>
-</form>
+    <a href="/tree"><h2>Back to Surveys List</h2></a>
+</div>
+<div class="module">
+    
 </div>
 <div class="module">
 	{% if t %}
-	<h2>All Data for Survey {{ t.trigger }}</h2>
+	<h2>All Data for Survey: {{ t.trigger }}</h2>
 	<table>
 		{% if sessions and not loops %}
 		<thead>
 			<tr>
-				<th scope="col">Person</th>
-				<th scope="col">Start Date</th>
+				<th scope="col">Mobile No.</th>
+				<!--<th scope="col">Start Date</th>-->
 				{% for state in states %}
 				<th scope="col">{{state.question.text}}</th>
 				{% endfor %}
@@ -49,7 +28,7 @@ search
 		    {% for session in sessions %}
 			<tr>
                 <th scope="row">{{ session.person.phone }}</th>
-				<td>{{ session.start_date }}</td>
+			<!--	<td>{{ session.start_date }}</td> -->
 				{% for state in states %}
                 <td>
                     {% for entry in session.entry_set.all %}
@@ -125,13 +104,13 @@ search
 	{% endif %}
 </div>
 
-<div class="module dt">
-    <h2>View Question Path</h2>
+<!--<div class="module dt">
+	<h2>Edit a Decision Tree</h2>
 	{% if t and not loops %}{% render_state t.root_state %}
 	{% else %} 
 	  Sorry this tree has loops.  This is not yet supported!
 	{% endif %}
 	
-</div>
+</div>-->
 
 {% endblock %}

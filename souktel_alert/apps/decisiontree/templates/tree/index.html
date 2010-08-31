@@ -1,25 +1,21 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block title %}Decision Trees{% endblock %}
 {% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 {% block content %}
 {% load tree-tags %}
 
-<div class="module"><h2>Add New Survey</h2></div>
-	<tr class="no-data">
-				<td colspan="2">
-					No Trees Yet.
-					<a href="admin/decisiontree/" class="add">
-						Add a Tree
-					</a>
-				</td>
-			</tr>
+<div class="module">
+    <a href="{% url add_survey %}" class="add">Add a Tree</a>
+</div>
+
 <div class="module">
 	<h2>All Surveys</h2>
 	<table>
 		<thead>
 			<tr>
-				<th scope="col">Trigger</th>
+				<th scope="col">Keyword</th>
 				<th scope="col">First Question</th>
+                                <th scope="col">Report</th>
 				<th scope="col"></th>
 			</tr>
 		</thead>
@@ -30,7 +26,7 @@
 				<td><a href="tree/data/{{tree.id}}">view data</a></td>
 			</tr>{% endfor %}{% else %}
 			<tr class="no-data">
-                            	<td colspan="2">
+				<td colspan="2">
 					No Trees Yet.
 					<a href="admin/decisiontree/" class="add">
 						Add a Tree
@@ -38,30 +34,30 @@
 				</td>
 			</tr>{% endif %}
 		</tbody>
-		<tfoot>
-                    <tr>
-                        <td colspan="2">
-			<a href="">Total # of Surveys </a> </td>
-				<td colspan="2">
-					<a href="">
-						Export to Excel
-					</a>
-				</td>
-			</tr>
-		</tfoot>
-	</table>
+
+                <table class='list'>
+                 <colgroup>
+                    <col class='name' />
+                    <col class='number' />
+                 </colgroup>
+                    <tr class='secondRow doNotFilter'>
+                    <th class='name'>Total Surveys</th>
+                    <th class='number'>{{ count }}</th>
+                    </tr>
+               	</table>
+        </table>
 </div>
 
-<div class="module dt">
+<!--<div class="module dt">
 	<h2>Edit a Decision Tree</h2>
 	{% if t %}{% render_state t.root_state %}{% endif %}
-</div>
+</div> -->
 
 <!--<div class="module">
 	<h2>Add a Decision Tree</h2>
 	<form method="post" action="/">
 		<label for="dt-add-trigger">Trigger</label>
 		<input id="dt-add-trigger" type="text" name="trigger" />
-	</form>
+	</form
 </div>-->
 {% endblock %}

@@ -42,38 +42,43 @@ class TestApp (TestScript):
            8005551213 > 0000
            8005551213 < Thanks for entering.
          """
+
+    def testFoo(self):
+        self.runScript(testTrigger)
+
+     
          
-    def testLocalization(self):
-        '''Tests very basic localization of trees'''
-        #reporter = self._register('0004', 'en', "loc_en")
-        contact = self._register('0004', 'en', "loc_en")
-        script = """
-              loc_en > test
-              loc_en < hello
-            """        
-        self.runScript(script)
-        reporter = self._register('0005', 'sp', "loc_sp")
-        script = """
-              loc_sp > test
-              loc_sp < ola
-            """        
-        self.runScript(script)
-        reporter = self._register('0006', 'fr', "loc_mult")
-        script = """
-              loc_mult > test
-              loc_mult < bon jour
-              loc_mult > blah
-              loc_mult < You are done with this survey.  Thanks for participating!
-              
-            """        
-        self.runScript(script)
-        reporter.language = 'en'
-        reporter.save()
-        script = """
-              loc_mult > test
-              loc_mult < hello
-            """        
-        self.runScript(script)
+#    def testLocalization(self):
+#        '''Tests very basic localization of trees'''
+#        #reporter = self._register('0004', 'en', "loc_en")
+#        contact = self._register('0004', 'en', "loc_en")
+#        script = """
+#              loc_en > test
+#              loc_en < hello
+#            """        
+#        self.runScript(script)
+#        reporter = self._register('0005', 'sp', "loc_sp")
+#        script = """
+#              loc_sp > test
+#              loc_sp < ola
+#            """        
+#        self.runScript(script)
+#        reporter = self._register('0006', 'fr', "loc_mult")
+#        script = """
+#              loc_mult > test
+#              loc_mult < bon jour
+#              loc_mult > blah
+#              loc_mult < You are done with this survey.  Thanks for participating!
+#              
+#            """        
+#        self.runScript(script)
+#        reporter.language = 'en'
+#        reporter.save()
+#        script = """
+#              loc_mult > test
+#              loc_mult < hello
+#            """        
+#        self.runScript(script)
         
          
     def _register(self, name, language, phone):
@@ -88,6 +93,3 @@ class TestApp (TestScript):
         connection.contact = contact
         connection.save()
         return contact
-    
-        
-         

@@ -96,7 +96,6 @@ class Answer(models.Model):
         ('A', 'Answer (exact)'),
         ('R', 'Regular Expression'),
         ('C', 'Custom logic'),
-        ('D', 'Free Test')
     )
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=1, choices=ANSWER_TYPES)
@@ -176,6 +175,8 @@ class TreeState(models.Model):
         return ("State %s, Question: %s" % (
             self.name,
             self.question))
+
+
     
 class Transition(models.Model):
     """ A Transition is a way to navigate from one
@@ -186,10 +187,7 @@ class Transition(models.Model):
     next_state = models.ForeignKey(TreeState, blank=True, null=True, related_name='next_state')     
     
     def __unicode__(self):
-        return ("%s : %s --> %s" % 
-            (self.current_state,
-             self.answer,
-             self.next_state))
+      return ("%s : %s --> %s" %  (self.current_state, self.answer, self.next_state)).decode('utf-8')
  
 class Session(models.Model):
     """ A Session represents a single person's current 

@@ -1,25 +1,29 @@
 #!/usr/bin/env python
 # vim: ai ts=4 sts=4 et sw=4
-
+import logging
 
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.contrib.auth.decorators import login_required, permission_required
-from django import forms
+from django.views.decorators.http import require_GET, require_POST
 
+from decisiontree.forms import *
 from decisiontree.models import *
 
 from StringIO import StringIO
+
 import csv
 
 def index(req):
     allTrees = Tree.objects.all()
+    tree_count = Tree.objects.count()
+    
     context_instance=RequestContext(req)
     if len(allTrees) != 0:
         t = allTrees[len(allTrees) - 1]
         context_instance["trees"] = allTrees
         context_instance["t"] = t
+        context_instance["total"] = tree_count
         return render_to_response("tree/index.html", context_instance)
     else:
 		return render_to_response("tree/index.html", context_instance)
@@ -128,39 +132,53 @@ def get_tree(id):
             return Tree.objects.all()[len(Tree.objects.all()) - 1]
         else:
             return Tree()  
+    
 
-def filter(request, context):
+def addtree(request ,context ,treeid=None):
 
+    validationMsg =""
+    if not treeid or int(treeid) == 0:
+        tree = None
+    else:
+        tree = Tree.objects.get(id=treeid)
 
-    form = FilterForm(request.POST)
+    if request.method == 'POST':
+        form = TreesForm(request.POST)
+        if form.is_valid():
+            if tree:
+                tree.trigger = form.cleaned_data['trigger']
+                tree.root_state = form.cleaned_data['root_state']
+                tree.completion_text = form.cleaned_data['completion_text']
+                tree.save()
+                validationMsg =("You have successfully updated the Survey")
+            else:
+                try:
+                    tree = Tree(tigger=form.cleaned_data['trigger'] ,\
+                                           root_state=form.cleaned_data['root_state'],\
+                                           completion_text=form.cleaned_data['completion_text'])
+                    tree.save()
+                    validationMsg = "You have successfully inserted a Survey %s." % form.cleaned_data['trigger']
+                except Exception, e :
+                    validationMsg = "Failed to add new Survey %s." % e
 
-    if form.is_valid():
-            fieldMsg = form.cleaned_data['Field']
-           # senderMsg = form.cleaned_data['sender']
-           # identityMsg  = form.cleaned_data['identity']
-           # textMsg  = form.cleaned_data['text']
+                #recipients = Recipient.objects.all()
+                mycontext = {'validationMsg':validationMsg}
+                context.update(mycontext)
+                #return render_to_response(request, 'recipients_list.html', context)
+                return redirect(index)
+
 
     else:
-             print "form is not valid"
+        if tree:
+            data = {'trigger':tree.trigger,'root_state':tree.root_state,'completion_text':tree.completion_text}
+        else:
+            data = {'trigger': '', 'root_state': '', 'completion_text': ''}
+        form = TreesForm(data)
 
+    if not treeid:
+        treeid = 0
 
-    entry  = Entry.objects.filter(field=fieldMsg)
-    entry2 = Entry.objects.all()
-    paginator = Paginator(entry,10)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        entry_list = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        entry_list = paginator.page(paginator.num_pages)
-
-    mycontext = {'entry': entry_list,'form':form ,'count':0,'entry2':entry2}
+    mycontext = {'tree':tree,'form':form, 'treeid': treeid,'validationMsg':validationMsg}
     context.update(mycontext)
-    return render_to_response('data.html',context , context_instance=RequestContext(request))
+    return render_to_response('tree/survey.html',context,context_instance=RequestContext(request))
 
-class FilterForm(forms.Form):
-    Field = forms.CharField(label=("Field"),required=False)

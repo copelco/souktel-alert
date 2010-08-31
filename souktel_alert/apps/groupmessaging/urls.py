@@ -8,7 +8,7 @@ from views import messages
 from views import groups
 from views import recipients
 from views import outgoinglog
-from views import surveys
+
 
 urlpatterns = patterns('',
     url(r'^groupmessaging/?$', index.index, name='index'),
@@ -35,6 +35,4 @@ urlpatterns = patterns('',
         name='outgoinglog_list'),
     url(r'^groupmessaging/outgoinglog/filter/?$', outgoinglog.filter, \
         name='outgoinglog_filter'),
-    url(r'^groupmessaging/surveys/?$', surveys.list, name='surveys_list'),
-    url(r'^groupmessaging/surveys/update/(\d+)/?$', surveys.update, name='survey_form'),
 )

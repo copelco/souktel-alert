@@ -13,3 +13,6 @@ Features
 * branching logic
 * tree visualization
 * errors for unrecognized messages (e.g. 'i don't recognize that kind of fruit') and multiple retries before exiting the session
+
+URLS:
+Note that this adds a /tree URL to (sort of) visualize trees
