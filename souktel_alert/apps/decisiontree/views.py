@@ -4,7 +4,7 @@ import logging
 
 from django.http import HttpResponse
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response ,redirect
 from django.views.decorators.http import require_GET, require_POST
 from groupmessaging.views.common import webuser_required
 from decisiontree.forms import *
