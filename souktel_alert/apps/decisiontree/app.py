@@ -8,7 +8,7 @@ from models import *
 
 from django.utils.translation import ugettext as _
 
-from afghansms_extensions.models import Report
+#from afghansms_extensions.models import Report
 
 class App(AppBase):
     

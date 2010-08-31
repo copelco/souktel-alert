@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load i18n %}
-<form action="{% url add_survey %}" method="POST" class="pretty"> {% csrf_token %}
+<form action="{% url insert treeid %}" method="POST" class="pretty"> {% csrf_token %}
 <fieldset> 
 <legend>
 {% if treeid %}

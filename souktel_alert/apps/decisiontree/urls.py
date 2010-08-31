@@ -13,7 +13,9 @@ urlpatterns = patterns('',
     
     (r'^tree/data/export$', views.export),
     (r'^tree/data/export/(?P<id>\d+)$', views.export),
-    url(r'^tree/add$', views.addtree, name='add_survey'),
+    url(r'^tree/data/add/?$', views.addtree, name='add_tree'),
+    url(r'^tree/(\d+)/?$', views.addtree, name='insert'),
+    #url(r'^tree/data/add/(\d+)/?$', views.addtree, name='add'),
     # serve the static files for this TREE app
     # TODO: this should be automatic, via WEBUI
     (r'^static/tree/(?P<path>.*)$', "django.views.static.serve",

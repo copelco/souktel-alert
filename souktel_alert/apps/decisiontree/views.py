@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.views.decorators.http import require_GET, require_POST
-
+from groupmessaging.views.common import webuser_required
 from decisiontree.forms import *
 from decisiontree.models import *
 
@@ -134,6 +134,7 @@ def get_tree(id):
             return Tree()  
     
 
+@webuser_required
 def addtree(request ,context ,treeid=None):
 
     validationMsg =""
@@ -143,6 +144,7 @@ def addtree(request ,context ,treeid=None):
         tree = Tree.objects.get(id=treeid)
 
     if request.method == 'POST':
+
         form = TreesForm(request.POST)
         if form.is_valid():
             if tree:
