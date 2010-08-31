@@ -28,7 +28,7 @@ class Answer(models.Model):
     body = models.PositiveIntegerField()
 
     def __unicode__(self):
-        return self.body
+        return str(self.body)
 
     def save(self, **kwargs):
         if not self.pk:
