@@ -177,32 +177,24 @@ def deletetree(request, context, treeid):
 @webuser_required
 def addquestion(request ,context ,questionid=None):
 
-    validationMsg =""
-    if not questionid or int(questionid) == 0:
-        question = None
-    else:
-        questoin = Question.objects.get(id=questionid)
+    validationMsg = ""
+    question = None
+    if questionid:
+           question = get_object_or_404(Tree, pk=treeid)
+    
 
     if request.method == 'POST':
-
-        form = QuestionForm(request.POST)
+        form = QuestionForm(request.POST, instance=question)
         if form.is_valid():
-            if question:
-                question.text = form.cleaned_data['text']
-                question.error_response = form.cleaned_data['error_response']
-                question.save()
+            question = form.save()
+            if questionid:
                 validationMsg =("You have successfully updated the Question")
-            else:
-                try:                   
-                    question = Question(text=form.cleaned_data['text'] ,error_response = form.cleaned_data['error_response'])
-                    question.save()
-                    validationMsg = "You have successfully inserted a Question %s." % form.cleaned_data['Text']
-                except Exception, e :
-                    validationMsg = "Failed to add new Question %s." % e
-                mycontext = {'validationMsg':validationMsg}
-                
+            else:                   
+                validationMsg = "You have successfully inserted a Question %s." % form.cleaned_data['Text']                
+                mycontext = {'validationMsg':validationMsg}                
                 context.update(mycontext)
                 return redirect(questionlist)
+
     else:
         if question:
             data = {'text':question.text,'error_response':question.error_response}
@@ -215,7 +207,7 @@ def addquestion(request ,context ,questionid=None):
 
     mycontext = {'question':question,'form':form, 'questionid': questionid,'validationMsg':validationMsg}
     context.update(mycontext)
-    return render_to_response('tree/question.html',context,context_instance=RequestContext(request))
+
 
 def questionlist(req):
     allQuestions = Question.objects.all()

@@ -32,9 +32,23 @@ class TreesForm(forms.ModelForm):
         self.fields['completion_text'].label = 'Completion Text'
 
 class QuestionForm(forms.Form):
-    text = forms.CharField(label=("Message text"),widget=forms.Textarea(),
-            initial=("Please enter your Question here"))
-    error_response = forms.CharField(label=("Error text"),widget=forms.Textarea(),
-            initial=("Please enter your Error Message here"))
 
+    class Meta:
+        model = Question
+
+    def __init__(self, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        self.fields['text'].label = 'Message Text'
+        self.fields['error_response'].label = 'Error Text'
     
+    
+class StateForm(forms.ModelForm):
+
+    class Meta:
+        model = TreeState
+
+    def __init__(self, *args, **kwargs):
+        super(StateForm, self).__init__(*args, **kwargs)
+        self.fields['name'].label = 'name'
+        self.fields['question'].label = 'question'
+        self.fields['num_retries'].label = 'num retries'
