@@ -155,7 +155,6 @@ def addtree(request ,context ,treeid=None):
                 validationMsg =("You have successfully updated the Survey")
             else:
                 try:
-                    
                     tree = Tree(trigger=form.cleaned_data['trigger'] ,completion_text=form.cleaned_data['completion_text'])
                     tree.save()
                     for treestate in TreeStates:

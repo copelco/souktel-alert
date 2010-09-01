@@ -20,10 +20,16 @@ class AnswerForm(forms.ModelForm):
 		data = self.cleaned_data["trigger"]
 		return data.lower()
 
-class TreesForm(forms.Form):
-    trigger = forms.CharField(label=("Keyword"), max_length=50)
-    root_state  = forms.ModelMultipleChoiceField(label=("First Question"), queryset=TreeState.objects.all())
-    completion_text  = forms.CharField(label=("Completion Text"),max_length=30)
+class TreesForm(forms.ModelForm):
+
+    class Meta:
+        model = Tree
+
+    def __init__(self, *args, **kwargs):
+        super(TreesForm, self).__init__(*args, **kwargs)
+        self.fields['trigger'].label = 'Keyword'
+        self.fields['root_state'].label = 'First Question'
+        self.fields['completion_text'].label = 'Completion Text'
 
 class QuestionForm(forms.Form):
     text = forms.CharField(label=("Message text"),widget=forms.Textarea(),
