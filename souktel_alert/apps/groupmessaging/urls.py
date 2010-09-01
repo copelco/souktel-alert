@@ -11,7 +11,7 @@ from views import outgoinglog
 
 
 urlpatterns = patterns('',
-    url(r'^groupmessaging/?$', index.index, name='index'),
+    url(r'^$', index.index, name='index'),
     url(r'^groupmessaging/messages/?$', messages.list, name='messages_list'),    
     url(r'^groupmessaging/messages/add/?$', messages.messageform, name='messages_add'),
     url(r'^groupmessaging/messages/send/?$', messages.send, name='messages_send'),
