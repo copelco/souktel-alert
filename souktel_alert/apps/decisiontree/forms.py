@@ -31,7 +31,7 @@ class TreesForm(forms.ModelForm):
         self.fields['root_state'].label = 'First Question'
         self.fields['completion_text'].label = 'Completion Text'
 
-class QuestionForm(forms.Form):
+class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question

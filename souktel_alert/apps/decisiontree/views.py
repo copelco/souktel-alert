@@ -180,7 +180,7 @@ def addquestion(request ,context ,questionid=None):
     validationMsg = ""
     question = None
     if questionid:
-           question = get_object_or_404(Tree, pk=treeid)
+           question = get_object_or_404(Question, pk=questionid)
     
 
     if request.method == 'POST':
@@ -190,7 +190,7 @@ def addquestion(request ,context ,questionid=None):
             if questionid:
                 validationMsg =("You have successfully updated the Question")
             else:                   
-                validationMsg = "You have successfully inserted a Question %s." % form.cleaned_data['Text']                
+                validationMsg = "You have successfully inserted a Question %s." % question.text
                 mycontext = {'validationMsg':validationMsg}                
                 context.update(mycontext)
                 return redirect(questionlist)
@@ -207,6 +207,8 @@ def addquestion(request ,context ,questionid=None):
 
     mycontext = {'question':question,'form':form, 'questionid': questionid,'validationMsg':validationMsg}
     context.update(mycontext)
+    return render_to_response('tree/question.html', context,
+                              context_instance=RequestContext(request))
 
 
 def questionlist(req):
