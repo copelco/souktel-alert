@@ -154,9 +154,12 @@ def addtree(request ,context ,treeid=None):
                 tree.save()
                 validationMsg =("You have successfully updated the Survey")
             else:
-                try:                    
+                try:
+                    print "Hello"
                     tree = Tree(trigger=form.cleaned_data['trigger'] ,completion_text=form.cleaned_data['completion_text'])
                     tree.save()
+                    for treestate in TreeStates:
+                        tree.root_state.add(TreeState)
                     validationMsg = "You have successfully inserted a Survey %s." % form.cleaned_data['trigger']
                 except Exception, e :
                     validationMsg = "Failed to add new Survey %s." % e
@@ -178,3 +181,69 @@ def addtree(request ,context ,treeid=None):
     context.update(mycontext)
     return render_to_response('tree/survey.html',context,context_instance=RequestContext(request))
 
+@webuser_required
+def deletetree(request, context, treeid):
+
+    tree = Tree.objects.get(id=treeid)
+    tree.delete()
+    mycontext = {'tree': tree}
+    context.update(mycontext)
+
+    return redirect(index)
+
+@webuser_required
+def addquestion(request ,context ,questionid=None):
+
+    validationMsg =""
+    if not questionid or int(questionid) == 0:
+        question = None
+    else:
+        questoin = Question.objects.get(id=questionid)
+
+    if request.method == 'POST':
+
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            if question:
+                question.text = form.cleaned_data['text']
+                question.error_response = form.cleaned_data['error_response']
+                question.save()
+                validationMsg =("You have successfully updated the Question")
+            else:
+                try:                   
+                    question = Question(text=form.cleaned_data['text'] ,error_response = form.cleaned_data['error_response'])
+                    question.save()
+                    validationMsg = "You have successfully inserted a Question %s." % form.cleaned_data['Text']
+                except Exception, e :
+                    validationMsg = "Failed to add new Question %s." % e
+                mycontext = {'validationMsg':validationMsg}
+                print validationMsg
+                context.update(mycontext)
+                return redirect(questionlist)
+    else:
+        if question:
+            data = {'text':question.text,'error_response':question.error_response}
+        else:
+            data = {'text': '', 'error_response': ''}
+        form = QuestionForm(data)
+
+    if not questionid:
+        questionid = 0
+
+    mycontext = {'question':question,'form':form, 'questionid': questionid,'validationMsg':validationMsg}
+    context.update(mycontext)
+    return render_to_response('tree/question.html',context,context_instance=RequestContext(request))
+
+def questionlist(req):
+    allQuestions = Question.objects.all()
+    questions_count = Question.objects.count()
+
+    context_instance=RequestContext(req)
+    if len(allQuestions) != 0:
+        q = allQuestions[len(allQuestions) - 1]
+        context_instance["questions"] = allQuestions
+        context_instance["q"] = q
+        context_instance["qtotal"] = questions_count
+        return render_to_response("tree/questions_list.html", context_instance)
+    else:
+		return render_to_response("tree/questions_list.html", context_instance)

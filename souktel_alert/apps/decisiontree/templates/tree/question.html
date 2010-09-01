@@ -2,13 +2,13 @@
 
 {% block content %}
 {% load i18n %}
-<form action="{% url insert treeid %}" method="POST" class="pretty"> {% csrf_token %}
+<form action="{% url insert_question questionid %}" method="POST" class="pretty"> {% csrf_token %}
 <fieldset> 
 <legend>
-{% if treeid %}
-{% trans "Survey Update Form" %}
+{% if questionid %}
+{% trans "Question Update Form" %}
 {% else %}
-{% trans "New Survey Form" %}
+{% trans "New Question Form" %}
 {% endif %}
 </legend>
 

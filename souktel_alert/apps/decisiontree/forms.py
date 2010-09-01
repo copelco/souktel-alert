@@ -24,4 +24,11 @@ class TreesForm(forms.Form):
     trigger = forms.CharField(label=("Keyword"), max_length=50)
     root_state  = forms.ModelMultipleChoiceField(label=("First Question"), queryset=TreeState.objects.all())
     completion_text  = forms.CharField(label=("Completion Text"),max_length=30)
+
+class QuestionForm(forms.Form):
+    text = forms.CharField(label=("Message text"),widget=forms.Textarea(),
+            initial=("Please enter your Question here"))
+    error_response = forms.CharField(label=("Error text"),widget=forms.Textarea(),
+            initial=("Please enter your Error Message here"))
+
     

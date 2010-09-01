@@ -15,6 +15,10 @@ urlpatterns = patterns('',
     (r'^tree/data/export/(?P<id>\d+)$', views.export),
     url(r'^tree/data/add/?$', views.addtree, name='add_tree'),
     url(r'^tree/(\d+)/?$', views.addtree, name='insert'),
+    url(r'^tree/delete/(\d+)/?$', views.deletetree, name='delete_tree'),
+    url(r'^tree/survey/question/list/?$', views.questionlist, name='list'),
+    url(r'^tree/survey/question/add/?$', views.addquestion, name='add_question'),
+    url(r'^tree/survey/question/insert/(\d+)/?$', views.addquestion, name='insert_question'),
     #url(r'^tree/data/add/(\d+)/?$', views.addtree, name='add'),
     # serve the static files for this TREE app
     # TODO: this should be automatic, via WEBUI

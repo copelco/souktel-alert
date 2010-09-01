@@ -2,11 +2,11 @@
 {% load i18n %}
 {% block javascript %}
 <script>
-function deleteMessage(url){
- if (confirm("{% trans 'Do you really want to delete this Message ??' %}")) {
-   window.location=url;
- } 
-}
+    function deleteMessage(url){
+        if (confirm("{% trans 'Do you really want to delete this Message ??' %}")) {
+        window.location=url;
+        }
+    }
 </script>
 
 {% endblock %}
@@ -14,7 +14,7 @@ function deleteMessage(url){
 {% block content %}
 
 <h2> {% trans "Message Templates" %}</h2>
-<TABLE class='list'>
+<table class='list'>
     <colgroup> 
     <col class='number' />
     <col class='name' />

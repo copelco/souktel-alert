@@ -15,43 +15,37 @@
 {% block content %}
 
 <div class="module">
-    <a href="{% url add_tree %}" class="add">
-        <h2>Add new Survey</h2>
-    </a>
-</div>
-
-<div class="module">
-<h2> Survey List</h2>
+<h2> Questions List</h2>
 <table class='list'>
     <colgroup> 
-    <col class='number' />
+  <col class='number' />
     <col class='name' />
     <col class='number' />
     <col class='number' />
     <col class='number' />
-    </colgroup> 
+    </colgroup>
     <tr class='secondRow doNotFilter'>
-    <th class='name'>Keyword</th> 
-    <th class='name'>First Question</th>
+    <th class='name'>ID</th>
+    <th class='name'>Question Text</th>
     <th class='name'>Edit</th>
     <th class='name'>Delete</th>
-    <th class='name'>Questions</th>
-    <th class='name'>Report</th>
-        {% if trees %}{% for tree in trees %}
+    <th class='name'></th>
+    <th class='name'></th>
+        {% if questions %}{% for question in questions %}
     <tr>
-    <td class='name'>{{ tree.trigger }}</td>
-    <td class='name'>{{ tree.root_state.question}}</td>
-    <td class='name'><a  href="{% url insert tree.id %}"><img style="border:0px"
+    <td class='name'>{{ question.id}}</td>
+    <td class='name'>{{ question.text }}</td>
+    <td class='name'><a  href=""><img style="border:0px"
         src="/static/groupmessaging/edit-icon.jpeg" width="20" height="20" /> </a>
     </td>
-    <td class='name'><a href = "javascript:deleteMessage('{% url delete_tree tree.id %}')">
+    <td class='name'><a href = "javascript:deleteMessage('')">
         <img style="border:0px" src="/static/groupmessaging/delete-icon.png" width="20" height="20"/> </a>
     </td>
-    <td class='name'><a href ="{% url add_question %}">
-        <img style="border:0px" src="/static/groupmessaging/question.png" width="20" height="20"/> </a>
+    <td class='name'><a href ="">
+        
     </td>
-    <td class='name'><a href ="tree/data/{{tree.id}}">
-        <img style="border:0px" src="/static/groupmessaging/report.gif" width="20" height="20"/> </a>
+    <td class='name'><a href ="">
+        
     </td>
     </tr>
         {% endfor %}
@@ -71,22 +65,10 @@
                     {% if Glist.has_next %}
                     <a href="?page={{ Glist.next_page_number }}">next</a>
                     {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the Surveys = {{ total }}</span> </td>
+                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the Questions = {{ qtotal }}</span> </td>
 
         </tr>
 </table>
 
 {% endblock %}
-<!--<div class="module dt">
-	<h2>Edit a Decision Tree</h2>
-	{% if t %}{% render_state t.root_state %}{% endif %}
-</div> -->
-
-<!--<div class="module">
-	<h2>Add a Decision Tree</h2>
-	<form method="post" action="/">
-		<label for="dt-add-trigger">Trigger</label>
-		<input id="dt-add-trigger" type="text" name="trigger" />
-	</form
-</div>-->
 
