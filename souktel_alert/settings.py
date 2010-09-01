@@ -101,15 +101,15 @@ INSTALLED_APPS = [
 # to add it here, also, to expose it in the rapidsms ui.
 TABS = [
     #('rapidsms.views.dashboard', 'Dashboard'),
-    ('rapidsms.contrib.httptester.views.generate_identity', 'Message Tester'),
+    #('rapidsms.contrib.httptester.views.generate_identity', 'Message Tester'),
     #('rapidsms.contrib.messagelog.views.message_log', 'Message Log'),
     #('rapidsms.contrib.messaging.views.messaging', 'Messaging'),
-    ('groupmessaging.views.index.index', 'Group Messaging'),
+    #('groupmessaging.views.index.index', 'Group Messaging'),
     #('rapidsms_xforms.views.xforms', 'XForms'),
-    ('rclickatell.views.test', 'Clickatell'),
+    #('rclickatell.views.test', 'Clickatell'),
     #('poll.views.dashboard', 'Survey'),
     #('questions.views.dashboard', 'Questions'),
-    ('decisiontree.views.index', 'Survey'),
+    #('decisiontree.views.index', 'Survey'),
 ]
 
 
