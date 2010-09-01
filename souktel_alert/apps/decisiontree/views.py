@@ -4,7 +4,7 @@ import logging
 
 from django.http import HttpResponse
 from django.template import RequestContext
-from django.shortcuts import render_to_response ,redirect
+from django.shortcuts import render_to_response ,redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
 from groupmessaging.views.common import webuser_required
 from decisiontree.forms import *
@@ -135,35 +135,21 @@ def get_tree(id):
     
 
 @webuser_required
-def addtree(request ,context ,treeid=None):
-
-    validationMsg =""
-    if not treeid or int(treeid) == 0:
-        tree = None
-    else:
-        tree = Tree.objects.get(id=treeid)
+def addtree(request, context, treeid=None):
+    validationMsg = ""
+    tree = None
+    if treeid:
+        tree = get_object_or_404(Tree, pk=treeid)
 
     if request.method == 'POST':
-
-        form = TreesForm(request.POST)
+        form = TreesForm(request.POST, instance=tree)
         if form.is_valid():
-            if tree:
-                tree.trigger = form.cleaned_data['trigger']
-                tree.root_state = form.cleaned_data['root_state']
-                tree.completion_text = form.cleaned_data['completion_text']
-                tree.save()
+            tree = form.save()
+            if treeid:
                 validationMsg =("You have successfully updated the Survey")
             else:
-                try:
-                    tree = Tree(trigger=form.cleaned_data['trigger'] ,completion_text=form.cleaned_data['completion_text'])
-                    tree.save()
-                    for treestate in TreeStates:
-                        tree.root_state.add(TreeState)
-                    validationMsg = "You have successfully inserted a Survey %s." % form.cleaned_data['trigger']
-                except Exception, e :
-                    validationMsg = "Failed to add new Survey %s." % e
+                validationMsg = "You have successfully inserted a Survey %s." % tree.trigger
                 mycontext = {'validationMsg':validationMsg}
-                
                 context.update(mycontext)
                 return redirect(index)
     else:
@@ -173,12 +159,10 @@ def addtree(request ,context ,treeid=None):
             data = {'trigger': '', 'root_state': '', 'completion_text': ''}
         form = TreesForm(data)
 
-    if not treeid:
-        treeid = 0
-
-    mycontext = {'tree':tree,'form':form, 'treeid': treeid,'validationMsg':validationMsg}
+    mycontext = {'tree':tree, 'form':form, 'validationMsg':validationMsg}
     context.update(mycontext)
-    return render_to_response('tree/survey.html',context,context_instance=RequestContext(request))
+    return render_to_response('tree/survey.html', context,
+                              context_instance=RequestContext(request))
 
 @webuser_required
 def deletetree(request, context, treeid):
