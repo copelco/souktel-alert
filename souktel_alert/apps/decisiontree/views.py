@@ -247,3 +247,13 @@ def questionlist(req):
         return render_to_response("tree/questions_list.html", context_instance)
     else:
 		return render_to_response("tree/questions_list.html", context_instance)
+
+@webuser_required
+def deletequestion(request, context, questionid):
+
+    question = Question.objects.get(id=questionid)
+    question.delete()
+    mycontext = {'question': question}
+    context.update(mycontext)
+
+    return redirect(questionlist)

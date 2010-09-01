@@ -2,7 +2,7 @@
 {% block javascript %}
     <script>
     function deleteMessage(url){
-    if (confirm("Do you really want to delete this Survey ??")) {
+    if (confirm("Do you really want to delete this Question ??")) {
       window.location=url;
     }
     }
@@ -35,10 +35,10 @@
     <tr>
     <td class='name'>{{ question.id}}</td>
     <td class='name'>{{ question.text }}</td>
-    <td class='name'><a  href=""><img style="border:0px"
+    <td class='name'><a  href="{% url insert_question question.id %}"><img style="border:0px"
         src="/static/groupmessaging/edit-icon.jpeg" width="20" height="20" /> </a>
     </td>
-    <td class='name'><a href = "javascript:deleteMessage('')">
+    <td class='name'><a href = "javascript:deleteMessage('{% url delete_question question.id %}')">
         <img style="border:0px" src="/static/groupmessaging/delete-icon.png" width="20" height="20"/> </a>
     </td>
     <td class='name'><a href ="">
@@ -70,5 +70,10 @@
         </tr>
 </table>
 
+{% endblock %}
+
+{% block submenu %}
+<ul><li><a href = "{% url add_question %}" >Add new Question</a></li>
+<li><a href = "/tree" >Back to Survey list</a></li></ul>
 {% endblock %}
 
