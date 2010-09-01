@@ -155,7 +155,7 @@ def addtree(request ,context ,treeid=None):
                 validationMsg =("You have successfully updated the Survey")
             else:
                 try:
-                    print "Hello"
+                    
                     tree = Tree(trigger=form.cleaned_data['trigger'] ,completion_text=form.cleaned_data['completion_text'])
                     tree.save()
                     for treestate in TreeStates:
@@ -164,7 +164,7 @@ def addtree(request ,context ,treeid=None):
                 except Exception, e :
                     validationMsg = "Failed to add new Survey %s." % e
                 mycontext = {'validationMsg':validationMsg}
-                print validationMsg
+                
                 context.update(mycontext)
                 return redirect(index)
     else:
@@ -217,7 +217,7 @@ def addquestion(request ,context ,questionid=None):
                 except Exception, e :
                     validationMsg = "Failed to add new Question %s." % e
                 mycontext = {'validationMsg':validationMsg}
-                print validationMsg
+                
                 context.update(mycontext)
                 return redirect(questionlist)
     else:
