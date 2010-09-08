@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response ,redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
-from groupmessaging.views.common import webuser_required
+from django.contrib.auth.decorators import login_required
 from decisiontree.forms import *
 from decisiontree.models import *
 
@@ -134,8 +134,8 @@ def get_tree(id):
             return Tree()  
     
 
-@webuser_required
-def addtree(request, context, treeid=None):
+@login_required
+def addtree(request, treeid=None):
     validationMsg = ""
     tree = None
     if treeid:
@@ -150,7 +150,7 @@ def addtree(request, context, treeid=None):
             else:
                 validationMsg = "You have successfully inserted a Survey %s." % tree.trigger
                 mycontext = {'validationMsg':validationMsg}
-                context.update(mycontext)
+                context = (mycontext)
                 return redirect(index)
     else:
         if tree:
@@ -160,21 +160,21 @@ def addtree(request, context, treeid=None):
         form = TreesForm(data)
 
     mycontext = {'tree':tree, 'form':form, 'validationMsg':validationMsg}
-    context.update(mycontext)
+    context = (mycontext)
     return render_to_response('tree/survey.html', context,
                               context_instance=RequestContext(request))
 
-@webuser_required
-def deletetree(request, context, treeid):
+@login_required
+def deletetree(request, treeid):
 
     tree = Tree.objects.get(id=treeid)
     tree.delete()
     mycontext = {'tree': tree}
-    context.update(mycontext)
+    context = (mycontext)
 
     return redirect(index)
 
-@webuser_required
+@login_required
 def addquestion(request ,context ,questionid=None):
 
     validationMsg = ""
@@ -192,7 +192,7 @@ def addquestion(request ,context ,questionid=None):
             else:                   
                 validationMsg = "You have successfully inserted a Question %s." % question.text
                 mycontext = {'validationMsg':validationMsg}                
-                context.update(mycontext)
+                context = (mycontext)
                 return redirect(questionlist)
 
     else:
@@ -206,7 +206,7 @@ def addquestion(request ,context ,questionid=None):
         questionid = 0
 
     mycontext = {'question':question,'form':form, 'questionid': questionid,'validationMsg':validationMsg}
-    context.update(mycontext)
+    context = (mycontext)
     return render_to_response('tree/question.html', context,
                               context_instance=RequestContext(request))
 
@@ -225,12 +225,12 @@ def questionlist(req):
     else:
 		return render_to_response("tree/questions_list.html", context_instance)
 
-@webuser_required
-def deletequestion(request, context, questionid):
+@login_required
+def deletequestion(request, questionid):
 
     question = Question.objects.get(id=questionid)
     question.delete()
     mycontext = {'question': question}
-    context.update(mycontext)
+    context = (mycontext)
 
     return redirect(questionlist)

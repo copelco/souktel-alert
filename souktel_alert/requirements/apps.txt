@@ -1,9 +1,7 @@
 django==1.2.1
-rapidsms==0.9.3a
+rapidsms==0.9.5a
 django-uni-form==0.7
 rapidsms-xforms==0.1.1
 pygooglechart==0.3.0
 -e git+http://github.com/caktus/rapidsms-rerouter.git#egg=rerouter
 -e git+http://github.com/caktus/rapidsms-clickatell.git#egg=rclickatell
-http://github.com/copelco/souktel-alert/raw/master/souktel_alert/requirements/rapidsms.tar.gz
-

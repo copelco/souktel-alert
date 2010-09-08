@@ -40,7 +40,7 @@ class GroupAdmin(admin.ModelAdmin):
     search_fields = ['code', 'name']
 
 admin.site.register(Site)
-admin.site.register(WebUser)
+# admin.site.register(WebUser)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Recipient, RecipientAdmin)
 admin.site.register(Message, MessageAdmin)

@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     # "rapidsms.contrib.search",
     "rapidsms.contrib.echo",
     
+    # "contact_plus",
     "uni_form",
     "rjavna",
     "rclickatell",
@@ -163,6 +164,17 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     "django.core.context_processors.media",
     "django.core.context_processors.request"
 ]
+
+AUTH_PROFILE_MODULE = 'rapidsms.Contact'
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'groupmessaging.middleware.ContactRequestMiddleware',
+)
 
 
 # -------------------------------------------------------------------- #

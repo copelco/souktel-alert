@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 
-from groupmessaging.views.common import webuser_required
+from django.contrib.auth.decorators import login_required
 from groupmessaging.models import Message
 from groupmessaging.models import Site
 from groupmessaging.models import Recipient
@@ -19,19 +19,19 @@ from datetime import datetime
 
 
 
-@webuser_required
-def list(request, context):
+@login_required
+def list(request):
     ''' List all the Messages'''
     messages = Message.objects.all()
     count = Message.objects.count()
     mycontext = {'messages': messages, 'count': count}
-    context.update(mycontext)
+    context = (mycontext)
 
     return render_to_response('messages.html', context, context_instance=RequestContext(request))
 
 
-@webuser_required
-def messageform(request, context, messageid=None):
+@login_required
+def messageform(request, messageid=None):
     '''form for Add/Edit messages'''
     if not messageid or int(messageid) == 0:
         mess = None
@@ -46,7 +46,7 @@ def messageform(request, context, messageid=None):
                 mess.code = form.cleaned_data['code']
                 mess.name = form.cleaned_data['name']
                 mess.text = form.cleaned_data['text']
-                mess.site = context['user'].site
+                mess.site = request.contact.site
                 mess.save()
                                 
             else: 
@@ -54,11 +54,11 @@ def messageform(request, context, messageid=None):
                 mess = Message(code=form.cleaned_data['code'],\
                                            name=form.cleaned_data['name'],\
                                             text=form.cleaned_data['text'],\
-                                            site=context['user'].site)           
+                                            site=request.contact.site)           
                 mess.save()
                 mess = Message.objects.all()
                 mycontext = {'mess': mess}
-                context.update(mycontext)
+                context = (mycontext)
                 return redirect(list)
            
     else:
@@ -72,41 +72,41 @@ def messageform(request, context, messageid=None):
         messageid = 0
     
     mycontext = {'mess': mess, 'form': form, 'messageid': messageid}
-    context.update(mycontext)
+    context = (mycontext)
     return render_to_response("messages_form.html", context, context_instance=RequestContext(request))
 
 
-@webuser_required    
-def delete(request, context, messageid):
+@login_required    
+def delete(request, messageid):
     
     message = Message.objects.get(id=messageid)
     message.delete()
     mycontext = {'message': message}
-    context.update(mycontext)
+    context = (mycontext)
        
     return redirect(list)
 
 
-@webuser_required
-def send(request, context):
+@login_required
+def send(request):
     
     messages = Message.objects.all()
     if request.method == 'POST':
-        form = SendMessageForm(context['user'].site, request.POST)
+        form = SendMessageForm(request.contact.site, request.POST)
         if form.is_valid():
             text = form.cleaned_data['text']
             date = datetime.now()
             groups = Group.objects.filter(id__in=form.cleaned_data['groups'])
             logging.debug(groups)
-            send_message(context['user'], groups, text, date)
+            send_message(request.contact, groups, text, date)
             redirect(list)
         else:
             redirect('/groupmessaging')
     else:
-        form = SendMessageForm(context['user'].site)
+        form = SendMessageForm(request.contact.site)
     
     mycontext = {'messages': messages, 'form': form}
-    context.update(mycontext)
+    context = (mycontext)
     
     return render_to_response("messages_send.html", context, context_instance=RequestContext(request))
 

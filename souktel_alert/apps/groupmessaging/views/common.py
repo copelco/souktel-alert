@@ -3,10 +3,10 @@
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from groupmessaging.models import WebUser
+# from groupmessaging.models import WebUser
 
 
-def webuser_required(view):
+def login_required(view):
     auth = WebUserAuthenticator(view)
     return auth.authenticate
 

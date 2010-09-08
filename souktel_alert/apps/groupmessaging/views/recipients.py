@@ -16,14 +16,14 @@ from django.http import HttpResponseRedirect
 from groupmessaging.models import Recipient
 from groupmessaging.models import Site
 from groupmessaging.models import Group
-from groupmessaging.views.common import webuser_required
+from django.contrib.auth.decorators import login_required
 
 
 
-@webuser_required
-def list(request, context):
+@login_required
+def list(request):
 
-    recipients = Recipient.objects.filter(site=context['user'].site)
+    recipients = Recipient.objects.filter(site=request.contact.site)
     paginator = Paginator(recipients,10)
     
     try:
@@ -38,11 +38,11 @@ def list(request, context):
 
 
     mycontext = {'recipients': recipient_list,'count':recipients.count()}
-    context.update(mycontext)
+    context = (mycontext)
     return render_to_response('recipients_list.html', context, context_instance=RequestContext(request))
 
-@webuser_required
-def recipient(request, context, recipientid=None):
+@login_required
+def recipient(request, recipientid=None):
     validationMsg =""
     if not recipientid or int(recipientid) == 0:
         recipient = None
@@ -65,7 +65,7 @@ def recipient(request, context, recipientid=None):
                                            last_name=form.cleaned_data['lastName'],\
                                            identity=form.cleaned_data['identity'],\
                                            active=form.cleaned_data['active'],\
-                                           site = context['user'].site)
+                                           site = request.contact.site)
                     recipient.save()
                     validationMsg = "You have successfully inserted a recipient %s." % form.cleaned_data['firstName']
                 except Exception, e :
@@ -73,7 +73,7 @@ def recipient(request, context, recipientid=None):
 
                 #recipients = Recipient.objects.all()
                 mycontext = {'validationMsg':validationMsg}
-                context.update(mycontext)
+                context = (mycontext)
                 #return render_to_response(request, 'recipients_list.html', context)
                 return redirect(list)
                 
@@ -89,10 +89,10 @@ def recipient(request, context, recipientid=None):
         recipientid = 0
 
     mycontext = {'recipient':recipient,'form':form, 'recipientid': recipientid,'validationMsg':validationMsg}
-    context.update(mycontext)
+    context = (mycontext)
     return render_to_response('recipient.html', context, context_instance=RequestContext(request))
 
-@webuser_required
+@login_required
 def delete(request,context,recipientid):
     validationMsg =""
     recipient = Recipient.objects.get(id=recipientid)
@@ -104,7 +104,7 @@ def delete(request,context,recipientid):
         validationMsg = "Failed to delete %s." % e
 
     mycontext = {'validationMsg':validationMsg}
-    context.update(mycontext)
+    context = (mycontext)
     return redirect(list)
 
 class RecipientForm(forms.Form):
@@ -122,7 +122,7 @@ class BulkRecipientForm(forms.Form):
     identity  = forms.CharField(label=_(u"Identity"),max_length=30)
     active    = forms.BooleanField(label=_(u"Active"),required=False)
 
-@webuser_required
+@login_required
 def manage_recipients(request,context):
 
     RecipientFormSet = formset_factory(BulkRecipientForm, extra=3)
@@ -130,9 +130,9 @@ def manage_recipients(request,context):
         groupid = request.POST['group']
         if groupid and groupid.__len__() > 0:
             group = Group.objects.get(id=groupid)
-        #groupSite = Group.objects.get(site=context['user'].site)
+        #groupSite = Group.objects.get(site=request.contact.site)
         #print groupSite
-        #if groupSite.id <> context['user'].site.id :
+        #if groupSite.id <> request.contact.site.id :
             #raise forms.ValidationError('Invalid user site : user site is different than entered site??')
         formset = RecipientFormSet(request.POST, request.FILES)
         if formset.is_valid():
@@ -143,7 +143,7 @@ def manage_recipients(request,context):
                                            last_name=form.cleaned_data['lastName'],\
                                            identity=form.cleaned_data['identity'],\
                                            active=form.cleaned_data['active'],\
-                                           site = context['user'].site)
+                                           site = request.contact.site)
                         recipient.save()
                         if groupid and groupid.__len__() > 0:
                             group.recipients.add(recipient)
@@ -153,15 +153,15 @@ def manage_recipients(request,context):
                     raise
        
             mycontext = {}  #{'validationMsg':validationMsg}
-            context.update(mycontext)
+            context = (mycontext)
             return redirect(list)
         else:
             print "ddsadsd"
     else:
         formset = RecipientFormSet()
 
-    groups = Group.objects.filter(site=context['user'].site, active=True)
+    groups = Group.objects.filter(site=request.contact.site, active=True)
     mycontext = {'formset': formset, 'groups': groups}
-    context.update(mycontext)
+    context = (mycontext)
     return render_to_response('manage_recipients.html', context, context_instance=RequestContext(request))
    

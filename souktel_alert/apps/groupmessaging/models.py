@@ -7,6 +7,8 @@ from django.db import models
 from django.contrib.auth.models import User, UserManager
 from django.utils.translation import ugettext as _, ugettext_lazy
 
+from rapidsms.models import Contact
+
 
 class Site(models.Model):
     ''' Site Model
@@ -19,29 +21,12 @@ class Site(models.Model):
                                  verbose_name=ugettext_lazy(u"Enabled?"))
     credit = models.PositiveIntegerField(default=0, \
                                          verbose_name=ugettext_lazy(u"Units"))
-    manager = models.ForeignKey('WebUser', blank=True, null=True, \
+    manager = models.ForeignKey(Contact, blank=True, null=True, \
                                 related_name='managing', \
                                 verbose_name=ugettext_lazy(u"Manager"))
 
     def __unicode__(self):
         return _(u"%(name)s") % {'name': self.name}
-
-
-class WebUser(User):
-    ''' WebUser Model
-
-    System User which connects to web interface '''
-
-    # Use UserManager to get the create_user method, etc.
-    objects = UserManager()
-
-    recipient = models.ForeignKey('Recipient', blank=True, null=True, \
-                                  verbose_name=ugettext_lazy(u"Recipient"))
-    site = models.ForeignKey('Site', related_name='managing', \
-                             verbose_name=ugettext_lazy(u"Site"))
-
-    comment = models.CharField(max_length=100, blank=True, \
-                               verbose_name=ugettext_lazy(u"Comment"))
 
 
 class Group(models.Model):
@@ -62,7 +47,7 @@ class Group(models.Model):
                                  verbose_name=ugettext_lazy(u"Enabled?"))
     recipients = models.ManyToManyField('Recipient', blank=True, \
                                      verbose_name=ugettext_lazy(u"Recipients"))
-    managers = models.ManyToManyField('WebUser', \
+    managers = models.ManyToManyField(Contact, \
                                       verbose_name=ugettext_lazy(u"Managers"))
 
     def __unicode__(self):
@@ -124,7 +109,7 @@ class Message(models.Model):
 class SendingLog(models.Model):
     ''' Messages Log '''
 
-    sender = models.ForeignKey('WebUser', \
+    sender = models.ForeignKey(Contact, \
                                verbose_name=ugettext_lazy(u"Sender"))
     groups = models.ManyToManyField('Group', \
                                     verbose_name=ugettext_lazy(u"Groups"))
@@ -182,7 +167,7 @@ class OutgoingLog(models.Model):
     RAW_STATUSES = [VERBOSE_PENDING, VERBOSE_DELIVERED, \
                     VERBOSE_TIMEOUT, VERBOSE_FAILED,VERBOSE_QUEUED]
 
-    sender = models.ForeignKey('WebUser', \
+    sender = models.ForeignKey(Contact, \
                                verbose_name=ugettext_lazy(u"Sender"))
     identity = models.CharField(max_length=30, \
                                 verbose_name=ugettext_lazy(u"Identity"))
