@@ -10,7 +10,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
+from groupmessaging.decorators import contact_required
 
 from rapidsms.models import Contact
 
@@ -39,7 +39,7 @@ class GroupForm(forms.Form):
     managers = forms.MultipleChoiceField(label=_(u"Group managers"),required=True)
     
 
-@login_required
+@contact_required
 def list(request):
     contact = request.user.get_profile()
     ''' List Group '''
@@ -70,7 +70,7 @@ def list(request):
     return render_to_response('groups.html', context, context_instance=RequestContext(request))
 
 
-@login_required
+@contact_required
 def add(request):
     ''' add function '''
 
@@ -107,7 +107,7 @@ def add(request):
     return render_to_response('new_group.html', context, context_instance=RequestContext(request))
 
 
-@login_required
+@contact_required
 def delete(request, group_id):
 
     ''' add function '''
@@ -121,7 +121,7 @@ def delete(request, group_id):
     return redirect(list)
 
 
-@login_required
+@contact_required
 def update(request, group_id):
     group = get_object_or_404(Group, pk=group_id)
 

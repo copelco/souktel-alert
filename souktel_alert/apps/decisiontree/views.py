@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response ,redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
-from django.contrib.auth.decorators import login_required
+from groupmessaging.decorators import contact_required
 from decisiontree.forms import *
 from decisiontree.models import *
 
@@ -134,7 +134,7 @@ def get_tree(id):
             return Tree()  
     
 
-@login_required
+@contact_required
 def addtree(request, treeid=None):
     validationMsg = ""
     tree = None
@@ -164,7 +164,7 @@ def addtree(request, treeid=None):
     return render_to_response('tree/survey.html', context,
                               context_instance=RequestContext(request))
 
-@login_required
+@contact_required
 def deletetree(request, treeid):
 
     tree = Tree.objects.get(id=treeid)
@@ -174,7 +174,7 @@ def deletetree(request, treeid):
 
     return redirect(index)
 
-@login_required
+@contact_required
 def addquestion(request ,context ,questionid=None):
 
     validationMsg = ""
@@ -225,7 +225,7 @@ def questionlist(req):
     else:
 		return render_to_response("tree/questions_list.html", context_instance)
 
-@login_required
+@contact_required
 def deletequestion(request, questionid):
 
     question = Question.objects.get(id=questionid)

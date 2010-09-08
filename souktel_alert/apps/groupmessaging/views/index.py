@@ -7,14 +7,14 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from django.contrib.auth.decorators import login_required
+from groupmessaging.decorators import contact_required
 from groupmessaging.models import SendingLog, Recipient, Group, OutgoingLog
 
 
-@login_required
+@contact_required
 def index(request):
     context = {}
-    contact = request.user.get_profile()
+    contact = request.contact
     # shortcut
     logging.debug('webuser site: %s' % contact.site)
 

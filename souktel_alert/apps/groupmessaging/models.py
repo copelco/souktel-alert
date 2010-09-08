@@ -202,3 +202,5 @@ class OutgoingLog(models.Model):
         return _(u"%(text)s to %(identity)s: %(status)s") % \
                {'text': self.text, 'identity': self.identity, \
                 'status': self.status_text}
+
+

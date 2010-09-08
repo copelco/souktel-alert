@@ -16,11 +16,11 @@ from django.http import HttpResponseRedirect
 from groupmessaging.models import Recipient
 from groupmessaging.models import Site
 from groupmessaging.models import Group
-from django.contrib.auth.decorators import login_required
+from groupmessaging.decorators import contact_required
 
 
 
-@login_required
+@contact_required
 def list(request):
 
     recipients = Recipient.objects.filter(site=request.contact.site)
@@ -41,7 +41,7 @@ def list(request):
     context = (mycontext)
     return render_to_response('recipients_list.html', context, context_instance=RequestContext(request))
 
-@login_required
+@contact_required
 def recipient(request, recipientid=None):
     validationMsg =""
     if not recipientid or int(recipientid) == 0:
@@ -92,7 +92,7 @@ def recipient(request, recipientid=None):
     context = (mycontext)
     return render_to_response('recipient.html', context, context_instance=RequestContext(request))
 
-@login_required
+@contact_required
 def delete(request,context,recipientid):
     validationMsg =""
     recipient = Recipient.objects.get(id=recipientid)
@@ -122,7 +122,7 @@ class BulkRecipientForm(forms.Form):
     identity  = forms.CharField(label=_(u"Identity"),max_length=30)
     active    = forms.BooleanField(label=_(u"Active"),required=False)
 
-@login_required
+@contact_required
 def manage_recipients(request,context):
 
     RecipientFormSet = formset_factory(BulkRecipientForm, extra=3)

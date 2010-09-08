@@ -1,6 +1,9 @@
-""" Simple middleware to attach Contact to request object """
+from rapidsms.models import Contact
+
 
 class ContactRequestMiddleware(object):
+    """ Simple middleware to attach Contact to request object """
+
     def process_request(self, request):
         request.contact = None
         
@@ -8,5 +11,5 @@ class ContactRequestMiddleware(object):
         if request.user.is_authenticated():
             try:
                 request.contact = request.user.get_profile()
-            except crm.Contact.DoesNotExist:
+            except Contact.DoesNotExist:
                 pass

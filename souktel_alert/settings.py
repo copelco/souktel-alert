@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # vim: ai ts=4 sts=4 et sw=4
 
+import os
+
+PROJECT_PATH = os.path.abspath('%s' % os.path.dirname(__file__))
+
 
 # -------------------------------------------------------------------- #
 #                          MAIN CONFIGURATION                          #
@@ -89,7 +93,7 @@ INSTALLED_APPS = [
     "rjavna",
     "rclickatell",
     "rerouter",
-    "rapidsms_xforms",
+    # "rapidsms_xforms",
     "groupmessaging",
     #"poll",
     "decisiontree",
@@ -100,7 +104,7 @@ INSTALLED_APPS = [
 # this rapidsms-specific setting defines which views are linked by the
 # tabbed navigation. when adding an app to INSTALLED_APPS, you may wish
 # to add it here, also, to expose it in the rapidsms ui.
-TABS = [
+RAPIDSMS_TABS = [
     #('rapidsms.views.dashboard', 'Dashboard'),
     #('rapidsms.contrib.httptester.views.generate_identity', 'Message Tester'),
     #('rapidsms.contrib.messagelog.views.message_log', 'Message Log'),
@@ -175,6 +179,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'groupmessaging.middleware.ContactRequestMiddleware',
 )
+
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_PATH, 'templates'),
+)
+
 
 
 # -------------------------------------------------------------------- #

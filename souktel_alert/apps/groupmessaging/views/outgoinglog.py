@@ -13,11 +13,11 @@ from django.template import RequestContext
 from django.forms.formsets import formset_factory
 
 from groupmessaging.models import OutgoingLog
-from django.contrib.auth.decorators import login_required
+from groupmessaging.decorators import contact_required
 
 
 
-@login_required
+@contact_required
 def list(request):
     
     outgoinglog = OutgoingLog.objects.all()
@@ -39,7 +39,7 @@ def list(request):
     return render_to_response('outgoing_log.html', context, context_instance=RequestContext(request))
 
 
-@login_required
+@contact_required
 def filter(request):
    
     outgoinglog_list=""
