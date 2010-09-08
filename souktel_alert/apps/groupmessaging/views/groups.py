@@ -102,7 +102,7 @@ def add(request):
 
     else:
         form = GroupForm(site=request.contact.site)  # An unbound form
-        context = {'form': form}
+    context = {'form': form}
 
     return render_to_response('new_group.html', context, context_instance=RequestContext(request))
 
