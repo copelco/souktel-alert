@@ -22,7 +22,7 @@
 </tr>
 {% for message in latest_messages %}
 <tr{% if forloop.last %} class=""{% endif %}>
-<td>{{ message.sender }}</td> 
+<td>{{ message.sender.user.first_name }}</td> 
 <td>{{ message.groups_list }}</td>
 <td>{{ message.short_text }}</td>
 <td>{{ message.date|naturalday }}</td>

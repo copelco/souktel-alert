@@ -100,13 +100,10 @@ def send(request):
             logging.debug(groups)
             send_message(request.contact, groups, text, date)
             redirect(list)
-        else:
-            redirect('/groupmessaging')
     else:
-        form = SendMessageForm(request.contact.site)
+        form = SendMessageForm(site=request.contact.site)
     
-    mycontext = {'messages': messages, 'form': form}
-    context = (mycontext)
+    context = {'messages': messages, 'form': form}
     
     return render_to_response("messages_send.html", context, context_instance=RequestContext(request))
 
