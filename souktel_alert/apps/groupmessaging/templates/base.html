@@ -21,7 +21,20 @@
 <div id='header'>
     <h1 style="text-align:{% trans 'left;' %}">{{ user.site }} - {% trans "Souktel Group Messaging" %}</h1>
 <p>{% block title %}{% endblock %}</p>
-<p class='login' style="float: {% trans 'right;' %}">{% trans "Logged in as" %} <a href="/accounts/logout/" title="logout or sign-in as a different user.">{{ user.get_full_name }}</a></p>
+<p class='login' style="float: {% trans 'right;' %}">
+    {% if user.is_authenticated %}
+        {% trans "Logged in as" %}
+        <a href="{% url rapidsms.views.logout %}" title="logout or sign-in as a different user.">
+            {% if user.get_full_name %}
+                {{ user.get_full_name }}
+            {% else %}
+                {{ user }}
+            {% endif %}
+        </a>
+    {% else %}
+        <a href="{% url rapidsms.views.login %}" title="Log in">{% trans "Log in" %}</a>
+    {% endif %}
+</p>
 </div>
 
 <div id='menu'>
