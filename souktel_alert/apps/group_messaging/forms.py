@@ -38,7 +38,7 @@ class RecipientForm(forms.ModelForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields.keyOrder = ('first_name', 'last_name', 'comment',
-                                'site', 'active')
+                                'site', 'user', 'active')
 
 
 class ConnectionInlineForm(forms.ModelForm):
