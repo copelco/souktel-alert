@@ -36,8 +36,8 @@ function deleteRecipient(url){
 </tr>
 {% for recipient in recipients.object_list %}
 <tr {% if forloop.last %} class=""{% endif %}>
-<td class='name'>{{recipient.full_name}}</td>
-<td class='name'>{{recipient.identity}}</td>
+<td class='name'>{{recipient.name}}</td>
+<td class='name'>{{recipient.default_connection.identity}}</td>
 <td class='' style='text-align:center;'>{{recipient.active}}</td>
 <td class='number'><a style = "text-decoration:none" href = "{% url recipient recipient.id %}" >
 <img style="border:0px" src="/static/groupmessaging/edit-icon.jpeg" width="20" height="20" /> </a></td>

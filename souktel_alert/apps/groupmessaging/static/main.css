@@ -65,7 +65,12 @@ form.inline p {margin-bottom:0;}
 .notice a {color:#514721;}
 .success a {color:#264409;}
 
-.djangoerrors {
+.errorlist {
+    padding: 0;
+    margin: 0;
+}
+
+.djangoerrors, .errorlist li {
     width: auto;
     color: white;
     background-color: pink;

@@ -64,8 +64,8 @@ def send_message(sender, groups, text, date):
             message.recipients.add(recipient)
 
             # create to-send messages
-            msg = OutgoingLog(sender=sender, identity=recipient.identity, \
-                              backend=recipient.backend, text=message.text, \
+            msg = OutgoingLog(sender=sender, identity=recipient.default_connection.identity, \
+                              backend=recipient.default_connection.backend, text=message.text, \
                               status=OutgoingLog.QUEUED)
             msg.save()
 

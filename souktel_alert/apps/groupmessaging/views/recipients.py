@@ -4,7 +4,7 @@ import logging
 
 from django import forms
 from django.http import HttpResponse
-from django.shortcuts import redirect, render_to_response
+from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.translation import ugettext as _
@@ -25,11 +25,9 @@ from groupmessaging.decorators import contact_required
 from groupmessaging.forms import RecipientForm, ConnectionFormset
 
 
-
 @contact_required
-def list(request):
-
-    recipients = Recipient.objects.filter(site=request.contact.site)
+def list_recipients(request):
+    recipients = Contact.objects.filter(site=request.contact.site)
     paginator = Paginator(recipients,10)
     
     try:
@@ -42,17 +40,17 @@ def list(request):
     except (EmptyPage, InvalidPage):
         recipient_list = paginator.page(paginator.num_pages)
 
+    context = {'recipients': recipient_list,'count':recipients.count()}
+    return render_to_response('recipients_list.html', context,
+                              context_instance=RequestContext(request))
 
-    mycontext = {'recipients': recipient_list,'count':recipients.count()}
-    context = (mycontext)
-    return render_to_response('recipients_list.html', context, context_instance=RequestContext(request))
 
 @contact_required
 def recipient(request, recipientid=None):
     instance = Contact()
     if recipientid:
         instance = get_object_or_404(Contact, pk=recipientid)
-    validationMsg = ""
+
     if request.method == 'POST':
         form = RecipientForm(request.POST, instance=instance)
         formset = ConnectionFormset(request.POST, instance=instance)
@@ -62,55 +60,33 @@ def recipient(request, recipientid=None):
             for connection in connections:
                 connection.contact = saved_contact
                 connection.save()
-            if recipient:
-                validationMsg =_(u"You have successfully updated the recipient")
+            if recipientid:
+                msg = _(u"You have successfully updated the recipient")
             else:
-                validationMsg = "You have successfully inserted a recipient %s." % form.cleaned_data['firstName']
-            messages.add_message(request, messages.ERROR, validationMsg)
-            return redirect(list)
+                msg = "You have successfully inserted a recipient %s."
+                msg = _(msg % saved_contact.name)
+            messages.add_message(request, messages.INFO, msg)
+            return redirect(list_recipients)
     else:
-        # if recipient:
-        #     data = {'firstName': recipient.first_name,'lastName':recipient.last_name,'identity':recipient.identity,'active':recipient.active}
-        # else:
-        #     data = {'active': True}
         form = RecipientForm(instance=instance)
         formset = ConnectionFormset(instance=instance)
-    
-    if not recipientid:
-        recipientid = 0
 
     context = {
         'recipient': recipient,
         'form': form,
         'formset': formset,
-        'recipientid': recipientid,
-        'validationMsg': validationMsg,
     }
     return render_to_response('recipient.html', context,
                               context_instance=RequestContext(request))
 
 
 @contact_required
-def delete(request,context,recipientid):
-    validationMsg =""
-    recipient = Recipient.objects.get(id=recipientid)
-                
-    try:
-        recipient.delete()
-        validationMsg = "You have successfully deleted this record"
-    except Exception, e :
-        validationMsg = "Failed to delete %s." % e
-
-    mycontext = {'validationMsg':validationMsg}
-    context = (mycontext)
-    return redirect(list)
-
-# class RecipientForm(forms.Form):
-#     firstName = forms.CharField(label=_(u"First Name"), max_length=50)
-#     lastName  = forms.CharField(label=_(u"Last Name"),max_length=50)
-#     identity  = forms.CharField(label=_(u"Identity"),max_length=30)
-#     active    = forms.BooleanField(label=_(u"Active"),required=False)
-    #site      = forms.ModelMultipleChoiceField(queryset= Site.objects.all(), required=True)
+def delete(request, recipientid):
+    recipient = get_object_or_404(Contact, pk=recipientid)
+    recipient.delete()
+    msg = "You have successfully deleted this record"
+    messages.add_message(request, messages.INFO, msg)
+    return redirect(list_recipients)
 
 
 class BulkRecipientForm(forms.Form):

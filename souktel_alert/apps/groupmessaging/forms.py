@@ -29,17 +29,16 @@ class RecipientForm(forms.ModelForm):
     
     class Meta:
         model = Contact
-        exclude = ('user', 'language', 'name')
+        exclude = ('language', 'name')
 
     def __init__(self, *args, **kwargs):
         super(RecipientForm, self).__init__(*args, **kwargs)
         self.fields['site'].required = True
         self.fields['active'].required = True
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
         self.fields.keyOrder = ('first_name', 'last_name', 'comment',
                                 'site', 'active')
-    
-    def save(self):
-        pass
 
 
 class ConnectionInlineForm(forms.ModelForm):
