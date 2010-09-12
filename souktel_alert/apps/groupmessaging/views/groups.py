@@ -7,37 +7,16 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
-from groupmessaging.decorators import contact_required
+from django.core.urlresolvers import reverse
 
 from rapidsms.models import Contact
 
+from groupmessaging.decorators import contact_required
 from groupmessaging.models import Group, Site, Recipient
+from groupmessaging.forms import GroupForm
 
-
-class GroupForm(forms.Form):
-
-    def __init__(self, site, *args, **kwargs):
-        super(GroupForm, self).__init__(*args, **kwargs)
-
-        self.fields['recipients'].choices = \
-                [(recipient.id, recipient.first_name) for recipient \
-                in Recipient.objects.filter(active=True, site=site)]
-
-        self.fields['managers'].choices = \
-                [(manager.id, manager.user.first_name) for manager \
-                in Contact.objects.filter(site=site)]
-    
-    # logging.debug('webuser : %s' % WebUser)
-              
-    code = forms.CharField(label=_(u"Group code"),max_length='15', required=True)
-    name = forms.CharField(label=_(u"Group name"),max_length='50', required=True)
-    active = forms.BooleanField(label=_(u"active"),required=False)
-    recipients = forms.MultipleChoiceField(label=_(u"Group recipients"))
-    managers = forms.MultipleChoiceField(label=_(u"Group managers"),required=True)
-    
 
 @contact_required
 def list(request):
@@ -73,38 +52,16 @@ def list(request):
 @contact_required
 def add(request):
     ''' add function '''
-
     if request.method == 'POST':  # If the form has been submitted...
         form = GroupForm(request.contact.site, request.POST)
         if form.is_valid():  # All validation rules pass
-            code = form.cleaned_data['code']
-            name = form.cleaned_data['name']
-            active = form.cleaned_data['active']
-            recipients = form.cleaned_data['recipients']
-            managers = form.cleaned_data['managers']
-           
-            
-            try:
-                ins = Group(code=code, name=name,\
-                        site=request.contact.site, active=active)
-                ins.save()
-
-                for recipient in recipients:
-                    ins.recipients.add(recipient)
-                for manager in managers:
-                    ins.managers.add(manager)
-                
-
-            except Exception, e:
-                return HttpResponse("Error 2 : %s" % e)
-
-            return HttpResponseRedirect('/groupmessaging/groups/')
-
+            form.save()
+            return HttpResponseRedirect(reverse('new_group'))
     else:
         form = GroupForm(site=request.contact.site)  # An unbound form
     context = {'form': form}
-
-    return render_to_response('new_group.html', context, context_instance=RequestContext(request))
+    return render_to_response('new_group.html', context,
+                              context_instance=RequestContext(request))
 
 
 @contact_required

@@ -11,12 +11,18 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
+from django.contrib import messages
 
 from django.http import HttpResponseRedirect
+
+from rapidsms.models import Contact
+
 from groupmessaging.models import Recipient
 from groupmessaging.models import Site
 from groupmessaging.models import Group
 from groupmessaging.decorators import contact_required
+
+from groupmessaging.forms import RecipientForm, ConnectionFormset
 
 
 
@@ -43,54 +49,46 @@ def list(request):
 
 @contact_required
 def recipient(request, recipientid=None):
-    validationMsg =""
-    if not recipientid or int(recipientid) == 0:
-        recipient = None
-    else:
-        recipient = Recipient.objects.get(id=recipientid)
-
+    instance = Contact()
+    if recipientid:
+        instance = get_object_or_404(Contact, pk=recipientid)
+    validationMsg = ""
     if request.method == 'POST':
-        form = RecipientForm(request.POST)
-        if form.is_valid():
+        form = RecipientForm(request.POST, instance=instance)
+        formset = ConnectionFormset(request.POST, instance=instance)
+        if form.is_valid() and formset.is_valid():
+            saved_contact = form.save()
+            connections = formset.save(commit=False)
+            for connection in connections:
+                connection.contact = saved_contact
+                connection.save()
             if recipient:
-                recipient.first_name = form.cleaned_data['firstName']
-                recipient.last_name = form.cleaned_data['lastName']
-                recipient.identity = form.cleaned_data['identity']
-                recipient.active = form.cleaned_data['active']
-                recipient.save()
                 validationMsg =_(u"You have successfully updated the recipient")
             else:
-                try:
-                    recipient = Recipient(first_name=form.cleaned_data['firstName'] ,\
-                                           last_name=form.cleaned_data['lastName'],\
-                                           identity=form.cleaned_data['identity'],\
-                                           active=form.cleaned_data['active'],\
-                                           site = request.contact.site)
-                    recipient.save()
-                    validationMsg = "You have successfully inserted a recipient %s." % form.cleaned_data['firstName']
-                except Exception, e :
-                    validationMsg = "Failed to add new recipient %s." % e
-
-                #recipients = Recipient.objects.all()
-                mycontext = {'validationMsg':validationMsg}
-                context = (mycontext)
-                #return render_to_response(request, 'recipients_list.html', context)
-                return redirect(list)
-                
-                
+                validationMsg = "You have successfully inserted a recipient %s." % form.cleaned_data['firstName']
+            messages.add_message(request, messages.ERROR, validationMsg)
+            return redirect(list)
     else:
-        if recipient:
-            data = {'firstName': recipient.first_name,'lastName':recipient.last_name,'identity':recipient.identity,'active':recipient.active}
-        else:
-            data = {'active': True}
-        form = RecipientForm(data) 
+        # if recipient:
+        #     data = {'firstName': recipient.first_name,'lastName':recipient.last_name,'identity':recipient.identity,'active':recipient.active}
+        # else:
+        #     data = {'active': True}
+        form = RecipientForm(instance=instance)
+        formset = ConnectionFormset(instance=instance)
     
     if not recipientid:
         recipientid = 0
 
-    mycontext = {'recipient':recipient,'form':form, 'recipientid': recipientid,'validationMsg':validationMsg}
-    context = (mycontext)
-    return render_to_response('recipient.html', context, context_instance=RequestContext(request))
+    context = {
+        'recipient': recipient,
+        'form': form,
+        'formset': formset,
+        'recipientid': recipientid,
+        'validationMsg': validationMsg,
+    }
+    return render_to_response('recipient.html', context,
+                              context_instance=RequestContext(request))
+
 
 @contact_required
 def delete(request,context,recipientid):
@@ -107,11 +105,11 @@ def delete(request,context,recipientid):
     context = (mycontext)
     return redirect(list)
 
-class RecipientForm(forms.Form):
-    firstName = forms.CharField(label=_(u"First Name"), max_length=50)
-    lastName  = forms.CharField(label=_(u"Last Name"),max_length=50)
-    identity  = forms.CharField(label=_(u"Identity"),max_length=30)
-    active    = forms.BooleanField(label=_(u"Active"),required=False)
+# class RecipientForm(forms.Form):
+#     firstName = forms.CharField(label=_(u"First Name"), max_length=50)
+#     lastName  = forms.CharField(label=_(u"Last Name"),max_length=50)
+#     identity  = forms.CharField(label=_(u"Identity"),max_length=30)
+#     active    = forms.BooleanField(label=_(u"Active"),required=False)
     #site      = forms.ModelMultipleChoiceField(queryset= Site.objects.all(), required=True)
 
 

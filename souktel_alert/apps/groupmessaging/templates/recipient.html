@@ -2,30 +2,63 @@
 
 {% block content %}
 {% load i18n %}
-<form action="{% url recipient recipientid %}" method="POST" class="pretty"> {% csrf_token %}
-<fieldset> 
-<legend>
-{% if recipientid %}
-{% trans "Recipient Update Form" %}
-{% else %}
-{% trans "New Recipient Form" %}
-{% endif %}
-</legend>
+<form action="" method="POST" class="pretty"> {% csrf_token %}
+    <fieldset> 
+        <legend>
+            {% if recipientid %}
+                {% trans "Recipient Update Form" %}
+            {% else %}
+                {% trans "New Recipient Form" %}
+            {% endif %}
+        </legend>
+        <table>
+        {% for field in form %}
+            <tr>
+                <td>{{ field.label_tag }}</td>
+                <td>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class='djangoerrors'>
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+        {{ formset.management_form }}
+        <table>
+        {% for form in formset.forms %}
+            <tr>
+            {% for field in form.visible_fields %}
+                <td>
+                    {{ field.label_tag }}: {{ field }}
+                    {% if field.errors %}
+                        <div class='djangoerrors'>
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </td>
+            {% endfor %}
+                <td>
+                {% for field in form.hidden_fields %}
+                    {{ field }}
+                {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
 
-<table>
-{% for field in form %}
-<tr>
-<td>{{ field.label_tag }}</td><td>{{ field }} {%if field.errors %}<div class='djangoerrors'>{% for error in field.errors %}{{ error }}{% endfor %}</div>{% endif %}</td>
-</tr>
-{% endfor %}
-</table>
-
-<p class="buttons"> 
-<button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
-<a class="button negative icon cross" href="{% url recipients_list %}">{% trans "Cancel" %}</a>
-</p> 
-</fieldset> 
-
+        <p class="buttons"> 
+            <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+            <a class="button negative icon cross" href="{% url recipients_list %}">{% trans "Cancel" %}</a>
+        </p>
+    </fieldset>
+</form>
 {% endblock %}
 
 {% block submenu %}

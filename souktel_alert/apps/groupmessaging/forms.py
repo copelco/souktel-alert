@@ -1,7 +1,9 @@
 from django import forms
+from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
 
-from rapidsms.models import Contact
+from rapidsms.models import Contact, Connection
 
 from groupmessaging import models as gm
 
@@ -21,3 +23,36 @@ class GroupForm(forms.ModelForm):
         managers = Contact.objects.filter(site=site)
         self.fields['managers'].queryset = managers
         self.fields['managers'].label = _(u"Group managers")
+
+
+class RecipientForm(forms.ModelForm):
+    
+    class Meta:
+        model = Contact
+        exclude = ('user', 'language', 'name')
+
+    def __init__(self, *args, **kwargs):
+        super(RecipientForm, self).__init__(*args, **kwargs)
+        self.fields['site'].required = True
+        self.fields['active'].required = True
+        self.fields.keyOrder = ('first_name', 'last_name', 'comment',
+                                'site', 'active')
+    
+    def save(self):
+        pass
+
+
+class ConnectionInlineForm(forms.ModelForm):
+
+    class Meta:
+        model = Connection
+
+    def __init__(self, *args, **kwargs):
+        super(ConnectionInlineForm, self).__init__(*args, **kwargs)
+        self.fields['backend'].required = True
+        self.fields['identity'].required = True
+
+
+ConnectionFormset = inlineformset_factory(Contact, Connection, extra=1,
+                                          form=ConnectionInlineForm)
+
