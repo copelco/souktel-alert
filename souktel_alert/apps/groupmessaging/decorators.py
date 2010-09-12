@@ -9,7 +9,7 @@ def contact_required(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         if not request.contact:
-            body = "Associated contact record not found."
+            body = "You don't have access to this page (missing contact)."
             messages.add_message(request, messages.ERROR, body)
             return HttpResponseRedirect(reverse('rapidsms.views.login'))
         if not request.contact.site:

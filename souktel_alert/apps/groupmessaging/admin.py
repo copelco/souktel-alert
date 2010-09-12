@@ -42,7 +42,7 @@ class GroupAdmin(admin.ModelAdmin):
 admin.site.register(Site)
 # admin.site.register(WebUser)
 admin.site.register(Group, GroupAdmin)
-admin.site.register(Recipient, RecipientAdmin)
+# admin.site.register(Recipient, RecipientAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(SendingLog, SendingLogAdmin)
 admin.site.register(OutgoingLog, OutgoingLogAdmin)

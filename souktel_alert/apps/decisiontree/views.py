@@ -175,7 +175,7 @@ def deletetree(request, treeid):
     return redirect(index)
 
 @contact_required
-def addquestion(request ,context ,questionid=None):
+def addquestion(request, questionid=None):
 
     validationMsg = ""
     question = None

@@ -45,10 +45,11 @@ class Group(models.Model):
     site = models.ForeignKey('Site', verbose_name=ugettext_lazy(u"Site"))
     active = models.BooleanField(default=True, \
                                  verbose_name=ugettext_lazy(u"Enabled?"))
-    recipients = models.ManyToManyField('Recipient', blank=True, \
-                                     verbose_name=ugettext_lazy(u"Recipients"))
-    managers = models.ManyToManyField(Contact, \
-                                      verbose_name=ugettext_lazy(u"Managers"))
+    recipients = models.ManyToManyField(Contact, blank=True,
+                                        related_name='group_recipients',
+                                        verbose_name=_(u"Recipients"))
+    managers = models.ManyToManyField(Contact, related_name='group_managers',
+                                      verbose_name=_(u"Managers"))
 
     def __unicode__(self):
         return _(u"%(name)s") % {'name': self.name}
@@ -109,11 +110,11 @@ class Message(models.Model):
 class SendingLog(models.Model):
     ''' Messages Log '''
 
-    sender = models.ForeignKey(Contact, \
+    sender = models.ForeignKey(Contact, related_name='log_senders',
                                verbose_name=ugettext_lazy(u"Sender"))
     groups = models.ManyToManyField('Group', \
                                     verbose_name=ugettext_lazy(u"Groups"))
-    recipients = models.ManyToManyField('Recipient', \
+    recipients = models.ManyToManyField(Contact, related_name='log_recipients',
                                      verbose_name=ugettext_lazy(u"Recipients"))
     date = models.DateTimeField(auto_now_add=True, \
                                 verbose_name=ugettext_lazy(u"Date"))
