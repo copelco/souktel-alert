@@ -31,9 +31,9 @@
 <td class='name'>{{ message.code }}</td>
 <td class='name'>{{ message.name }}</td>
 <td class='name'><a  href="{% url messages_form message.id %}"><img style="border:0px" 
-    src="/static/groupmessaging/edit-icon.jpeg" width="20" height="20" /> </a></td>
+    src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a></td>
 <td class='name'><a href = "javascript:deleteMessage('{% url messages_delete message.id %}')">
-<img style="border:0px" src="/static/groupmessaging/delete-icon.png" width="20" height="20"/> </a>
+<img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
 </td>
 </tr>
 {% endfor %}

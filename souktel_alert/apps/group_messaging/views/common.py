@@ -3,7 +3,7 @@
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-# from groupmessaging.models import WebUser
+# from group_messaging.models import WebUser
 
 
 def login_required(view):

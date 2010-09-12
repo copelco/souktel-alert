@@ -19,7 +19,7 @@ from rclickatell.forms import StatusCallbackForm
 from django.test import Client
 from django.core.urlresolvers import reverse
 from datetime import datetime
-from groupmessaging.models import SendingLog, OutgoingLog
+from group_messaging.models import SendingLog, OutgoingLog
 
 logging.basicConfig(level=logging.DEBUG)
 router1 = MockRouter()

@@ -94,7 +94,7 @@ INSTALLED_APPS = [
     "rclickatell",
     "rerouter",
     # "rapidsms_xforms",
-    "groupmessaging",
+    "group_messaging",
     #"poll",
     "decisiontree",
     "goals",
@@ -109,7 +109,7 @@ RAPIDSMS_TABS = [
     #('rapidsms.contrib.httptester.views.generate_identity', 'Message Tester'),
     #('rapidsms.contrib.messagelog.views.message_log', 'Message Log'),
     #('rapidsms.contrib.messaging.views.messaging', 'Messaging'),
-    #('groupmessaging.views.index.index', 'Group Messaging'),
+    #('group_messaging.views.index.index', 'Group Messaging'),
     #('rapidsms_xforms.views.xforms', 'XForms'),
     #('rclickatell.views.test', 'Clickatell'),
     #('poll.views.dashboard', 'Survey'),
@@ -177,7 +177,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'groupmessaging.middleware.ContactRequestMiddleware',
+    'group_messaging.middleware.ContactRequestMiddleware',
 )
 
 TEMPLATE_DIRS = (

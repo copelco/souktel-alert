@@ -37,8 +37,8 @@
             <td class='name'> {{ group.name }}</td>
             <td class='name'> {% for manager in group.managers.select_related %}{{ manager.get_full_name }}, {% endfor %}</td>
             <td class='name'> {{ group.recipients.select_related|length }}</td>
-            <td align="center"> <a href="{% url update_group group.id %}"><img style="border:0px" src="/static/groupmessaging/edit-icon.jpeg" width="20" height="20" /> </a></td>
-            <td align="center"> <a href = "javascript:deleteGroup('{% url delete_group group.id %}')"><img style="border:0px" src="/static/groupmessaging/delete-icon.png" width="20" height="20" /></a> </td>
+            <td align="center"> <a href="{% url update_group group.id %}"><img style="border:0px" src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a></td>
+            <td align="center"> <a href = "javascript:deleteGroup('{% url delete_group group.id %}')"><img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20" /></a> </td>
         </tr>
         {% empty %}
         <tr>

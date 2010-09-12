@@ -9,12 +9,12 @@ from django.shortcuts import redirect, render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 
-from groupmessaging.decorators import contact_required
-from groupmessaging.models import Message
-from groupmessaging.models import Site
-from groupmessaging.models import Recipient
-from groupmessaging.models import Group
-from groupmessaging.utils import send_message
+from group_messaging.decorators import contact_required
+from group_messaging.models import Message
+from group_messaging.models import Site
+from group_messaging.models import Recipient
+from group_messaging.models import Group
+from group_messaging.utils import send_message
 from datetime import datetime
 
 

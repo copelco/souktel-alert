@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from rapidsms.models import Contact, Connection
 
-from groupmessaging import models as gm
+from group_messaging import models as gm
 
 
 class GroupForm(forms.ModelForm):

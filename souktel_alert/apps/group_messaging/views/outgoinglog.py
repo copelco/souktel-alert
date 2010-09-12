@@ -12,8 +12,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
 
-from groupmessaging.models import OutgoingLog
-from groupmessaging.decorators import contact_required
+from group_messaging.models import OutgoingLog
+from group_messaging.decorators import contact_required
 
 
 

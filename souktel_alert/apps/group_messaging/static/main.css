@@ -85,9 +85,9 @@ button.icon, a.icon, p.icon, div.icon {
 }
 
 button.tick, a.tick, p.tick, div.tick {
-    background-image: url('/static/groupmessaging/blueprint/plugins/buttons/icons/tick.png');
+    background-image: url('/static/group_messaging/blueprint/plugins/buttons/icons/tick.png');
 }
 
 button.cross, a.cross, p.cross, div.cross {
-    background-image: url('/static/groupmessaging/blueprint/plugins/buttons/icons/cross.png');
+    background-image: url('/static/group_messaging/blueprint/plugins/buttons/icons/cross.png');
 }

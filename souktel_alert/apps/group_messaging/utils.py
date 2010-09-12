@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from rapidsms.models import Connection, Backend
-from groupmessaging.models import SendingLog, OutgoingLog
+from group_messaging.models import SendingLog, OutgoingLog
 
 def process_queue_callback(router, *args, **kwargs):
     return process_queue(router)

@@ -7,8 +7,8 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from groupmessaging.decorators import contact_required
-from groupmessaging.models import SendingLog, Recipient, Group, OutgoingLog
+from group_messaging.decorators import contact_required
+from group_messaging.models import SendingLog, Recipient, Group, OutgoingLog
 
 
 @contact_required

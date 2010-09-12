@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response ,redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
-from groupmessaging.decorators import contact_required
+from group_messaging.decorators import contact_required
 from decisiontree.forms import *
 from decisiontree.models import *
 

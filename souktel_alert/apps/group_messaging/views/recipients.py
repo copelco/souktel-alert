@@ -17,12 +17,12 @@ from django.http import HttpResponseRedirect
 
 from rapidsms.models import Contact
 
-from groupmessaging.models import Recipient
-from groupmessaging.models import Site
-from groupmessaging.models import Group
-from groupmessaging.decorators import contact_required
+from group_messaging.models import Recipient
+from group_messaging.models import Site
+from group_messaging.models import Group
+from group_messaging.decorators import contact_required
 
-from groupmessaging.forms import RecipientForm, ConnectionFormset
+from group_messaging.forms import RecipientForm, ConnectionFormset
 
 
 @contact_required

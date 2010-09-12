@@ -13,9 +13,9 @@ from django.core.urlresolvers import reverse
 
 from rapidsms.models import Contact
 
-from groupmessaging.decorators import contact_required
-from groupmessaging.models import Group, Site, Recipient
-from groupmessaging.forms import GroupForm
+from group_messaging.decorators import contact_required
+from group_messaging.models import Group, Site, Recipient
+from group_messaging.forms import GroupForm
 
 
 @contact_required
@@ -109,7 +109,7 @@ def update(request, group_id):
             except Exception, e:
                 return HttpResponse("Error 2 : %s" % e)
 
-            return HttpResponseRedirect('/groupmessaging/groups/')
+            return HttpResponseRedirect('/group_messaging/groups/')
 
     else:
         Groups_obj = Group.objects.get(id=group_id)

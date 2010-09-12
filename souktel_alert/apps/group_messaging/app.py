@@ -9,7 +9,7 @@ from rapidsms.contrib.scheduler.models import EventSchedule
 from rapidsms.apps.base import AppBase
 from django.template import RequestContext
 
-from groupmessaging.utils import *
+from group_messaging.utils import *
 
 def loop2mn(loop):
     ''' Generates an array of numbers for Event Schudule minutes '''
@@ -39,12 +39,12 @@ class App(AppBase):
 
         # create a scheduled event if not present
         # due to bug in fixture handling in scheduler
-        event_desc = 'groupmessaging_main'
+        event_desc = 'group_messaging_main'
         if EventSchedule.objects.filter(description=event_desc).count() > 0:
             return
 
         schedule = EventSchedule(description=event_desc, \
-                     callback="groupmessaging.utils.process_queue_callback", \
+                     callback="group_messaging.utils.process_queue_callback", \
 		     minutes=([00,60]), \
                      callback_args=('self.router'))
         schedule.save()
