@@ -1,4 +1,4 @@
-django==1.2.1
+django==1.2.3
 rapidsms==0.9.5a
 django-uni-form==0.7
 rapidsms-xforms==0.1.1
