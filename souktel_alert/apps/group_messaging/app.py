@@ -23,7 +23,7 @@ def loop2mn(loop):
     for num in range(0,60):
         if num % loop == 0:
             mn.append(num)
-    return mn
+    return 10
 
 
 class App(AppBase):
@@ -45,17 +45,17 @@ class App(AppBase):
 
         schedule = EventSchedule(description=event_desc, \
                      callback="group_messaging.utils.process_queue_callback", \
-		     minutes=([00,60]), \
+		     minutes=([00,58]), \
                      callback_args=('self.router'))
         schedule.save()
-        loggin.DEBUG(u"Created Event Schedule %s" % event_desc)
+        logging.DEBUG(u"Created Event Schedule %s" % event_desc)
 
     def handle(self, message):
         
         try:
             func, captures = self.keyword.match(self, message.text)
         except TypeError:
-            loggin.DEBUG('not captured')
+            logging.DEBUG('not captured')
             return False
 
         try:
@@ -68,6 +68,6 @@ class App(AppBase):
     @keyword('')
     def queue(self, message):
         message.respond(_(u"Launching queue..."))
-        loggin.DEBUG("Launching queue...")
+        logging.DEBUG("Launching queue...")
         process_queue(self.router)
         message.respond(_(u"Queue processed"))
