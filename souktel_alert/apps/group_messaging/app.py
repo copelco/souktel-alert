@@ -2,7 +2,6 @@
 # encoding=utf-8
 
 import rapidsms
-import logging
 from parsers.keyworder import Keyworder
 from django.utils.translation import ugettext as _
 from rapidsms.contrib.scheduler.models import EventSchedule
@@ -48,26 +47,26 @@ class App(AppBase):
 		     minutes=([00,58]), \
                      callback_args=('self.router'))
         schedule.save()
-        logging.DEBUG(u"Created Event Schedule %s" % event_desc)
+        self.debug(u"Created Event Schedule %s" % event_desc)
 
     def handle(self, message):
         
         try:
             func, captures = self.keyword.match(self, message.text)
         except TypeError:
-            logging.DEBUG('not captured')
+            self.debug('not captured')
             return False
 
         try:
             return func(self, message, *captures)
         except Exception, e:
-            message.respond(_(u"System Error: %s") % e)
+            self.exception(e)
             return True
 
     keyword.prefix = ['queue']
     @keyword('')
     def queue(self, message):
         message.respond(_(u"Launching queue..."))
-        logging.DEBUG("Launching queue...")
+        self.debug("Launching queue...")
         process_queue(self.router)
         message.respond(_(u"Queue processed"))

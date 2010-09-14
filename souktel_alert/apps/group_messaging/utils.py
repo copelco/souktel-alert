@@ -26,7 +26,6 @@ def process_queue(router):
         if not back:
             message.status = message.FAILED
             message.save()
-            print Hello
             continue
 
         # create message object
