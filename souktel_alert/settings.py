@@ -95,9 +95,9 @@ INSTALLED_APPS = [
     "rerouter",
     # "rapidsms_xforms",
     "group_messaging",
+    "goals",
     #"poll",
     "decisiontree",
-    "goals",
 ]
 
 
@@ -155,8 +155,8 @@ SITE_ID = 1
 LOG_LEVEL   = "DEBUG"
 LOG_FILE    = "rapidsms.log"
 LOG_FORMAT  = "%(asctime)s %(levelname)-8s - %(name)-26s %(message)s"
-LOG_SIZE    = 65536 # 8192 bytes = 64 kb
-LOG_BACKUPS = 256 # number of logs to keep
+LOG_SIZE    = 33554432 # 2^25
+LOG_BACKUPS = 10 # number of logs to keep
 
 
 # these weird dependencies should be handled by their respective apps,
@@ -215,10 +215,12 @@ ROOT_URLCONF = "rapidsms.djangoproject.urls"
 # virtual database for each thread, and syncdb is only called for the
 # first. this leads to confusing "no such table" errors. so i'm
 # defaulting to a temporary file instead.
-import os, tempfile
-TEST_DATABASE_NAME = os.path.join(
-    tempfile.gettempdir(),
-    "rapidsms.test.sqlite3")
+# import os, tempfile, sys
+# if 'test' in sys.argv:
+#     for db_name in DATABASES:
+#         DATABASES[db_name]['TEST_DATABASE_NAME'] = os.path.join(
+#             tempfile.gettempdir(), 
+#             "%s.rapidsms.test.sqlite3" % db_name)
 
 
 XFORMS_HOST="192.168.10.20:8000"

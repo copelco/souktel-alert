@@ -4,9 +4,10 @@ from goals import models as goals
 
 
 class GoalAdmin(admin.ModelAdmin):
-    list_display = ('id', 'connection', 'body', 'date_created',
-                    'date_last_notified', 'active')
-    list_filter = ('active', 'date_created', 'date_last_notified')
+    list_display = ('id', 'contact', 'body', 'date_created',
+                    'date_last_notified', 'in_session', 'complete')
+    list_filter = ('complete', 'in_session', 'date_created',
+                   'date_last_notified')
     search_fields = ('body',)
     ordering = ('-date_created',)
 admin.site.register(goals.Goal, GoalAdmin)

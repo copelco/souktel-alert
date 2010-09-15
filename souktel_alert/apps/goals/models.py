@@ -6,11 +6,12 @@ from rapidsms.models import Connection, Contact
 
 
 class Goal(models.Model):
-    connection = models.ForeignKey(Connection)
+    contact = models.ForeignKey(Contact, related_name='goals')
     date_created = models.DateTimeField()
     date_last_notified = models.DateTimeField()
     body = models.TextField()
-    active = models.BooleanField(default=True)
+    in_session = models.BooleanField(default=False)
+    complete = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.body

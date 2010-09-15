@@ -24,7 +24,7 @@ class GoalsApp(AppBase):
     """ RapidSMS app to track goal setting """
 
     cron_schedule = {'minutes': '*'}
-    notification_treshold = datetime.timedelta(seconds=30)
+    notification_treshold = datetime.timedelta(minutes=30)
     template = """You stated that your goal was "%(goal)s". Please reply with a number between 1 and 5. Thanks!"""
 
     def start(self):
@@ -39,24 +39,6 @@ class GoalsApp(AppBase):
         else:
             self.debug('{0} exists'.format(SCHEDULE_DESC))
         self.info('started')
-
-    def handle(self, msg):
-        from goals.models import Goal
-
-        matches = number_re.match(msg.text)
-        if matches:
-            response = int(matches.group(0))
-            try:
-                goal = Goal.objects.get(active=True, connection=msg.connection)
-            except Goal.DoesNotExist:
-                return False
-            goal.answers.create(body=response)
-            goal.active = False
-            goal.save()
-            msg = OutgoingMessage(connection=goal.connection,
-                                  template='Thank you for your response!')
-            msg.send()
-            return True
 
     def status_update(self):
         """ Cron job that's executed every minute """
