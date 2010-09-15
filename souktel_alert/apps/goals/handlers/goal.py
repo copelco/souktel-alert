@@ -31,9 +31,9 @@ class GoalHandler(KeywordHandler):
             return True
         if answer_re.match(text):
             return self._handle_answer(text, connection.contact)
-        if active_re.match(text):
+        elif active_re.match(text):
             return self._handle_active(text, connection.contact)
-        if close_re.match(text):
+        elif close_re.match(text):
             return self._handle_close(text, connection.contact)
         elif new_re.match(text):
             return self._handle_new(text, connection.contact)
