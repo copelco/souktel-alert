@@ -1,4 +1,3 @@
-import re
 import datetime
 
 from rapidsms.apps.base import AppBase
@@ -8,7 +7,6 @@ from rapidsms.contrib.scheduler.models import EventSchedule
 
 SCHEDULE_DESC = 'goals-cron-job'
 CALLBACK = 'goals.app.scheduler_callback'
-number_re = re.compile(r'\d+')
 
 
 def scheduler_callback(router):

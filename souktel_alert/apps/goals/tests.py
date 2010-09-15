@@ -10,8 +10,6 @@ from goals.models import Goal, Answer
 
 
 class TestGoals(TestScript):
-    
-    apps = ('goals',)
 
     def setUp(self):
         super(TestGoals, self).setUp()
@@ -30,7 +28,7 @@ class TestGoals(TestScript):
           1112223333 < Your goal has been recorded.
         """)
 
-    def test_active(self):
+    def test_active_session(self):
         """ Test basic answer response and reply """
         goal = Goal.objects.create(contact=self.contact, body='test',
                                    in_session=True)
@@ -38,6 +36,8 @@ class TestGoals(TestScript):
         1112223333 > goal 5
         1112223333 < Thank you for your response!
         """)
+        goal = self.contact.goals.all()[0]
+        self.assertTrue(goal.complete)
 
     def test_unopened_session(self):
         """ Users can only answer a goal if a session is active """
@@ -51,4 +51,14 @@ class TestGoals(TestScript):
         self.assertInteraction("""
         5555555555 > goal my new goal
         5555555555 < You must register before using the goals app
+        """)
+
+    def test_active(self):
+        """ Users must register before using the goals app """
+        goal = Goal.objects.create(contact=self.contact, body='test')
+        self.assertInteraction("""
+        1112223333 > goal active
+        1112223333 < You stated that your goal was "test". Please reply with a number between 1 and 5. Thanks!
+        1112223333 > goal 5
+        1112223333 < Thank you for your response!
         """)

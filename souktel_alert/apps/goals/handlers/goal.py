@@ -8,6 +8,7 @@ from rapidsms.contrib.handlers.handlers.keyword import KeywordHandler
 
 new_re = re.compile(r'\w+')
 answer_re = re.compile(r'\d+')
+active_re = re.compile(r'^active$')
 
 
 class GoalHandler(KeywordHandler):
@@ -29,17 +30,29 @@ class GoalHandler(KeywordHandler):
         connection.contact = contact
         connection.save()
         if answer_re.match(text):
-            return self._handle_answer(text)
+            return self._handle_answer(text, connection.contact)
+        if active_re.match(text):
+            return self._handle_active(text, connection.contact)
         elif new_re.match(text):
-            return self._handle_new(text)
+            return self._handle_new(text, connection.contact)
 
-    def _handle_new(self, text):
-        contact = self.msg.connection.contact
+    def _handle_new(self, text, contact):
         contact.goals.create(body=text, contact=self.msg.connection.contact)
         self.respond('Your goal has been recorded.')
 
-    def _handle_answer(self, text):
-        contact = self.msg.connection.contact
+    def _handle_active(self, text, contact):
+        try:
+            complete_goals = contact.goals.filter(complete=False)
+            goal = complete_goals.order_by('date_last_notified')[0]
+        except IndexError:
+            self.respond('All of your goals are complete')
+        contact.goals.update(in_session=False)
+        goal.in_session = True
+        goal.save()
+        template = """You stated that your goal was "%(goal)s". Please reply with a number between 1 and 5. Thanks!"""
+        self.respond(template, goal=goal)
+
+    def _handle_answer(self, text, contact):
         try:
             goal = contact.goals.filter(in_session=True)[0]
         except IndexError:
