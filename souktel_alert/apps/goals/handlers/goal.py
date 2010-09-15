@@ -23,12 +23,15 @@ class GoalHandler(KeywordHandler):
     def handle(self, text):
         connection = self.msg.connection
         identity = connection.identity
-        try:
-            Contact.objects.filter(connection__identity=identity)[0]
-        except IndexError:
-            self.warning('{0} is unrecognized'.format(connection))
-            self.respond('You must register before using the goals app')
-            return True
+        if not connection.contact:
+            try:
+                contact = Contact.objects.filter(connection__identity=identity)[0]
+            except IndexError:
+                self.warning('{0} is unrecognized'.format(connection))
+                self.respond('You must register before using the goals app')
+                return True
+            connection.contact = contact
+            connection.save()
         if answer_re.match(text):
             return self._handle_answer(text, connection.contact)
         elif active_re.match(text):
