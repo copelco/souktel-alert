@@ -24,15 +24,24 @@ class TestGoals(TestScript):
         self._init_log(logging.DEBUG)
 
     def testGoalCreation(self):
+        """ Test basic goal creation and response """
         self.assertInteraction("""
           1112223333 > goal talk to 5 teachers
           1112223333 < Your goal has been recorded.
         """)
 
     def test_active(self):
+        """ Test basic answer response and reply """
         goal = Goal.objects.create(contact=self.contact, body='test',
                                    in_session=True)
         self.assertInteraction("""
         1112223333 > goal 5
         1112223333 < Thank you for your response!
+        """)
+
+    def test_unopened_session(self):
+        """ Users can only answer a goal if a session is active """
+        self.assertInteraction("""
+        1112223333 > goal 5
+        1112223333 < You don't currently have any open goal sessions
         """)
