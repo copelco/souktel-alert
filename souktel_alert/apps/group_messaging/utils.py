@@ -28,6 +28,8 @@ def process_queue(router):
                                                    backend=message.backend)
         msg = OutgoingMessage(conn, message.text)
         msg.send()
+        message.status = str(OutgoingLog.DELIVERED)
+        message.save()
 
 
 def send_message(sender, groups, text, date):

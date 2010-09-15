@@ -158,11 +158,11 @@ class OutgoingLog(models.Model):
     VERBOSE_QUEUED = _(u"Queued")
 
     STATUSES = (
-        (QUEUED, ugettext_lazy(VERBOSE_QUEUED)),
-        (PENDING, ugettext_lazy(VERBOSE_PENDING)),
-        (DELIVERED, ugettext_lazy(VERBOSE_DELIVERED)),
-        (TIMEOUT, ugettext_lazy(VERBOSE_TIMEOUT)),
-        (FAILED, ugettext_lazy(VERBOSE_FAILED)),
+        (str(QUEUED), ugettext_lazy(VERBOSE_QUEUED)),
+        (str(PENDING), ugettext_lazy(VERBOSE_PENDING)),
+        (str(DELIVERED), ugettext_lazy(VERBOSE_DELIVERED)),
+        (str(TIMEOUT), ugettext_lazy(VERBOSE_TIMEOUT)),
+        (str(FAILED), ugettext_lazy(VERBOSE_FAILED)),
     )
 
     RAW_STATUSES = [VERBOSE_PENDING, VERBOSE_DELIVERED, \
