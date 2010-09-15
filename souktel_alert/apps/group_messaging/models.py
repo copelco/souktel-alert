@@ -7,7 +7,7 @@ from django.db import models
 from django.contrib.auth.models import User, UserManager
 from django.utils.translation import ugettext as _, ugettext_lazy
 
-from rapidsms.models import Contact
+from rapidsms.models import Contact, Backend
 
 
 class Site(models.Model):
@@ -168,19 +168,16 @@ class OutgoingLog(models.Model):
     RAW_STATUSES = [VERBOSE_PENDING, VERBOSE_DELIVERED, \
                     VERBOSE_TIMEOUT, VERBOSE_FAILED,VERBOSE_QUEUED]
 
-    sender = models.ForeignKey(Contact, \
-                               verbose_name=ugettext_lazy(u"Sender"))
-    identity = models.CharField(max_length=30, \
-                                verbose_name=ugettext_lazy(u"Identity"))
-    backend = models.CharField(max_length=15, \
-                               verbose_name=ugettext_lazy(u"Backend"))
-    text = models.TextField(verbose_name=ugettext_lazy(u"Content"))
-    status = models.CharField(max_length=1, choices=STATUSES, default=QUEUED, \
-                              verbose_name=ugettext_lazy(u"Status"))
-    sent_on = models.DateTimeField(blank=True, null=True, \
-                                   verbose_name=ugettext_lazy(u"Send Date"))
-    received_on = models.DateTimeField(blank=True, null=True, \
-                                 verbose_name=ugettext_lazy(u"Reception Date"))
+    sender = models.ForeignKey(Contact, verbose_name=_(u"Sender"))
+    identity = models.CharField(max_length=30, verbose_name=_(u"Identity"))
+    backend = models.ForeignKey(Backend, verbose_name=_(u"Backend"))
+    text = models.TextField(verbose_name=_(u"Content"))
+    status = models.CharField(max_length=1, choices=STATUSES, default=QUEUED,
+                              verbose_name=_(u"Status"))
+    sent_on = models.DateTimeField(blank=True, null=True,
+                                   verbose_name=_(u"Send Date"))
+    received_on = models.DateTimeField(blank=True, null=True,
+                                       verbose_name=_(u"Reception Date"))
 
     def text_length(self):
         return self.text.__len__()

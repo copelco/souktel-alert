@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 # encoding=utf-8
-
+import logging
 from datetime import datetime
+
 from rapidsms.models import Connection, Backend
+from rapidsms.messages.outgoing import OutgoingMessage
+
 from group_messaging.models import SendingLog, OutgoingLog
+
+
+logger = logging.getLogger(__name__)
+
 
 def process_queue_callback(router, *args, **kwargs):
     return process_queue(router)
+
 
 def process_queue(router):
 
@@ -14,30 +22,13 @@ def process_queue(router):
     messages = OutgoingLog.objects.filter(status=OutgoingLog.QUEUED)[:10]
 
     for message in messages:
+        logger.debug('Processing message: %s', message)
+        
+        conn, _ = Connection.objects.get_or_create(identity=message.identity,
+                                                   backend=message.backend)
+        msg = OutgoingMessage(conn, message.text)
+        msg.send()
 
-        # loop on recipients
-        back = None
-
-        for backend in router.backends:
-            if hasattr(backend, 'slug') and backend.slug == message.backend \
-               or hasattr(backend, 'type') and backend.type == message.backend:
-                back = backend
-                
-        if not back:
-            message.status = message.FAILED
-            message.save()
-            continue
-
-        # create message object
-        try:
-            msg = back.message(message.identity, message.text)
-            msg.send()
-            message.status = message.PENDING
-            message.sent_on = datetime.now()
-            message.save()
-        except:
-            message.status = message.FAILED
-            message.save()
 
 def send_message(sender, groups, text, date):
     

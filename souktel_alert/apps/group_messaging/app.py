@@ -61,7 +61,8 @@ class App(AppBase):
             return func(self, message, *captures)
         except Exception, e:
             self.exception(e)
-            return True
+            message.respond('An error has occurred.')
+            return False
 
     keyword.prefix = ['queue']
     @keyword('')
