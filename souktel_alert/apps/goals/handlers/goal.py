@@ -76,7 +76,6 @@ class GoalHandler(KeywordHandler):
         if goal:
             goal.answers.create(body=text)
             goal.in_session = False
-            goal.complete = True
             goal.save()
             response = 'Thank you for your response!'
         else:

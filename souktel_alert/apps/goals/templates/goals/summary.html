@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table>
+    <tr>
+        <th>Goal</th>
+        <th>Contact</th>
+        <th>Date Created</th>
+        <th>Date Last Notified</th>
+        <th>In Session</th>
+        <th>Complete</th>
+    {% for answer in total_answers %}
+        <th>Answer {{ forloop.counter }}</th>
+    {% endfor %}
+    </tr>
+{% for goal in goals %}
+    <tr>
+        <td>{{ goal.body }}</td>
+        <td>{{ goal.contact }}</td>
+        <td>{{ goal.date_created }}</td>
+        <td>{{ goal.date_last_notified }}</td>
+        <td>{{ goal.in_session }}</td>
+        <td>{{ goal.complete }}</td>
+    {% for answer in goal.answers.all %}
+        <td>{{ answer }}</td>
+    {% endfor %}
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}
