@@ -46,13 +46,14 @@ class GoalsApp(AppBase):
         from goals.models import Goal
 
         self.debug('{0} running'.format(SCHEDULE_DESC))
-        start_date = datetime.datetime.now() - self.notification_treshold
-        goals = Goal.objects.filter(date_last_notified__lt=start_date,
-                                    in_session=True)
-        for goal in goals:
-            msg = OutgoingMessage(connection=goal.connection,
-                                  template=self.template,
-                                  goal=goal.body)
-            msg.send()
-            goal.date_last_notified = datetime.datetime.now()
-            goal.save()
+        # start_date = datetime.datetime.now() - self.notification_treshold
+        # goals = Goal.objects.filter(date_last_notified__lt=start_date,
+        #                             in_session=True)
+        # 
+        # for goal in goals:
+        #     msg = OutgoingMessage(connection=goal.connection,
+        #                           template=self.template,
+        #                           goal=goal.body)
+        #     msg.send()
+        #     goal.date_last_notified = datetime.datetime.now()
+        #     goal.save()
