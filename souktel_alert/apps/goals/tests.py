@@ -45,3 +45,10 @@ class TestGoals(TestScript):
         1112223333 > goal 5
         1112223333 < You don't currently have any open goal sessions
         """)
+
+    def test_unrecognized(self):
+        """ Users must register before using the goals app """
+        self.assertInteraction("""
+        5555555555 > goal my new goal
+        5555555555 < You must register before using the goals app
+        """)

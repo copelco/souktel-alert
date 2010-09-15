@@ -23,12 +23,11 @@ class GoalHandler(KeywordHandler):
         try:
             contact = Contact.objects.filter(connection__identity=identity)[0]
         except IndexError:
-            self.warning('{0} is unrecognized')
-            contact = None
-        if contact:
-            # associate connection to contact for later use
-            connection.contact = contact
-            connection.save()
+            self.warning('{0} is unrecognized'.format(connection))
+            self.respond('You must register before using the goals app')
+            return True
+        connection.contact = contact
+        connection.save()
         if answer_re.match(text):
             return self._handle_answer(text)
         elif new_re.match(text):
@@ -54,7 +53,5 @@ class GoalHandler(KeywordHandler):
             response = 'Thank you for your response!'
         else:
             response = "You don't currently have any open goal sessions"
-        msg = OutgoingMessage(connection=self.msg.connection,
-                              template=response)
-        msg.send()
+        self.respond(response)
         return True
