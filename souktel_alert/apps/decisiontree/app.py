@@ -41,10 +41,10 @@ class App(AppBase):
                 # This is a hack - the text will only encode in ascii if it doesn't have pashto chars
                 try:
                   msg.text.encode('ascii')
-                  tree = Tree.objects.get(trigger="default-en")
+                  tree, _ = Tree.objects.get_or_create(trigger="default-en")
                   self.debug("No trigger found using default-en")
                 except UnicodeEncodeError:
-                  tree = Tree.objects.get(trigger="default-pus")
+                  tree, _ = Tree.objects.get_or_create(trigger="default-pus")
                   self.debug("No trigger found using default-pus")
 
                 # start a new session for this person and save it
