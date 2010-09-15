@@ -1,4 +1,5 @@
 import re
+import datetime
 
 from rapidsms.models import Contact, Connection
 from rapidsms.messages import OutgoingMessage
@@ -8,7 +9,8 @@ from rapidsms.contrib.handlers.handlers.keyword import KeywordHandler
 
 new_re = re.compile(r'\w+')
 answer_re = re.compile(r'\d+')
-active_re = re.compile(r'^active$')
+active_re = re.compile(r'^next$')
+close_re = re.compile(r'^close$')
 
 
 class GoalHandler(KeywordHandler):
@@ -22,17 +24,17 @@ class GoalHandler(KeywordHandler):
         connection = self.msg.connection
         identity = connection.identity
         try:
-            contact = Contact.objects.filter(connection__identity=identity)[0]
+            Contact.objects.filter(connection__identity=identity)[0]
         except IndexError:
             self.warning('{0} is unrecognized'.format(connection))
             self.respond('You must register before using the goals app')
             return True
-        connection.contact = contact
-        connection.save()
         if answer_re.match(text):
             return self._handle_answer(text, connection.contact)
         if active_re.match(text):
             return self._handle_active(text, connection.contact)
+        if close_re.match(text):
+            return self._handle_close(text, connection.contact)
         elif new_re.match(text):
             return self._handle_new(text, connection.contact)
 
@@ -40,21 +42,34 @@ class GoalHandler(KeywordHandler):
         contact.goals.create(body=text, contact=self.msg.connection.contact)
         self.respond('Your goal has been recorded.')
 
-    def _handle_active(self, text, contact):
+    def _handle_active(self, text, contact):    
+        complete_goals = contact.goals.filter(complete=False)
         try:
-            complete_goals = contact.goals.filter(complete=False)
             goal = complete_goals.order_by('date_last_notified')[0]
         except IndexError:
             self.respond('All of your goals are complete')
+        # close all other sessions
         contact.goals.update(in_session=False)
         goal.in_session = True
+        goal.date_last_notified = datetime.datetime.now()
         goal.save()
-        template = """You stated that your goal was "%(goal)s". Please reply with a number between 1 and 5. Thanks!"""
-        self.respond(template, goal=goal)
+        month = goal.date_created.strftime('%b')
+        from goals.app import GoalsApp
+        self.respond(GoalsApp.template, month=month, goal=goal)
+
+    def _handle_close(self, text, contact):    
+        try:
+            goal = contact.goals.filter(complete=False, in_session=True)[0]
+        except IndexError:
+            self.respond('No goals to close')
+        goal.in_session = False
+        goal.complete = True
+        goal.save()
+        self.respond('Goal "%(goal)s" closed', goal=goal)
 
     def _handle_answer(self, text, contact):
         try:
-            goal = contact.goals.filter(in_session=True)[0]
+            goal = contact.goals.filter(in_session=True, complete=False)[0]
         except IndexError:
             self.warning('No goal sessions found for {0}'.format(contact))
             goal = None

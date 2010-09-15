@@ -37,7 +37,7 @@ class TestGoals(TestScript):
         1112223333 < Thank you for your response!
         """)
         goal = self.contact.goals.all()[0]
-        self.assertTrue(goal.complete)
+        self.assertFalse(goal.in_session)
 
     def test_unopened_session(self):
         """ Users can only answer a goal if a session is active """
@@ -53,12 +53,24 @@ class TestGoals(TestScript):
         5555555555 < You must register before using the goals app
         """)
 
-    def test_active(self):
-        """ Users must register before using the goals app """
+    def test_next(self):
+        """ Goals can be accessed with the "next" command """
         goal = Goal.objects.create(contact=self.contact, body='test')
         self.assertInteraction("""
-        1112223333 > goal active
-        1112223333 < You stated that your goal was "test". Please reply with a number between 1 and 5. Thanks!
+        1112223333 > goal next
+        1112223333 < In Sep., you stated that your goal was "test". How are you progressing towards this goal? Text "goal" with a number from 0 to 5, where 5 = great progress, 0 = no progress, e.g. "goal 4"
         1112223333 > goal 5
         1112223333 < Thank you for your response!
         """)
+
+    def test_close(self):
+        """ Goals can be closed with the "close" command """
+        goal = Goal.objects.create(contact=self.contact, body='test',
+                                   in_session=True)
+        self.assertInteraction("""
+        1112223333 > goal close
+        1112223333 < Goal "test" closed
+        """)
+        goal = self.contact.goals.all()[0]
+        self.assertFalse(goal.in_session)
+        self.assertTrue(goal.complete)
