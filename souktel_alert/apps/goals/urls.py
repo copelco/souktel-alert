@@ -4,5 +4,5 @@ from goals import views
 
 
 urlpatterns = patterns('',
-    url(r'^goals/summary/$', views.summary, name='goals-summary'),
+    url(r'^goals/summary/$', views.summary, name='goal-summary'),
 )

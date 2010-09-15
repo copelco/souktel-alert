@@ -17,8 +17,8 @@
     <tr>
         <td>{{ goal.body }}</td>
         <td>{{ goal.contact }}</td>
-        <td>{{ goal.date_created }}</td>
-        <td>{{ goal.date_last_notified }}</td>
+        <td>{{ goal.date_created|date:"d/m/Y h:i:s a" }}</td>
+        <td>{{ goal.date_last_notified|date:"d/m/Y h:i:s a" }}</td>
         <td>{{ goal.in_session }}</td>
         <td>{{ goal.complete }}</td>
     {% for answer in goal.answers.all %}

@@ -44,6 +44,7 @@
 <li><a href="{% url recipients_list %}">{% trans "Manage Recipients" %}</a> {% include "help_menu_recipients.html" %}</li>
 <li><a href="{% url messages_list %}">{% trans "Manage Message Templates" %}</a> {% include "help_menu_messages.html" %} </li>
 <li><a href="/tree">{% trans "Surveys" %}</a> {% include "help_menu_messages.html" %} </li>
+<li><a href="{% url goal-summary %}">{% trans "Goal Summary" %}</a> {% include "help_menu_messages.html" %} </li>
 <li><a href="{% url outgoinglog_list %}">{% trans "View Logs" %}</a> {% include "help_menu_logs.html" %}</li>
 </ul>
 {% block submenu %}{% endblock %}
