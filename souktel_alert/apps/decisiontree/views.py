@@ -234,3 +234,64 @@ def deletequestion(request, questionid):
     context = (mycontext)
 
     return redirect(questionlist)
+
+
+@contact_required
+def addanswer(request, answerid=None):
+
+    validationMsg = ""
+    answer = None
+    if answerid:
+           answer = get_object_or_404(Answer, pk=answerid)
+
+
+    if request.method == 'POST':
+        form = AnswerForm(request.POST, instance=answer)
+        if form.is_valid():
+            answer = form.save()
+            if answerid:
+                validationMsg =("You have successfully updated the Answer")
+            else:
+                validationMsg = "You have successfully inserted Answer %s." % question.text
+                mycontext = {'validationMsg':validationMsg}
+                context = (mycontext)
+                return redirect(answerlist)
+
+    else:
+        if answer:
+            data = {'name':answer.name,'type':answer.type, 'answer':answer.answer, 'description':answer.description}
+        else:
+            data = {'name': '', 'type': '', 'answer': '', 'description': ''}
+        form = AnswerForm(data)
+
+    if not answerid:
+        answerid = 0
+
+    mycontext = {'answer':answer,'form':form, 'answerid': answerid,'validationMsg':validationMsg}
+    context = (mycontext)
+    return render_to_response('tree/answer.html', context,
+                              context_instance=RequestContext(request))
+
+@contact_required
+def deleteanswer(request, answerid):
+
+    answer = Answer.objects.get(id=answerid)
+    question.delete()
+    mycontext = {'answer': answer}
+    context = (mycontext)
+
+    return redirect(answerlist)
+
+def answerlist(req):
+    allAnswers = Answer.objects.all()
+    answer_count = Answer.objects.count()
+
+    context_instance=RequestContext(req)
+    if len(allAnswers) != 0:
+        q = allAnswers[len(allAnswers) - 1]
+        context_instance["answers"] = allAnswers
+        context_instance["a"] = a
+        context_instance["atotal"] = answer_count
+        return render_to_response("tree/answers_list.html", context_instance)
+    else:
+		return render_to_response("tree/answers_list.html", context_instance)
