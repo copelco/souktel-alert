@@ -31,7 +31,7 @@ def summary(request):
             now = datetime.datetime.now()
             for goal in enabled_goals:
                 goal.schedule_start_date = start_date
-                goal.schedule_repeat = frequency
+                goal.schedule_frequency = frequency
                 goal.save()
             messages.info(request, 'Schedule saved successfully')
             return HttpResponseRedirect(reverse('goal-summary'))

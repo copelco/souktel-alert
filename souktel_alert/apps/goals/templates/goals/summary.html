@@ -23,7 +23,7 @@
                 <td>{{ form.apply_schedule }}{{ form.id }}</td>
                 <td>{{ goal.body }}</td>
                 <td>{{ goal.contact }}</td>
-                <td>{{ goal.get_schedule_repeat_display }} starting at {{ goal.schedule_start_date|date:"d/m/Y h:i:s a" }}</td>
+                <td>{{ goal.get_schedule_frequency_display }} starting at {{ goal.schedule_start_date|date:"d/m/Y h:i:s a" }}</td>
                 <td>{{ goal.date_last_notified|date:"d/m/Y h:i:s a" }}</td>
                 <td>{{ goal.date_next_notified|date:"d/m/Y h:i:s a" }}</td>
             {% for answer in goal.answers.all %}

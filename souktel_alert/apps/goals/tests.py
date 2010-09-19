@@ -1,5 +1,8 @@
+import datetime
 import unittest
 import logging
+
+from dateutil.relativedelta import relativedelta
 
 from django.test import TransactionTestCase, TestCase
 
@@ -74,3 +77,27 @@ class TestGoals(TestScript):
         goal = self.contact.goals.all()[0]
         self.assertFalse(goal.in_session)
         self.assertTrue(goal.complete)
+
+
+class TestSchedule(TestCase):
+    def setUp(self):
+        self.contact = Contact.objects.create(first_name='John',
+                                              last_name='Doe')
+        self.goal = Goal.objects.create(contact=self.contact, body='test')
+
+    def test_future_start_date(self):
+        """ date_next_notified should equal schedule_start_date if in future """
+        now = datetime.datetime.now()
+        delta = relativedelta(days=+1)
+        self.goal.schedule_start_date = now + delta
+        self.goal.schedule_frequency = 'daily'
+        self.assertEqual(self.goal.get_next_date(), now + delta)
+
+    def test_near_past(self):
+        """ date_next_notified should equal schedule_start_date if in future """
+        now = datetime.datetime.now()
+        delta = relativedelta(days=+1)
+        self.goal.schedule_start_date = now - delta + relativedelta(hours=+1)
+        self.goal.schedule_frequency = 'daily'
+        self.assertEqual(self.goal.get_next_date(),
+                         self.goal.schedule_start_date + delta)
