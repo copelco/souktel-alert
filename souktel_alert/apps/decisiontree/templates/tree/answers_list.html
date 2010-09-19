@@ -15,7 +15,7 @@
 {% block content %}
 
 <div class="module">
-<h2> Questions List</h2>
+<h2> Answers List</h2>
 <table class='list'>
     <colgroup> 
   <col class='number' />
@@ -23,28 +23,23 @@
     <col class='number' />
     <col class='number' />
     <col class='number' />
-    <col class='number' />
     </colgroup>
     <tr class='secondRow doNotFilter'>
     <th class='name'>ID</th>
-    <th class='name'>Question Text</th>
+    <th class='name'>Answer Text</th>
     <th class='name'>Edit</th>
     <th class='name'>Delete</th>
-    <th class='name'>Answers</th>
     <th class='name'></th>
     <th class='name'></th>
-        {% if questions %}{% for question in questions %}
+        {% if answers %}{% for answer in answers %}
     <tr>
-    <td class='name'>{{ question.id}}</td>
-    <td class='name'>{{ question.text }}</td>
-    <td class='name'><a  href="{% url insert_question question.id %}"><img style="border:0px"
+    <td class='name'>{{ answer.id}}</td>
+    <td class='name'>{{ answer.text }}</td>
+    <td class='name'><a  href="{% url insert_answer answer.id %}"><img style="border:0px"
         src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
     </td>
-    <td class='name'><a href = "javascript:deleteMessage('{% url delete_question question.id %}')">
+    <td class='name'><a href = "javascript:deleteMessage('{% url delete_answer answer.id %}')">
         <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
-    </td>
-    <td class='name'><a  href="{% url insert_question question.id %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
     </td>
     <td class='name'><a href ="">
         
@@ -70,7 +65,7 @@
                     {% if Glist.has_next %}
                     <a href="?page={{ Glist.next_page_number }}">next</a>
                     {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the Questions = {{ qtotal }}</span> </td>
+                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the Questions = {{ atotal }}</span> </td>
 
         </tr>
 </table>
