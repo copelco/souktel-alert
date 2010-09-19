@@ -94,7 +94,7 @@ INSTALLED_APPS = [
     "rclickatell",
     "rerouter",
     # "rapidsms_xforms",
-    #"group_messaging",
+    "group_messaging",
     "goals",
     #"poll",
     "decisiontree",
