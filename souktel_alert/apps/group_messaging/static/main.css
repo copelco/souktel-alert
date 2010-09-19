@@ -91,3 +91,7 @@ button.tick, a.tick, p.tick, div.tick {
 button.cross, a.cross, p.cross, div.cross {
     background-image: url('/static/group_messaging/blueprint/plugins/buttons/icons/cross.png');
 }
+
+table.auto {
+    width: auto;
+}

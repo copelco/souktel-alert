@@ -1,30 +1,51 @@
 {% extends "base.html" %}
 
 {% block content %}
-<table>
-    <tr>
-        <th>Goal</th>
-        <th>Contact</th>
-        <th>Date Created</th>
-        <th>Date Last Notified</th>
-        <th>In Session</th>
-        <th>Complete</th>
-    {% for answer in total_answers %}
-        <th>Answer {{ forloop.counter }}</th>
+<h1>Goals</h1>
+<form action='' method='post' accept-charset="utf-8">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <table class='auto'>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Goal</th>
+            <th>Contact</th>
+            <th>Schedule</th>
+            <th>Date Last Notified</th>
+            <th>Date Next Notified</th>
+        {% for answer in total_answers %}
+            <th>Answer {{ forloop.counter }}</th>
+        {% endfor %}
+        </tr>
+    {% for form in formset.forms %}
+        {% with form.instance as goal %}
+            <tr>
+                <td>{{ form.apply_schedule }}{{ form.id }}</td>
+                <td>{{ goal.body }}</td>
+                <td>{{ goal.contact }}</td>
+                <td>{{ goal.get_schedule_repeat_display }} starting at {{ goal.schedule_start_date|date:"d/m/Y h:i:s a" }}</td>
+                <td>{{ goal.date_last_notified|date:"d/m/Y h:i:s a" }}</td>
+                <td>{{ goal.date_next_notified|date:"d/m/Y h:i:s a" }}</td>
+            {% for answer in goal.answers.all %}
+                <td>{{ answer }}</td>
+            {% endfor %}    
+        {% endwith %}
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan='7'>No goals</td>
+        </tr>
     {% endfor %}
-    </tr>
-{% for goal in goals %}
-    <tr>
-        <td>{{ goal.body }}</td>
-        <td>{{ goal.contact }}</td>
-        <td>{{ goal.date_created|date:"d/m/Y h:i:s a" }}</td>
-        <td>{{ goal.date_last_notified|date:"d/m/Y h:i:s a" }}</td>
-        <td>{{ goal.in_session }}</td>
-        <td>{{ goal.complete }}</td>
-    {% for answer in goal.answers.all %}
-        <td>{{ answer }}</td>
-    {% endfor %}
-    </tr>
-{% endfor %}
-</table>
+    </table>
+    {% if goals %}
+        <h1>Schedule</h1>
+        <table class='auto'>
+            {{ form }}
+            <tr>
+                <td></td>
+                <td><input type="submit" name="submit" value="Submit" id="submit"></td>
+            </tr>
+        </table>
+    {% endif %}
+</form>
 {% endblock %}
