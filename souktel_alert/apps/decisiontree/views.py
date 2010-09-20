@@ -309,6 +309,8 @@ def filter(request):
     identityMsg=""
     textMsg=""
     answer2=""
+    answerF=""
+
     #if request.method == 'POST':
     form = ReportForm(request.POST)
 
