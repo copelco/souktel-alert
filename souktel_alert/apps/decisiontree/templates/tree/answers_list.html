@@ -34,7 +34,7 @@
         {% if answers %}{% for answer in answers %}
     <tr>
     <td class='name'>{{ answer.id}}</td>
-    <td class='name'>{{ answer.text }}</td>
+    <td class='name'>{{ answer.answer }}</td>
     <td class='name'><a  href="{% url insert_answer answer.id %}"><img style="border:0px"
         src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
     </td>
@@ -73,7 +73,7 @@
 {% endblock %}
 
 {% block submenu %}
-<ul><li><a href = "{% url add_question %}" >Add new Question</a></li>
-<li><a href = "/tree" >Back to Survey list</a></li></ul>
+<ul><li><a href = "{% url add_answer %}" >Add new Answer</a></li>
+<li><a href = "tree" >Back to Question list</a></li></ul>
 {% endblock %}
 

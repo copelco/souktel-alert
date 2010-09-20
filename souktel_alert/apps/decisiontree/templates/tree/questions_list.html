@@ -31,7 +31,7 @@
     <th class='name'>Edit</th>
     <th class='name'>Delete</th>
     <th class='name'>Answers</th>
-    <th class='name'></th>
+    <th class='name'>Questions Path</th>
     <th class='name'></th>
         {% if questions %}{% for question in questions %}
     <tr>
@@ -43,14 +43,13 @@
     <td class='name'><a href = "javascript:deleteMessage('{% url delete_question question.id %}')">
         <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
     </td>
-    <td class='name'><a  href="{% url insert_question question.id %}"><img style="border:0px"
+    <td class='name'><a  href="{% url anwser_list %}"><img style="border:0px"
         src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
     </td>
-    <td class='name'><a href ="">
-        
+    <td class='name'><a  href="{% url anwser_list %}"><img style="border:0px"
+        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
     </td>
-    <td class='name'><a href ="">
-        
+    <td class='name'><a href ="">     
     </td>
     </tr>
         {% endfor %}

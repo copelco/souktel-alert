@@ -252,7 +252,7 @@ def addanswer(request, answerid=None):
             if answerid:
                 validationMsg =("You have successfully updated the Answer")
             else:
-                validationMsg = "You have successfully inserted Answer %s." % question.text
+                validationMsg = "You have successfully inserted Answer %s." % answer.answer
                 mycontext = {'validationMsg':validationMsg}
                 context = (mycontext)
                 return redirect(answerlist)
@@ -276,7 +276,7 @@ def addanswer(request, answerid=None):
 def deleteanswer(request, answerid):
 
     answer = Answer.objects.get(id=answerid)
-    question.delete()
+    answer.delete()
     mycontext = {'answer': answer}
     context = (mycontext)
 
@@ -288,10 +288,57 @@ def answerlist(req):
 
     context_instance=RequestContext(req)
     if len(allAnswers) != 0:
-        q = allAnswers[len(allAnswers) - 1]
+        a = allAnswers[len(allAnswers) - 1]
         context_instance["answers"] = allAnswers
         context_instance["a"] = a
         context_instance["atotal"] = answer_count
         return render_to_response("tree/answers_list.html", context_instance)
     else:
 		return render_to_response("tree/answers_list.html", context_instance)
+
+
+@contact_required
+def filter(request):
+
+    outgoinglog_list=""
+    form =""
+    outgoinglog=""
+    answer=""
+    senderMsg=""
+    identityMsg=""
+    textMsg=""
+    answer2=""
+    #if request.method == 'POST':
+    form = ReportForm(request.POST)
+
+    if form.is_valid():
+            answer = form.cleaned_data['answer']
+           # senderMsg = form.cleaned_data['sender']
+           # identityMsg  = form.cleaned_data['identity']
+           # textMsg  = form.cleaned_data['text']
+
+    else:
+             print "form is not valid"
+
+
+    answer = Entries.objects.filter(status=statusMsg)
+    answer2 = Entries.objects.all()
+    paginator = Paginator(outgoinglog,10)
+
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    try:
+        answer_list = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        answer_list = paginator.page(paginator.num_pages)
+
+    mycontext = {'answerlog': answer_list,'form':form ,'count':0,'logs':answer2}
+    context = (mycontext)
+    return render_to_response('outgoing_log.html',context , context_instance=RequestContext(request))
+
+
+
+

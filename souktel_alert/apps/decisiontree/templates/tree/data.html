@@ -3,7 +3,6 @@
 {% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 {% block content %}
 {% load tree-tags %}
-
 <div class="module">
     <a href="/tree"><h2>Back to Surveys List</h2></a>
 </div>
@@ -11,6 +10,45 @@
     
 </div>
 <div class="module">
+    <h1>Filter</h1>
+</div>
+<form action="{% url answer_filter %}" method="POST" class="pretty">{% csrf_token %}
+<fieldset>
+<legend>
+search
+</legend>
+
+<table>
+
+<tr><td>Answer</td>
+<td>
+<select name="answer" id="id_answer" >
+    <option value="" selected="selected">---------</option>
+    	    {% for session in sessions %}
+        	{% for state in states %}
+                    {% for entry in session.entry_set.all %}
+                        {% ifequal entry.transition.current_state state %}
+
+            <option value="{{entry.transition.answer.answer}}">{{entry.transition.answer.answer}}</option>
+                    {% endifequal %}
+                    {% endfor %}
+
+
+                {% endfor %}
+
+        {% endfor %}
+</select>
+</td>
+</tr>
+</table>
+
+<p class="buttons">
+<button type="submit" class="button positive icon tick">Search</button>
+</p>
+</fieldset>
+</form>
+
+
 	{% if t %}
 	<h2>All Data for Survey: {{ t.trigger }}</h2>
 	<table>
@@ -30,9 +68,12 @@
                 <th scope="row">{{ session.person.phone }}</th>
 			<!--	<td>{{ session.start_date }}</td> -->
 				{% for state in states %}
-                <td>
+                
                     {% for entry in session.entry_set.all %}
                         {% ifequal entry.transition.current_state state %}
+                        <tr>
+                <th scope="row">{{entry.session.connection}}</th>
+                <td>
                         {{entry.transition.answer.answer}}
                         {% endifequal %} 
                     {% endfor %}
@@ -41,9 +82,10 @@
 			</tr>
 			{% endfor %}
         </tbody>
-        {% else %}
-		
-        {% if sessions and paths and loops %}
+
+<!--        {% else %}
+
+       {% if sessions and paths and loops %}
         <thead>
             <tr>
                 <th scope="col">Person</th>
@@ -64,7 +106,7 @@
                 <td>
                     <!--  this is really ugly but it works.  does a lot of unneccessary iteration 
                            because django templates don't seem to support an easy way to do this correctly. -->
-                    {% for map_session, value in map.items %}
+    <!--                {% for map_session, value in map.items %}
                         {% ifequal session map_session %}
                             {{ value }}
                         {% endifequal %}
@@ -104,7 +146,7 @@
 	{% endif %}
 </div>
 
-<!--<div class="module dt">
+<div class="module dt">
 	<h2>Edit a Decision Tree</h2>
 	{% if t and not loops %}{% render_state t.root_state %}
 	{% else %} 
