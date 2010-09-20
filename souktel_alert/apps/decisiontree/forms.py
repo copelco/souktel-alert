@@ -54,12 +54,12 @@ class StateForm(forms.ModelForm):
         self.fields['num_retries'].label = 'num retries'
 
 class ReportForm(forms.Form):
-
-    #pass
-    #sender = forms.CharField(label=_(u"Sender"), max_length=50)
-    #identity  = forms.CharField(label=_(u"Identity"),max_length=50)
-     #text  = forms.CharField(label=_(u"text"),max_length=30)
-     answer    = forms.CharField(label=("answer"),required=False)
-    #site      = forms.ModelMultipleChoiceField(queryset= Site.objects.all(), required=True)
-
+    ANALYSIS_TYPES = (
+        ('A', 'Mean'),
+        ('R', 'Median'),
+        ('C', 'Mode'),
+    )
+    answer    = forms.CharField(label=("answer"),required=False)
+    dataanalysis = forms.ChoiceField(choices=ANALYSIS_TYPES)
+    
 
