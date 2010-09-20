@@ -28,7 +28,6 @@ search
         	{% for state in states %}
                     {% for entry in session.entry_set.all %}
                         {% ifequal entry.transition.current_state state %}
-
             <option value="{{entry.transition.answer.answer}}">{{entry.transition.answer.answer}}</option>
                     {% endifequal %}
                     {% endfor %}

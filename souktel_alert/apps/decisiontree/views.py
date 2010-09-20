@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response ,redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from group_messaging.decorators import contact_required
 from decisiontree.forms import *
 from decisiontree.models import *
@@ -312,7 +313,7 @@ def filter(request):
     form = ReportForm(request.POST)
 
     if form.is_valid():
-            answer = form.cleaned_data['answer']
+            answerF = form.cleaned_data['answer']
            # senderMsg = form.cleaned_data['sender']
            # identityMsg  = form.cleaned_data['identity']
            # textMsg  = form.cleaned_data['text']
@@ -320,10 +321,9 @@ def filter(request):
     else:
              print "form is not valid"
 
-
-    answer = Entries.objects.filter(status=statusMsg)
-    answer2 = Entries.objects.all()
-    paginator = Paginator(outgoinglog,10)
+    answer = Entry.objects.filter(text=answerF)
+    answer2 = Entry.objects.all()
+    paginator = Paginator(answer,10)
 
     try:
         page = int(request.GET.get('page', '1'))
