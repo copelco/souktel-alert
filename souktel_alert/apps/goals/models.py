@@ -42,10 +42,8 @@ class Goal(models.Model):
             }
             delta = frequency_map[self.schedule_frequency]
             next_date = self.schedule_start_date
-            print 'next', next_date
             while next_date < now:
                 next_date += delta
-                print 'next', next_date
             return next_date
 
     def save(self, **kwargs):
