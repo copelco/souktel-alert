@@ -8,11 +8,13 @@ from views import messages
 from views import groups
 from views import recipients
 from views import outgoinglog
+from views import incominglog
 
 
 urlpatterns = patterns('',
     url(r'^$', index.index, name='index'),
-    url(r'^group-messaging/messages/$', messages.list, name='messages_list'),    
+    url(r'^group-messaging/messages/$', messages.list, name='messages_list'),
+    url(r'^group-messaging/incominglog/$', incominglog.message_log, name='incoming_log'),
     url(r'^group-messaging/messages/add/$', messages.messageform, name='messages_add'),
     url(r'^group-messaging/messages/send/$', messages.send, name='messages_send'),
     url(r'^group-messaging/messages/update/(\d+)/$', messages.messageform, name='messages_form'),
