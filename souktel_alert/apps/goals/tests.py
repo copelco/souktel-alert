@@ -8,8 +8,10 @@ from django.test import TransactionTestCase, TestCase
 
 from rapidsms.models import Contact, Connection, Backend
 from rapidsms.tests.scripted import TestScript
+from rapidsms.tests.harness import MockRouter
 
 from goals.models import Goal, Answer
+from goals.app import GoalsApp
 
 
 class TestGoals(TestScript):
@@ -84,6 +86,8 @@ class TestSchedule(TestCase):
         self.contact = Contact.objects.create(first_name='John',
                                               last_name='Doe')
         self.goal = Goal.objects.create(contact=self.contact, body='test')
+        self.router = MockRouter()
+        self.app = GoalsApp(router=self.router)
 
     def test_future_start_date(self):
         """ date_next_notified should equal schedule_start_date if in future """
@@ -101,3 +105,27 @@ class TestSchedule(TestCase):
         self.goal.schedule_frequency = 'daily'
         self.assertEqual(self.goal.get_next_date(),
                          self.goal.schedule_start_date + delta)
+
+    def test_goals_to_send_cron_job(self):
+        """ make sure date_next_notified is updated on cron job """
+        now = datetime.datetime.now()
+        delta = relativedelta(days=+1, hours=+1)
+        self.goal.schedule_start_date = now - delta
+        self.goal.schedule_frequency = 'daily'
+        self.goal.date_next_notified = now - delta
+        self.goal.save()
+        self.app.status_update()
+        goal = Goal.objects.get(pk=self.goal.pk)
+        self.assertTrue(goal.date_next_notified > self.goal.date_next_notified)
+
+    def test_no_goals_to_send_cron_job(self):
+        """ make sure only goals with date_next_notified < now are used """
+        now = datetime.datetime.now()
+        delta = relativedelta(hours=+5)
+        self.goal.schedule_start_date = now + delta
+        self.goal.schedule_frequency = 'daily'
+        self.goal.date_next_notified = now + delta
+        self.goal.save()
+        self.app.status_update()
+        goal = Goal.objects.get(pk=self.goal.pk)
+        self.assertEqual(goal.date_next_notified, self.goal.date_next_notified)

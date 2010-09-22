@@ -22,7 +22,7 @@ class GoalsApp(AppBase):
     """ RapidSMS app to track goal setting """
 
     cron_schedule = {'minutes': '*'}
-    notification_treshold = datetime.timedelta(minutes=30)
+    notification_treshold = datetime.timedelta(days=28)
     template = 'In %(month)s., you stated that your goal was "%(goal)s". '\
                'How are you progressing towards this goal? Text "goal" '\
                'with a number from 0 to 5, where 5 = great progress, 0 '\
@@ -42,18 +42,23 @@ class GoalsApp(AppBase):
         self.info('started')
 
     def status_update(self):
-        """ Cron job that's executed every minute """
+        """ cron job handler """
         from goals.models import Goal
 
         self.debug('{0} running'.format(SCHEDULE_DESC))
-        # start_date = datetime.datetime.now() - self.notification_treshold
-        # goals = Goal.objects.filter(date_last_notified__lt=start_date,
-        #                             in_session=True)
-        # 
-        # for goal in goals:
-        #     msg = OutgoingMessage(connection=goal.connection,
-        #                           template=self.template,
-        #                           goal=goal.body)
-        #     msg.send()
-        #     goal.date_last_notified = datetime.datetime.now()
-        #     goal.save()
+        now = datetime.datetime.now()
+        goals = Goal.active.filter(date_next_notified__lt=now)
+        goals = goals.exclude(schedule_start_date__isnull=True,
+                              schedule_frequency='')
+        self.info('found {0} goals'.format(goals.count()))
+        for goal in goals:
+            msg = OutgoingMessage(connection=goal.contact.default_connection,
+                                  template=self.template,
+                                  goal=goal.body)
+            try:
+                msg.send()
+            except Exception, e:
+                self.exception(e)
+            goal.date_last_notified = now
+            goal.date_next_notified = goal.get_next_date()
+            goal.save()

@@ -7,6 +7,12 @@ from django.db import models
 from rapidsms.models import Connection, Contact
 
 
+class ActiveGoalManager(models.Manager):
+    def get_query_set(self):
+            qs = super(ActiveGoalManager, self).get_query_set()
+            return qs.filter(complete=False)
+
+
 class Goal(models.Model):
     REPEAT_CHOICES = (
         ('daily', 'Daily'),
@@ -25,6 +31,9 @@ class Goal(models.Model):
     body = models.TextField()
     in_session = models.BooleanField(default=False)
     complete = models.BooleanField(default=False)
+
+    objects = models.Manager()
+    active = ActiveGoalManager()
 
     def __unicode__(self):
         return self.body
@@ -45,6 +54,7 @@ class Goal(models.Model):
             while next_date < now:
                 next_date += delta
             return next_date
+
 
     def save(self, **kwargs):
         if not self.pk:
