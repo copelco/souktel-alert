@@ -22,7 +22,6 @@ class GoalsApp(AppBase):
     """ RapidSMS app to track goal setting """
 
     cron_schedule = {'minutes': '*'}
-    notification_treshold = datetime.timedelta(days=28)
     template = 'In %(month)s., you stated that your goal was "%(goal)s". '\
                'How are you progressing towards this goal? Text "goal" '\
                'with a number from 0 to 5, where 5 = great progress, 0 '\
