@@ -98,6 +98,7 @@ INSTALLED_APPS = [
     "goals",
     #"poll",
     "decisiontree",
+    
 ]
 
 

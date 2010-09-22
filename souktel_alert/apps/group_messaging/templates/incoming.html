@@ -9,23 +9,9 @@
 
 {% block content %}
 <div class="messages module">
-	<h2>Message Log</h2>
+	<h2>Incoming Message Log</h2>
 	{{ messages_table.as_html }}
-        <tr class="">
-<td colspan="5"><span>
-        {% if message_table.has_previous %}
-            <a href="?page={{ outgoinglog.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ message_table.number }} of {{ message_table.paginator.num_pages }}.
-        </span>
-
-        {% if message_table.has_next %}
-            <a href="?page={{ outgoinglog.next_page_number }}">next</a>
-        {% endif %}
-    </span> &nbsp;&nbsp; |&nbsp;&nbsp;<span> Total number {{ count }}</span> </td>
-
-</tr>
+        {{ count }}
 </div>
+
 {% endblock %}
