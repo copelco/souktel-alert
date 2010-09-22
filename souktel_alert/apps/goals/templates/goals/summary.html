@@ -24,7 +24,7 @@
 <form id='schedule-form' action='' method='post' accept-charset="utf-8">
     {% csrf_token %}
     {{ formset.management_form }}
-    <table class='auto'>
+    <table class='auto list'>
         <tr>
             <th>&nbsp;</th>
             <th>Goal</th>
@@ -42,9 +42,13 @@
                 <td>{{ form.apply_schedule }}{{ form.id }}</td>
                 <td>{{ goal.body }}</td>
                 <td>{{ goal.contact }}</td>
-                <td>{{ goal.get_schedule_frequency_display }} starting at {{ goal.schedule_start_date|date:"d/m/Y h:i:s a" }}</td>
-                <td>{{ goal.date_last_notified|date:"d/m/Y h:i:s a" }}</td>
-                <td>{{ goal.date_next_notified|date:"d/m/Y h:i:s a" }}</td>
+                <td>
+                    {% if goal.schedule_frequency %}
+                        {{ goal.get_schedule_frequency_display }} starting at {{ goal.schedule_start_date|date:"Y-m-d h:i a" }}
+                    {% endif %}
+                </td>
+                <td>{{ goal.date_last_notified|date:"Y-m-d h:i a" }}</td>
+                <td>{{ goal.date_next_notified|date:"Y-m-d h:i a" }}</td>
             {% for answer in goal.answers.all %}
                 <td>{{ answer }}</td>
             {% endfor %}    
