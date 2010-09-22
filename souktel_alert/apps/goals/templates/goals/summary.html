@@ -5,8 +5,14 @@
 <script type="text/javascript" charset="utf-8">
     jQuery(document).ready(function() {
         $("#id_start_date_0").datepicker({dateFormat: 'yy-mm-dd'});
+        $('#select_all').click(function() {
+            var checked = $(this).attr('checked');
+            $("input[name$=apply_schedule]").each(function(idx, input) {
+                $(input).attr('checked', checked);
+            });
+        });
         $('#schedule-form').submit(function() {
-            var checked_boxes = $("input:checked").length;
+            var checked_boxes = $("input[name$=apply_schedule]:checked").length;
             if (checked_boxes == 0) {
                 $( "#dialog-modal" ).dialog({
                     modal: true,
@@ -21,12 +27,13 @@
 
 {% block content %}
 <h1>Goals</h1>
+
 <form id='schedule-form' action='' method='post' accept-charset="utf-8">
     {% csrf_token %}
     {{ formset.management_form }}
     <table class='auto list'>
         <tr>
-            <th>&nbsp;</th>
+            <th><input id='select_all' name='select_all' type='checkbox' /></th>
             <th>Goal</th>
             <th>Contact</th>
             <th>Schedule</th>
