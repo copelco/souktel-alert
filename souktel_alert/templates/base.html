@@ -9,11 +9,14 @@
 
     <link rel="stylesheet" href="/static/group_messaging/blueprint/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/static/group_messaging/blueprint/plugins/buttons/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="/static/group_messaging/lueprint/print.css" type="text/css" media="print">	
+    <link rel="stylesheet" href="/static/group_messaging/lueprint/print.css" type="text/css" media="print">  
     <!--[if lt IE 8]><link rel="stylesheet" href="/static/group_messaging/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
-
     <link rel="stylesheet" media="screen" type="text/css" href="/static/group_messaging/chrome.css" title="Default" />
     <link rel="stylesheet" media="screen" type="text/css" href="/static/group_messaging/main.css" title="Default" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}group_messaging/css/smoothness/jquery-ui-1.8.5.custom.css" type="text/css" />
+
+    <script src="{{ MEDIA_URL }}group_messaging/js/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ MEDIA_URL }}group_messaging/js/jquery-ui-1.8.5.custom.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="/static/group_messaging/ui.js"></script>
     {% block javascript %}{% endblock %}
 </head> 

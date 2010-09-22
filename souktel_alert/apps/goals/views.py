@@ -36,7 +36,8 @@ def summary(request):
             messages.info(request, 'Schedule saved successfully')
             return HttpResponseRedirect(reverse('goal-summary'))
     else:
-        form = ScheduleForm()
+        now = datetime.datetime.now()
+        form = ScheduleForm(initial={'start_date': now})
         formset = GoalFormSet(queryset=goals)
 
     context = {

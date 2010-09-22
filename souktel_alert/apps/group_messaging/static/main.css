@@ -95,3 +95,12 @@ button.cross, a.cross, p.cross, div.cross {
 table.auto {
     width: auto;
 }
+
+.ui-datepicker-calendar table{
+  margin: 0; }
+.ui-datepicker-calendar table th , .ui-datepicker-calendar table td {
+  padding: 0; text-align: center; }
+  
+#id_start_date_1 {
+    margin-left: 1em;
+}

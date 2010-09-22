@@ -1,8 +1,27 @@
 {% extends "base.html" %}
 
+{% block javascript %}
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function() {
+        $("#id_start_date_0").datepicker({dateFormat: 'yy-mm-dd'});
+        $('#schedule-form').submit(function() {
+            var checked_boxes = $("input:checked").length;
+            if (checked_boxes == 0) {
+                $( "#dialog-modal" ).dialog({
+                    modal: true,
+                    resizable: false
+                });
+                return false;
+            }
+        });
+    });
+</script>
+{% endblock %}
+
 {% block content %}
 <h1>Goals</h1>
-<form action='' method='post' accept-charset="utf-8">
+<form id='schedule-form' action='' method='post' accept-charset="utf-8">
     {% csrf_token %}
     {{ formset.management_form }}
     <table class='auto'>
@@ -48,4 +67,7 @@
         </table>
     {% endif %}
 </form>
+<div style='display: none;' id="dialog-modal" title="Missing goal(s)">
+    <p>Please select goals from the list to use the scheduler.</p>
+</div>
 {% endblock %}
