@@ -32,14 +32,16 @@ class GoalHandler(KeywordHandler):
                 return True
             connection.contact = contact
             connection.save()
+        contact = connection.contact
+        is_staff = contact.user and contact.user.is_staff
         if answer_re.match(text):
-            return self._handle_answer(text, connection.contact)
-        elif active_re.match(text):
-            return self._handle_active(text, connection.contact)
-        elif close_re.match(text):
-            return self._handle_close(text, connection.contact)
+            return self._handle_answer(text, contact)
+        elif active_re.match(text) and is_staff:
+            return self._handle_active(text, contact)
+        elif close_re.match(text) and is_staff:
+            return self._handle_close(text, contact)
         elif new_re.match(text):
-            return self._handle_new(text, connection.contact)
+            return self._handle_new(text, contact)
 
     def _handle_new(self, text, contact):
         contact.goals.create(body=text, contact=self.msg.connection.contact)
@@ -60,7 +62,7 @@ class GoalHandler(KeywordHandler):
         from goals.app import GoalsApp
         self.respond(GoalsApp.template, month=month, goal=goal)
 
-    def _handle_close(self, text, contact):    
+    def _handle_close(self, text, contact):
         try:
             goal = contact.goals.filter(complete=False, in_session=True)[0]
         except IndexError:

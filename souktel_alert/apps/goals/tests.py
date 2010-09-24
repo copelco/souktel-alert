@@ -5,6 +5,7 @@ import logging
 from dateutil.relativedelta import relativedelta
 
 from django.test import TransactionTestCase, TestCase
+from django.contrib.auth.models import User
 
 from rapidsms.models import Contact, Connection, Backend
 from rapidsms.tests.scripted import TestScript
@@ -58,8 +59,21 @@ class TestGoals(TestScript):
         5555555555 < You must register before using the goals app
         """)
 
-    def test_next(self):
+    def test_next_non_staff(self):
+        """ Non-staff cannot use the "next" command """
+        goal = Goal.objects.create(contact=self.contact, body='test')
+        self.assertInteraction("""
+        1112223333 > goal next
+        1112223333 < Your goal has been recorded.
+        """)
+
+    def test_next_staff(self):
         """ Goals can be accessed with the "next" command """
+        user = User.objects.create_user('test', 'test@abc.com', 'test')
+        user.is_staff = True
+        user.save()
+        self.contact.user = user
+        self.contact.save()
         goal = Goal.objects.create(contact=self.contact, body='test')
         self.assertInteraction("""
         1112223333 > goal next
@@ -68,7 +82,22 @@ class TestGoals(TestScript):
         1112223333 < Thank you for your response!
         """)
 
-    def test_close(self):
+    def test_close_non_staff(self):
+        """ Non-staff cannot close goals """
+        goal = Goal.objects.create(contact=self.contact, body='test',
+                                   in_session=True)
+        self.assertInteraction("""
+        1112223333 > goal close
+        1112223333 < Your goal has been recorded.
+        """)
+
+    def test_close_staff(self):
+        """ Goals can be closed with the "close" command """
+        user = User.objects.create_user('test', 'test@abc.com', 'test')
+        user.is_staff = True
+        user.save()
+        self.contact.user = user
+        self.contact.save()
         """ Goals can be closed with the "close" command """
         goal = Goal.objects.create(contact=self.contact, body='test',
                                    in_session=True)
