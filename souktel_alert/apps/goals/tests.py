@@ -63,7 +63,7 @@ class TestGoals(TestScript):
         goal = Goal.objects.create(contact=self.contact, body='test')
         self.assertInteraction("""
         1112223333 > goal next
-        1112223333 < In Sep., you stated that your goal was "test". How are you progressing towards this goal? Text "goal" with a number from 0 to 5, where 5 = great progress, 0 = no progress, e.g. "goal 4"
+        1112223333 < In Sep., "test" was your goal. Text "goal" with a # from 0 to 5, where 5 = great progress, 0 = no progress, e.g. "goal 4"
         1112223333 > goal 5
         1112223333 < Thank you for your response!
         """)
@@ -79,6 +79,28 @@ class TestGoals(TestScript):
         goal = self.contact.goals.all()[0]
         self.assertFalse(goal.in_session)
         self.assertTrue(goal.complete)
+
+
+class GoalLength(TestCase):
+    def setUp(self):
+        self.contact = Contact.objects.create(first_name='John',
+                                              last_name='Doe')
+        self.goal = Goal.objects.create(contact=self.contact, body='test')
+
+    def _body(self, length=10):
+        return 'n' * length
+
+    def test_18_chars(self):
+        month = self.goal.date_created.strftime('%b')
+        template = GoalsApp.template % {'month': month, 'goal': self._body(18)}
+        self.assertTrue(len(template) < 160,
+                        'Too long (%s): %s' % (str(len(template)), template))
+
+    def test_20_chars(self):
+        month = self.goal.date_created.strftime('%b')
+        template = GoalsApp.template % {'month': month, 'goal': self._body(20)}
+        self.assertTrue(len(template) < 160,
+                        'Too long (%s): %s' % (str(len(template)), template))
 
 
 class TestSchedule(TestCase):

@@ -22,9 +22,8 @@ class GoalsApp(AppBase):
     """ RapidSMS app to track goal setting """
 
     cron_schedule = {'minutes': '*'}
-    template = 'In %(month)s., you stated that your goal was "%(goal)s". '\
-               'How are you progressing towards this goal? Text "goal" '\
-               'with a number from 0 to 5, where 5 = great progress, 0 '\
+    template = 'In %(month)s., "%(goal)s" was your goal. Text "goal" '\
+               'with a # from 0 to 5, where 5 = great progress, 0 '\
                '= no progress, e.g. "goal 4"'
 
     def start(self):
