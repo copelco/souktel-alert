@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 # vim: ai ts=4 sts=4 et sw=4
+import csv
 import logging
+from StringIO import StringIO
 
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response ,redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from group_messaging.decorators import contact_required
+
 from decisiontree.forms import *
 from decisiontree.models import *
 
-from StringIO import StringIO
+from group_messaging.decorators import contact_required
 
-import csv
 
 def index(req):
     allTrees = Tree.objects.all()
@@ -29,7 +30,23 @@ def index(req):
     else:
 		return render_to_response("tree/index.html", context_instance)
 
-def data(req, id = None):
+
+@contact_required
+def data(req, id):
+    tree = get_object_or_404(Tree, pk=id)
+    if req.method == 'POST':
+        form = AnswerSearchForm(req.POST, tree=tree)
+        if form.is_valid():
+            answer = form.cleaned_data['answer']
+            # what now?
+    else:
+        form = AnswerSearchForm(tree=tree)
+    context = {
+        'form': form,
+        'tree': tree,
+        'ordered_sessions': tree.sessions.order_by('-start_date'),
+    }
+
     allTrees = Tree.objects.all()
     # ok, the plan is to generate a table of responses per state, but this is tricky with loops.
     # the first thing we'll do is get all the possible states you can reach from the tree
@@ -42,9 +59,15 @@ def data(req, id = None):
         if not loops:
             # this is the easy case.  just create one column per state and then display the results
             sessions = Session.objects.all().filter(tree=t)
-            return render_to_response("tree/data.html",
-                                      RequestContext(req, { "trees": allTrees, "t": t, "states" : all_states, "sessions" : sessions, "loops" : loops}
-                                      ))
+            context.update({
+                "trees": allTrees,
+                "t": t,
+                "states": all_states,
+                "sessions": sessions,
+                "loops": loops,
+            })
+            return render_to_response("tree/data.html", context,
+                                      context_instance=RequestContext(req))
         else: 
             # here what we want is a table where the columns are every unique path through the 
             # tree, and the rows are the sessions, with the paths filled in.
@@ -71,9 +94,15 @@ def data(req, id = None):
                         paths[path][session] = entry.transition.answer
                     else:
                         paths[path] = { session : entry.transition.answer }
-            return render_to_response("tree/data.html",
-                                      RequestContext(req, { "trees": allTrees, "t": t, "paths" : paths, "sessions" : sessions, "loops" : loops }
-                                      ))
+            context.update({
+                "trees": allTrees,
+                "t": t,
+                "paths" : paths,
+                "sessions" : sessions,
+                "loops" : loops,
+            })
+            return render_to_response("tree/data.html", context,
+                                      context_instance=RequestContext(req))
         # now we need to map all states to answers
         states_w_answers = {}
         for state in all_states:
@@ -84,11 +113,16 @@ def data(req, id = None):
             # stupid error fix to prevent trees with loops from exploding.  This should be done better
             t = Tree()
             t.trigger = "Sorry, can't display this tree because it has loops.  We're working on it."
-        return render_to_response("tree/index.html",
-            RequestContext(req, { "trees": allTrees, "t": t }))
+        context.update({
+            "trees": allTrees,
+            "t": t,
+        })
+        return render_to_response("tree/index.html", context,
+                                  context_instance=RequestContext(req))
     else:
-        return render_to_response("tree/index.html",
-            context_instance=RequestContext(req))
+        return render_to_response("tree/index.html", context,
+                                  context_instance=RequestContext(req))
+
 
 def export(req, id = None):
     t = get_tree(id)

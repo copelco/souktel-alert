@@ -55,7 +55,8 @@ class Tree(models.Model):
     def get_all_states(self):
         all_states = []
         all_states.append(self.root_state)
-        self.root_state.add_all_unique_children(all_states)
+        if self.root_state:
+            self.root_state.add_all_unique_children(all_states)
         return all_states
 
     class Meta:
@@ -183,7 +184,7 @@ class Transition(models.Model):
         TreeState to another, via an appropriate 
         Answer. """ 
     current_state = models.ForeignKey(TreeState)
-    answer = models.ForeignKey(Answer)
+    answer = models.ForeignKey(Answer, related_name='transitions')
     next_state = models.ForeignKey(TreeState, blank=True, null=True, related_name='next_state')     
     
     def __unicode__(self):
@@ -196,7 +197,7 @@ class Session(models.Model):
         are in, how many retries they have had, etc. so 
         that we aren't storing all of that in-memory. """ 
     connection = models.ForeignKey(Connection)
-    tree = models.ForeignKey(Tree)
+    tree = models.ForeignKey(Tree, related_name='sessions')
     start_date = models.DateTimeField(auto_now_add=True)
     state = models.ForeignKey(TreeState, blank=True, null=True) # none if the session is complete
     # the number of times the user has tried to answer 
@@ -217,9 +218,9 @@ class Entry(models.Model):
     """ An Entry is a single successful movement within
         a Session.  It represents an accepted Transition 
         from one state to another within the tree. """ 
-    session = models.ForeignKey(Session)
+    session = models.ForeignKey(Session, related_name='entries')
     sequence_id = models.IntegerField()
-    transition = models.ForeignKey(Transition)
+    transition = models.ForeignKey(Transition, related_name='entries')
     time = models.DateTimeField(auto_now_add=True)
     text = models.CharField(max_length=160)
     

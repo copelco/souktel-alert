@@ -91,3 +91,12 @@
 				background: #daf1f9;
 				color: #32a6d1;
 			}
+
+
+span.question {
+    font-style: italic;
+}
+
+span.answer {
+    font-weight: bold;
+}

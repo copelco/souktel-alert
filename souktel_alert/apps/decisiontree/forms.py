@@ -61,5 +61,14 @@ class ReportForm(forms.Form):
     )
     answer    = forms.CharField(label=("answer"),required=False)
     dataanalysis = forms.ChoiceField(choices=ANALYSIS_TYPES)
-    
 
+
+class AnswerSearchForm(forms.Form):
+    answer = forms.ModelChoiceField(queryset=Answer.objects.none())
+
+    def __init__(self, tree, *args, **kwargs):
+        self.tree = tree
+        super(AnswerSearchForm, self).__init__(*args, **kwargs)
+        answers = \
+            Answer.objects.filter(transitions__entries__session__tree=tree)
+        self.fields['answer'].queryset = answers.distinct()

@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     (r'^tree$', views.index),
     
     (r'^tree/data$', views.data),
-    (r'^tree/data/(?P<id>\d+)$', views.data),
+    (r'^tree/data/(?P<id>\d+)/$', views.data),
     
     (r'^tree/data/export$', views.export),
     (r'^tree/data/export/(?P<id>\d+)$', views.export),

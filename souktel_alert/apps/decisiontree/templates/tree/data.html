@@ -1,86 +1,95 @@
 {% extends "base.html" %}
-{% block title %}Decision Trees{% endblock %}
-{% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
-{% block content %}
 {% load tree-tags %}
+
+{% block title %}Decision Trees{% endblock %}
+
+{% block stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
+
+{% block content %}
+
 <div class="module">
     <a href="/tree"><h2>Back to Surveys List</h2></a>
 </div>
 <div class="module">
-    
-</div>
-<div class="module">
     <h1>Filter</h1>
 </div>
-<form action="{% url answer_filter %}" method="POST" class="pretty">{% csrf_token %}
-<fieldset>
-<legend>
-search
-</legend>
-
-<table>
-
-<tr><td>Answer</td>
-<td>
-<select name="answer" id="id_answer" >
-    <option value="" selected="selected">---------</option>
-    	    {% for session in sessions %}
-        	{% for state in states %}
-                    {% for entry in session.entry_set.all %}
-                        {% ifequal entry.transition.current_state state %}
-            <option value="{{entry.transition.answer.answer}}">{{entry.transition.answer.answer}}</option>
-                    {% endifequal %}
-                    {% endfor %}
-
-
-                {% endfor %}
-
-        {% endfor %}
-</select>
-</td>
-</tr>
-</table>
-
-<p class="buttons">
-<button type="submit" class="button positive icon tick">Search</button>
-</p>
-</fieldset>
+<form action="{% url answer_filter %}" method="POST" class="pretty">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Filter by Answer</legend>
+        <table>
+            {{ form }}
+            <tr>
+                <td>&nbsp;</td>
+                <td><button type="submit" class="button positive icon tick">Search</button></td>
+            </tr>
+        </table>
+    </fieldset>
 </form>
 
+<h2>Survey data for "{{ tree.trigger }}"</h2>
 
-	{% if t %}
-	<h2>All Data for Survey: {{ t.trigger }}</h2>
-	<table>
-		{% if sessions and not loops %}
-		<thead>
-			<tr>
-				<th scope="col">Mobile No.</th>
-				<!--<th scope="col">Start Date</th>-->
-				{% for state in states %}
-				<th scope="col">{{state.question.text}}</th>
-				{% endfor %}
-			</tr>
-		</thead>
-		<tbody>
-		    {% for session in sessions %}
-			<tr>
-                <th scope="row">{{ session.person.phone }}</th>
-			<!--	<td>{{ session.start_date }}</td> -->
-				{% for state in states %}
-                
-                    {% for entry in session.entry_set.all %}
-                        {% ifequal entry.transition.current_state state %}
-                        <tr>
-                <th scope="row">{{entry.session.connection}}</th>
-                <td>
-                        {{entry.transition.answer.answer}}
-                        {% endifequal %} 
-                    {% endfor %}
+<table class='auto'>
+    <thead>
+        <th>Connection</th>
+        <th>Date</th>
+        <th colspan='{{ states|length }}'>Path</th>
+    </thead>
+    <tbody>
+    {% for session in ordered_sessions %}
+        <tr>
+            <td>{{ session.connection }}</td>
+            <td>{{ session.start_date|date:"Y-m-d h:i a" }}</td>
+            {% for entry in session.entries.select_related %}
+                <td scope="row">
+                    <span class='question'>{{ entry.transition.current_state.question.text }}</span>
+                    <span class='answer'>{{ entry.transition.answer.answer }}</span>
                 </td>
-                {% endfor %}
-			</tr>
+                {% if not forloop.last %}
+                    <td class='transition'>&rarr;</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% comment %}
+
+{% if t %}
+<h2>All Data for Survey: {{ t.trigger }}</h2>
+<table>
+	{% if sessions and not loops %}
+	<thead>
+		<tr>
+			<th scope="col">Mobile No.</th>
+			<!--<th scope="col">Start Date</th>-->
+			{% for state in states %}
+			<th scope="col">{{state.question.text}}</th>
 			{% endfor %}
-        </tbody>
+		</tr>
+	</thead>
+	<tbody>
+	    {% for session in sessions %}
+		<tr>
+            <th scope="row">{{ session.person.phone }}</th>
+		<!--	<td>{{ session.start_date }}</td> -->
+			{% for state in states %}
+            
+                {% for entry in session.entry_set.all %}
+                    {% ifequal entry.transition.current_state state %}
+                    <tr>
+            <th scope="row">{{entry.session.connection}}</th>
+            <td>
+                    {{entry.transition.answer.answer}}
+                    {% endifequal %} 
+                {% endfor %}
+            </td>
+            {% endfor %}
+		</tr>
+		{% endfor %}
+    </tbody>
+        
 
 <!--        {% else %}
 
@@ -153,5 +162,5 @@ search
 	{% endif %}
 	
 </div>-->
-
+{% endcomment %}
 {% endblock %}
