@@ -173,12 +173,9 @@ class TreeState(models.Model):
                 
 
     def __unicode__(self):
-        return ("State %s, Question: %s" % (
-            self.name,
-            self.question))
+        return self.question.text
 
 
-    
 class Transition(models.Model):
     """ A Transition is a way to navigate from one
         TreeState to another, via an appropriate 

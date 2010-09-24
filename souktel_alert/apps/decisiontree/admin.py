@@ -4,11 +4,18 @@
 from django.contrib import admin
 from decisiontree.models import *
 
+
+class TransitionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'current_state', 'answer', 'next_state')
+    list_filter = ('answer',)
+    ordering = ('current_state',)
+
+
 admin.site.register(Tree)
 admin.site.register(Question)
 admin.site.register(Answer)
 admin.site.register(TreeState)
-admin.site.register(Transition)
+admin.site.register(Transition, TransitionAdmin)
 admin.site.register(Entry)
 admin.site.register(Session)
 
