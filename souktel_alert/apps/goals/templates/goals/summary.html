@@ -67,16 +67,14 @@
         </tr>
     {% endfor %}
     </table>
-    {% if goals %}
-        <h1>Schedule</h1>
-        <table class='auto'>
-            {{ form }}
-            <tr>
-                <td></td>
-                <td><input type="submit" name="submit" value="Submit" id="submit"></td>
-            </tr>
-        </table>
-    {% endif %}
+    <h1>Schedule</h1>
+    <table class='auto'>
+        {{ form }}
+        <tr>
+            <td></td>
+            <td><input type="submit" name="submit" value="Submit" id="submit"></td>
+        </tr>
+    </table>
 </form>
 <div style='display: none;' id="dialog-modal" title="Missing goal(s)">
     <p>Please select goals from the list to use the scheduler.</p>
