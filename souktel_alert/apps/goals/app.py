@@ -52,7 +52,8 @@ class GoalsApp(AppBase):
         for goal in goals:
             msg = OutgoingMessage(connection=goal.contact.default_connection,
                                   template=self.template,
-                                  goal=goal.body)
+                                  goal=goal.body,
+                                  month=goal.date_created.strftime('%b'))
             try:
                 msg.send()
             except Exception, e:

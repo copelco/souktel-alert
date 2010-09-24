@@ -15,11 +15,6 @@ from group_messaging.decorators import contact_required
 
 @contact_required
 def summary(request):
-    answers = Answer.objects.values('goal').annotate(count=Count('body'))
-    try:
-        answers = answers.order_by('-count')[0]['count']
-    except IndexError:
-        answers = 0
     goals = Goal.objects.order_by('-date_last_notified', '-date_created')
     if request.POST:
         form = ScheduleForm(request.POST)
@@ -41,8 +36,13 @@ def summary(request):
         form = ScheduleForm(initial={'start_date': now})
         formset = GoalFormSet(queryset=goals)
 
+    # pre-determine max column count
+    answers = Answer.objects.values('goal').annotate(count=Count('body'))
+    try:
+        answers = answers.order_by('-count')[0]['count']
+    except IndexError:
+        answers = 0
     context = {
-        'goals': Goal.objects.order_by('-date_last_notified'),
         'total_answers': xrange(answers),
         'form': form,
         'formset': formset,
