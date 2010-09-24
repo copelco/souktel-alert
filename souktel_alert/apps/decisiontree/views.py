@@ -44,7 +44,7 @@ def data(req, id):
     context = {
         'form': form,
         'tree': tree,
-        'ordered_sessions': tree.sessions.order_by('-start_date'),
+        'ordered_sessions': tree.sessions.order_by('-start_date')[:10],
     }
 
     allTrees = Tree.objects.all()
