@@ -72,3 +72,11 @@ class AnswerSearchForm(forms.Form):
         answers = \
             Answer.objects.filter(transitions__entries__session__tree=tree)
         self.fields['answer'].queryset = answers.distinct()
+
+
+class EntryTagForm(forms.ModelForm):
+
+    class Meta:
+        model = Entry
+        fields = ('tags',)
+

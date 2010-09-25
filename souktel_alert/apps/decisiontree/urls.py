@@ -10,7 +10,10 @@ urlpatterns = patterns('',
     
     (r'^tree/data$', views.data),
     (r'^tree/data/(?P<id>\d+)/$', views.data),
-    (r'^tree/log/$', views.log),
+
+    url(r'^tree/entry/list/$', views.list_entries, name='list-entries'),
+    url(r'^tree/entry/(?P<entry_id>\d+)/edit/$', views.update_entry,
+        name='update-entry'),
     
     (r'^tree/data/export$', views.export),
     (r'^tree/data/export/(?P<id>\d+)$', views.export),

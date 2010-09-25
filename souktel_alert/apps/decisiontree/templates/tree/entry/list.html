@@ -32,7 +32,10 @@
             <td>{{ entry.time|date:"Y-m-d h:i a" }}</td>
             <td>{{ entry.transition.current_state.question.text }}</td>
             <td>{{ entry.transition.answer }}</td>
-            <td>{% for tag in entry.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+            <td>
+                <a href='{% url update-entry entry.pk %}' title='Edit tags'>
+                    {% for tag in entry.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                </a>
         </tr>
     {% endfor %}
     </tbody>

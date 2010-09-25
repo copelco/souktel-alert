@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Entry{% endblock %}
+
+{% block content %}
+
+<h1>Edit Entry #{{ entry.pk }}</h1>
+<br />
+
+<form action="" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    <table class='auto'>
+        {{ form }}
+    </table>
+    <p><input type="submit" value="Update &rarr;"></p>
+</form>
+
+{% endblock %}

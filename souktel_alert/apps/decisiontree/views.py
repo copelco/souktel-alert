@@ -4,11 +4,13 @@ import csv
 import logging
 from StringIO import StringIO
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response ,redirect, get_object_or_404
 from django.views.decorators.http import require_GET, require_POST
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from decisiontree.forms import *
 from decisiontree.models import *
@@ -377,11 +379,31 @@ def filter(request):
 
 
 @contact_required
-def log(request):
+def list_entries(request):
+    """ List most recent survey activity """
     entries = Entry.objects.select_related().order_by('-time')[:25]
     context = {
         'entries': entries,
     }
-    return render_to_response("tree/log.html", context,
+    return render_to_response("tree/entry/list.html", context,
                               context_instance=RequestContext(request))
 
+
+@contact_required
+def update_entry(request, entry_id):
+    """ Manually update survey entry tags """
+    entry = get_object_or_404(Entry, pk=entry_id)
+    if request.method == 'POST':
+        form = EntryTagForm(request.POST, instance=entry)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Entry successfully updated')
+            return HttpResponseRedirect(reverse('list-entries'))
+    else:
+        form = EntryTagForm(instance=entry)
+    context = {
+        'form': form,
+        'entry': entry,
+    }
+    return render_to_response("tree/entry/edit.html", context,
+                              context_instance=RequestContext(request))
