@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # vim: ai ts=4 sts=4 et sw=4
-
+import re
+import datetime
 
 from django.db import models
+from django.db.models.signals import post_save
+
 from rapidsms.models import Contact, Connection
-import re
+
+from taggit.managers import TaggableManager
 
 
 class Question(models.Model):
@@ -211,6 +215,7 @@ class Session(models.Model):
             text = "completed"
         return ("%s : %s" % (self.connection.identity, text))
 
+
 class Entry(models.Model):
     """ An Entry is a single successful movement within
         a Session.  It represents an accepted Transition 
@@ -220,6 +225,8 @@ class Entry(models.Model):
     transition = models.ForeignKey(Transition, related_name='entries')
     time = models.DateTimeField(auto_now_add=True)
     text = models.CharField(max_length=160)
+    
+    tags = TaggableManager()
     
     def __unicode__(self):
         return "%s-%s: %s - %s" % (self.session.id, self.sequence_id, self.transition.current_state.question, self.text)
@@ -239,3 +246,23 @@ class Entry(models.Model):
     class Meta:
         verbose_name_plural="Entries"
         ordering = ('sequence_id',)
+
+
+class Tagger(models.Model):
+    answer = models.ForeignKey(Answer)
+    tags = TaggableManager()
+
+    @classmethod
+    def get_tags_for_answer(class_, answer):
+        taggers = Tagger.objects.filter(answer=answer)
+        tags = []
+        for tagger in taggers:
+            tags.extend(list(tagger.tags.all()))
+        return tags
+
+
+def entry_tagger(sender, **kwargs):
+    instance = kwargs.get('instance')
+    tags = Tagger.get_tags_for_answer(instance.transition.answer)
+    instance.tags.add(*tags)
+post_save.connect(entry_tagger, sender=Entry)

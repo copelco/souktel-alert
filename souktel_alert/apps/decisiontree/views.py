@@ -376,5 +376,12 @@ def filter(request):
     return render_to_response('outgoing_log.html',context , context_instance=RequestContext(request))
 
 
-
+@contact_required
+def log(request):
+    entries = Entry.objects.select_related().order_by('-time')[:25]
+    context = {
+        'entries': entries,
+    }
+    return render_to_response("tree/log.html", context,
+                              context_instance=RequestContext(request))
 

@@ -1,95 +1,56 @@
-from rapidsms.tests.scripted import TestScript
-from app import App
-#import reporters.app as reporters_app
-#import i18n.app as i18n_app
+import logging
 
-from models import *
-#from reporters.models import Reporter, PersistantConnection, PersistantBackend
-from rapidsms.models import Contact, Connection
-    
-class TestApp (TestScript):
-    #apps = (App, reporters_app.App)
-    apps = (App)
-    # the test_backend script does the loading of the dummy backend that allows reporters
-    # to work properly in tests
-    fixtures = ['test_backend', 'test_tree']
-    
-    testTrigger = """
-           8005551212 > test
-           8005551212 < hello
-         """        
-    
-    testPin = """
-           8005551211 > pin
-           8005551211 < Please enter your 4-digit PIN
-           8005551211 > 1234
-           8005551211 < Thanks for entering.
-         """
-         
-    testPinFailure = """
-           8005551213 > pin
-           8005551213 < Please enter your 4-digit PIN
-           8005551213 > abcd
-           8005551213 < "abcd" is not a valid answer. You must enter a 4-digit decimal number
-           8005551213 > 123
-           8005551213 < "123" is not a valid answer. You must enter a 4-digit decimal number
-           8005551213 > 123d
-           8005551213 < "123d" is not a valid answer. You must enter a 4-digit decimal number
-           8005551213 > 12345
-           8005551213 < "12345" is not a valid answer. You must enter a 4-digit decimal number
-           8005551213 > 
-           8005551213 < "" is not a valid answer. You must enter a 4-digit decimal number
-           8005551213 > 0000
-           8005551213 < Thanks for entering.
-         """
+from django.test import TransactionTestCase, TestCase
+from django.contrib.auth.models import User
 
-    def testFoo(self):
-        self.runScript(testTrigger)
+from rapidsms.models import Connection, Contact, Backend
 
-     
-         
-#    def testLocalization(self):
-#        '''Tests very basic localization of trees'''
-#        #reporter = self._register('0004', 'en', "loc_en")
-#        contact = self._register('0004', 'en', "loc_en")
-#        script = """
-#              loc_en > test
-#              loc_en < hello
-#            """        
-#        self.runScript(script)
-#        reporter = self._register('0005', 'sp', "loc_sp")
-#        script = """
-#              loc_sp > test
-#              loc_sp < ola
-#            """        
-#        self.runScript(script)
-#        reporter = self._register('0006', 'fr', "loc_mult")
-#        script = """
-#              loc_mult > test
-#              loc_mult < bon jour
-#              loc_mult > blah
-#              loc_mult < You are done with this survey.  Thanks for participating!
-#              
-#            """        
-#        self.runScript(script)
-#        reporter.language = 'en'
-#        reporter.save()
-#        script = """
-#              loc_mult > test
-#              loc_mult < hello
-#            """        
-#        self.runScript(script)
-        
-         
-    def _register(self, name, language, phone):
-        """Register a user"""
-        # create the reporter object for this person 
-        #reporter =  Reporter.objects.create(alias=alias, language=language)
-        contact =  Contact.objects.create(name=name, language=language)
-        
-        # running this script ensures the connection gets created by the reporters app
-        self.runScript("%s > hello world" % phone)
-        connection = Connection.objects.get(identity=phone)
-        connection.contact = contact
-        connection.save()
-        return contact
+from rapidsms.tests.harness import MockRouter, MockBackend
+from rapidsms.models import Connection, Contact, Backend
+from rapidsms.messages.outgoing import OutgoingMessage
+
+from decisiontree import models as dt
+
+from taggit.models import Tag
+
+
+class TaggingTest(TestCase):
+    def setUp(self):
+        self.backend = Backend.objects.create(name='test-backend')
+        self.contact = Contact.objects.create(first_name='John',
+                                              last_name='Doe')
+        self.connection = Connection.objects.create(contact=self.contact,
+                                                    backend=self.backend,
+                                                    identity='1112223333')
+        text = 'Do you like apples or squash more?'
+        self.q1 = dt.Question.objects.create(text=text)
+        self.fruit = dt.Answer.objects.create(type='A', name='apples',
+                                              answer='apples')
+        self.state1 = dt.TreeState.objects.create(name='food',
+                                                  question=self.q1)
+        self.tree1 = dt.Tree.objects.create(trigger='food',
+                                            root_state=self.state1)
+        self.trans1 = dt.Transition.objects.create(current_state=self.state1,
+                                                   answer=self.fruit)
+        self.session = dt.Session.objects.create(connection=self.connection,
+                                                 tree=self.tree1,
+                                                 state=self.state1,
+                                                 num_tries=1)
+        self.fruit_tag = Tag.objects.create(name='fruit', slug='fruit')
+        self.vegetable_tag = Tag.objects.create(name='vegetable',
+                                                slug='vegetable')
+
+    def test_proper_tagging(self):
+        tagger = dt.Tagger.objects.create(answer=self.fruit)
+        tagger.tags.add(self.fruit_tag)
+        tags = dt.Tagger.get_tags_for_answer(self.fruit)
+        self.assertTrue(self.fruit_tag in tags)
+        self.assertFalse(self.vegetable_tag in tags)
+
+    def test_entry_tagging_on_save(self):
+        tagger = dt.Tagger.objects.create(answer=self.fruit)
+        tagger.tags.add(self.fruit_tag)
+        entry = dt.Entry.objects.create(session=self.session, sequence_id=1,
+                                        transition=self.trans1, text='apples')
+        self.assertTrue(self.fruit_tag in entry.tags.all(),
+                        '%s not in %s' % (self.fruit_tag, entry.tags.all()))

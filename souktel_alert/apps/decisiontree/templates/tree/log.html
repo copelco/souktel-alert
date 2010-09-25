@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load tree-tags %}
+
+{% block title %}Decision Trees{% endblock %}
+
+{% block stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
+
+{% block content %}
+
+<div class="module">
+    <a href="/tree"><h2>Back to Surveys List</h2></a>
+</div>
+
+<h1>Survey Log</h1>
+<br />
+
+
+<table class='auto'>
+    <thead>
+        <th>Survey</th>
+        <th>Contact</th>
+        <th>Date</th>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>Tags</th>
+    </thead>
+    <tbody>
+    {% for entry in entries %}
+        <tr>
+            <td>{{ entry.session.tree.trigger }}</td>
+            <td>{{ entry.session.connection.contact }}</td>
+            <td>{{ entry.time|date:"Y-m-d h:i a" }}</td>
+            <td>{{ entry.transition.current_state.question.text }}</td>
+            <td>{{ entry.transition.answer }}</td>
+            <td>{% for tag in entry.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
