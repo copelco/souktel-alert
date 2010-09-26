@@ -356,8 +356,8 @@ def filter(request):
            # identityMsg  = form.cleaned_data['identity']
            # textMsg  = form.cleaned_data['text']
 
-    else:
-             print "form is not valid"
+    #else:
+#             print "form is not valid"
 
     answer = Entry.objects.filter(text=answerF)
     answer2 = Entry.objects.all()
