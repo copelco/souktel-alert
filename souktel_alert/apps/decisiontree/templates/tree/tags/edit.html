@@ -1,0 +1,18 @@
+{% extends "tree/base.html" %}
+
+{% block title %}{% if auto_tag %}Edit{% else %}Create{% endif %} Auto Tag{% endblock %}
+
+{% block content %}
+
+<h1>{% if auto_tag %}Edit{% else %}Create{% endif %} Auto Tag</h1>
+<br />
+
+<form action="" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    <table class='auto'>
+        {{ form }}
+    </table>
+    <p><input type="submit" value="{% if auto_tag %}Save{% else %}Create{% endif %} Auto Tag &rarr;"></p>
+</form>
+
+{% endblock %}

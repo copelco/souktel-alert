@@ -1,0 +1,31 @@
+{% extends "tree/base.html" %}
+{% load tree-tags %}
+
+{% block title %}Auto tags{% endblock %}
+
+{% block stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
+
+{% block content %}
+
+<h1>Auto tags</h1>
+
+<table class='auto'>
+    <thead>
+        <th></th>
+        <th>Keyword</th>
+        <th>Tags</th>
+    </thead>
+    <tbody>
+    {% for auto_tag in auto_tags %}
+        <tr>
+            <td><a href='{% url edit-auto-tag auto_tag.pk %}'>{{ auto_tag.pk }}</a></td>
+            <td>{{ auto_tag.answer }}</td>
+            <td>
+                {% for tag in auto_tag.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
