@@ -54,17 +54,24 @@ class StateForm(forms.ModelForm):
         self.fields['num_retries'].label = 'num retries'
 
 class ReportForm(forms.Form):
+
     ANALYSIS_TYPES = (
         ('A', 'Mean'),
         ('R', 'Median'),
         ('C', 'Mode'),
     )
-    answer    = forms.CharField(label=("answer"),required=False)
+    #answer    = forms.CharField(label=("answer"),required=False)
     dataanalysis = forms.ChoiceField(choices=ANALYSIS_TYPES)
 
 
 class AnswerSearchForm(forms.Form):
+    ANALYSIS_TYPES = (
+        ('A', 'Mean'),
+        ('R', 'Median'),
+        ('C', 'Mode'),
+    )
     answer = forms.ModelChoiceField(queryset=Answer.objects.none())
+    analysis = forms.ChoiceField(choices=ANALYSIS_TYPES)
 
     def __init__(self, tree, *args, **kwargs):
         self.tree = tree
@@ -72,6 +79,7 @@ class AnswerSearchForm(forms.Form):
         answers = \
             Answer.objects.filter(transitions__entries__session__tree=tree)
         self.fields['answer'].queryset = answers.distinct()
+        self.fields['analysis'].label = 'Calculator'
 
 
 class EntryTagForm(forms.ModelForm):

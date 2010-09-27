@@ -43,7 +43,7 @@ urlpatterns = patterns('',
     url(r'^tree/survey/path/add/$', views.questionpath, name='add_path'),
     url(r'^tree/survey/path/update/(\d+)/$', views.questionpath, name='insert_path'),
     url(r'^tree/survey/path/delete/(\d+)/$', views.deletepath, name='delete_path'),
-    url(r'^tree/survey/filter/$', views.filter, name='answer_filter'),
+    #url(r'^tree/survey/filter/$', views.filter, name='answer_filter'),
     #url(r'^tree/data/add/(\d+)/$', views.addtree, name='add'),
     # serve the static files for this TREE app
     # TODO: this should be automatic, via WEBUI

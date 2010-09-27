@@ -299,49 +299,6 @@ def answerlist(req):
 		return render_to_response("tree/answers_list.html", context_instance)
 
 
-@contact_required
-def filter(request):
-
-    outgoinglog_list=""
-    form =""
-    outgoinglog=""
-    answer=""
-    senderMsg=""
-    identityMsg=""
-    textMsg=""
-    answer2=""
-    answerF=""
-
-    #if request.method == 'POST':
-    form = ReportForm(request.POST)
-
-    if form.is_valid():
-            answerF = form.cleaned_data['answer']
-           # senderMsg = form.cleaned_data['sender']
-           # identityMsg  = form.cleaned_data['identity']
-           # textMsg  = form.cleaned_data['text']
-
-    #else:
-#             print "form is not valid"
-
-    answer = Entry.objects.filter(text=answerF)
-    answer2 = Entry.objects.all()
-    paginator = Paginator(answer,10)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        answer_list = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        answer_list = paginator.page(paginator.num_pages)
-
-    mycontext = {'answerlog': answer_list,'form':form ,'count':0,'logs':answer2}
-    context = (mycontext)
-    return render_to_response('outgoing_log.html',context , context_instance=RequestContext(request))
-
 
 @contact_required
 def list_entries(request):
