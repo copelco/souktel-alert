@@ -6,7 +6,7 @@ from django.conf.urls.defaults import *
 import decisiontree.views as views
 
 urlpatterns = patterns('',
-    (r'^tree/$', views.index),
+    url(r'^tree/$', views.index, name='list-surveys'),
     
     (r'^tree/data$', views.data),
     (r'^tree/data/(?P<id>\d+)/$', views.data),
