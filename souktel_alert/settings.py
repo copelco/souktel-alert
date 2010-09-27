@@ -196,9 +196,9 @@ MIDDLEWARE_CLASSES = (
     'group_messaging.middleware.ContactRequestMiddleware',
 )
 
-TEMPLATE_DIRS = (
+TEMPLATE_DIRS = [
     os.path.join(PROJECT_PATH, 'templates'),
-)
+]
 
 
 

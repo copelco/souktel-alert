@@ -11,6 +11,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 
 from decisiontree.forms import *
 from decisiontree.models import *
@@ -34,96 +35,60 @@ def index(req):
 
 
 @contact_required
-def data(req, id):
+def data(request, id):
     tree = get_object_or_404(Tree, pk=id)
-    if req.method == 'POST':
-        form = AnswerSearchForm(req.POST, tree=tree)
-        if form.is_valid():
-            answer = form.cleaned_data['answer']
-            # what now?
-    else:
-        form = AnswerSearchForm(tree=tree)
-    context = {
-        'form': form,
-        'tree': tree,
-        'ordered_sessions': tree.sessions.order_by('-start_date')[:10],
-    }
+    # if req.method == 'POST':
+    #     form = AnswerSearchForm(req.POST, tree=tree)
+    #     if form.is_valid():
+    #         answer = form.cleaned_data['answer']
+    #         # what now?
+    # else:
+    #     form = AnswerSearchForm(tree=tree)
 
-    allTrees = Tree.objects.all()
-    # ok, the plan is to generate a table of responses per state, but this is tricky with loops.
-    # the first thing we'll do is get all the possible states you can reach from the tree
-    # then we'll tabulate the results of each state's first value
-    # then we'll look at paths, by using the concatenated list of states taken for that path as a key
-    if len(allTrees) != 0:
-        t = get_tree(id)
-        all_states = t.get_all_states()
-        loops = t.has_loops() 
-        if not loops:
-            # this is the easy case.  just create one column per state and then display the results
-            sessions = Session.objects.all().filter(tree=t)
-            context.update({
-                "trees": allTrees,
-                "t": t,
-                "states": all_states,
-                "sessions": sessions,
-                "loops": loops,
-            })
-            return render_to_response("tree/data.html", context,
-                                      context_instance=RequestContext(req))
-        else: 
-            # here what we want is a table where the columns are every unique path through the 
-            # tree, and the rows are the sessions, with the paths filled in.
-            # Since there are loops we have to generate the list of unique paths from
-            # the session data.  
-            # So we get every session, and for every entry in that session we get the path.
-            # If we haven't seen the path we add it to the master list.  
-            # Then we walk back through the master list, and walk through each session to
-            # see if it has an entry matching that path, and if so set the answer.  
-            sessions = Session.objects.all().filter(tree=t)
-            paths = {}
-            # i think paths will be a dictionary of paths to dictionaries of sessions to answers
-            # e.g. { <path> : { <session> : <answer>}
-            # which will allow us to iterate through paths and say:
-            # if paths[path].has_key(session):
-            #    this_cell = paths[path][session]
-            for session in sessions:
-                entries = session.entry_set.all().order_by('sequence_id')
-                path = ''
-                for entry in entries:
-                    path = path + str(entry.transition.current_state.id) + '/'
-                    entry.path = path
-                    if paths.has_key(path):
-                        paths[path][session] = entry.transition.answer
-                    else:
-                        paths[path] = { session : entry.transition.answer }
-            context.update({
-                "trees": allTrees,
-                "t": t,
-                "paths" : paths,
-                "sessions" : sessions,
-                "loops" : loops,
-            })
-            return render_to_response("tree/data.html", context,
-                                      context_instance=RequestContext(req))
-        # now we need to map all states to answers
-        states_w_answers = {}
-        for state in all_states:
-            states_w_answers[state] = map((lambda x: x.answer), state.transition_set.all()) 
-        # now we need to get all the entries
-        all_entries = Entry.objects.all().filter(session__tree = t)
-        if loops:
-            # stupid error fix to prevent trees with loops from exploding.  This should be done better
-            t = Tree()
-            t.trigger = "Sorry, can't display this tree because it has loops.  We're working on it."
-        context.update({
-            "trees": allTrees,
-            "t": t,
-        })
-        return render_to_response("tree/index.html", context,
-                                  context_instance=RequestContext(req))
-    else:
-        return render_to_response("tree/index.html", context,
-                                  context_instance=RequestContext(req))
+    # pre-fetch all entries for this tree and create a map so we can
+    # efficiently pair everything up in Python, rather than lots of SQL
+    entries = Entry.objects.filter(session__tree=tree).select_related()
+    entry_map = {}
+    for entry in entries:
+        state = entry.transition.current_state
+        if entry.session.pk not in entry_map:
+            entry_map[entry.session.pk] = {}
+        entry_map[entry.session.pk][state.pk] = entry
+    states = tree.get_all_states()
+    sessions = tree.sessions.select_related().order_by('-start_date')
+    # for each session, created an ordered list of (state, entry) pairs
+    # using the map from above. this will ease template display.
+    for session in sessions:
+        session.ordered_states = []
+        for state in states:
+            try:
+                entry = entry_map[session.pk][state.pk]
+            except KeyError:
+                entry = None
+            session.ordered_states.append((state, entry))
+    # count answers grouped by state
+    stats = Transition.objects.filter(entries__session__tree=tree)
+    stats = stats.values('current_state', 'answer__answer')
+    stats = stats.annotate(count=Count('answer'))
+    stat_map = {}
+    for stat in stats:
+        current_state = stat['current_state']
+        answer = stat['answer__answer']
+        count = stat['count']
+        if current_state not in stat_map:
+            stat_map[current_state] = {'answers': {}, 'total': 0}
+        stat_map[current_state]['answers'][answer] = count
+        stat_map[current_state]['total'] += count
+    for state in states:
+        state.stats = stat_map.get(state.pk, {})
+    context = {
+        # 'form': form,
+        'tree': tree,
+        'sessions': sessions,
+        'states': states,
+    }
+    return render_to_response("tree/data.html", context,
+                              context_instance=RequestContext(request))
 
 
 def export(req, id = None):
