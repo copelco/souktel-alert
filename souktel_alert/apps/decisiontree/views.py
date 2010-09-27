@@ -407,3 +407,125 @@ def update_entry(request, entry_id):
     }
     return render_to_response("tree/entry/edit.html", context,
                               context_instance=RequestContext(request))
+
+@contact_required
+def addstate(request, stateid=None):
+
+    validationMsg = ""
+    state = None
+    if stateid:
+           state = get_object_or_404(TreeState, pk=stateid)
+
+
+    if request.method == 'POST':
+        form = StateForm(request.POST, instance=state)
+        if form.is_valid():
+            state = form.save()
+            if stateid:
+                validationMsg =("You have successfully updated the Question state")
+            else:
+                validationMsg = "You have successfully inserted State %s." % state.name
+                mycontext = {'validationMsg':validationMsg}
+                context = (mycontext)
+                return redirect(statelist)
+
+    else:
+        if state:
+            data = {'name':state.name,'question':state.question, 'answer':state.num_retries}
+        else:
+            data = {'name': '', 'question': '', 'num retries': ''}
+        form = StateForm(data)
+
+    if not stateid:
+        stateid = 0
+
+    mycontext = {'state':state,'form':form, 'stateid': stateid,'validationMsg':validationMsg}
+    context = (mycontext)
+    return render_to_response('tree/state.html', context,
+                              context_instance=RequestContext(request))
+
+def statelist(req):
+    allStates =  TreeState.objects.all()
+    states_count =  TreeState.objects.count()
+
+    context_instance=RequestContext(req)
+    if len(allStates) != 0:
+        s = allStates[len(allStates) - 1]
+        context_instance["states"] = allStates
+        context_instance["s"] = s
+        context_instance["stotal"] = states_count
+        return render_to_response("tree/states_list.html", context_instance)
+    else:
+		return render_to_response("tree/states_list.html", context_instance)
+
+
+@contact_required
+def deletestate(request, stateid):
+
+    state = TreeState.objects.get(id=stateid)
+    state.delete()
+    mycontext = {'state': state}
+    context = (mycontext)
+
+    return redirect(statelist)
+
+def questionpathlist(req):
+    allPaths =  Transition.objects.all()
+    paths_count =  Transition.objects.count()
+
+    context_instance=RequestContext(req)
+    if len(allPaths) != 0:
+        p = allPaths[len(allPaths) - 1]
+        context_instance["paths"] = allPaths
+        context_instance["p"] = p
+        context_instance["ptotal"] = paths_count
+        return render_to_response("tree/path_list.html", context_instance)
+    else:
+		return render_to_response("tree/path_list.html", context_instance)
+
+
+@contact_required
+def deletepath(request, pathid):
+
+    path = Transition.objects.get(id=pathid)
+    path.delete()
+    mycontext = {'path': path}
+    context = (mycontext)
+
+    return redirect(statelist)
+
+@contact_required
+def questionpath(request, pathid=None):
+
+    validationMsg = ""
+    path = None
+    if pathid:
+           path = get_object_or_404(Transition, pk=pathid)
+
+
+    if request.method == 'POST':
+        form = PathForm(request.POST, instance=path)
+        if form.is_valid():
+            path = form.save()
+            if pathid:
+                validationMsg =("You have successfully updated the Question Path")
+            else:
+                validationMsg = "You have successfully inserted Question Path %s." % path.id
+                mycontext = {'validationMsg':validationMsg}
+                context = (mycontext)
+                return redirect(questionpathlist)
+
+    else:
+        if path:
+            data = {'current state':path.current_state,'answer':path.answer, 'next state':path.next_state}
+        else:
+            data = {'current state': '', 'answer': '', 'next state': ''}
+        form = PathForm(data)
+
+    if not pathid:
+        pathid = 0
+
+    mycontext = {'path':path,'form':form, 'pathid': pathid,'validationMsg':validationMsg}
+    context = (mycontext)
+    return render_to_response('tree/path.html', context,
+                              context_instance=RequestContext(request))

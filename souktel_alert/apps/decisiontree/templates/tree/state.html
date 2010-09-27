@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load i18n %}
+<form action="" method="POST" class="pretty"> {% csrf_token %}
+<fieldset> 
+<legend>
+{% if stateid %}
+{% trans "State Update Form" %}
+{% else %}
+{% trans "New State Form" %}
+{% endif %}
+</legend>
+
+<table>
+{% for field in form %}
+<tr>
+<td>{{ field.label_tag }}</td><td>{{ field }} {%if field.errors %}<div class='djangoerrors'>{% for error in field.errors %}{{ error }}{% endfor %}</div>{% endif %}</td>
+</tr>
+{% endfor %}
+</table>
+
+<p class="buttons"> 
+<button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+<a class="button negative icon cross" href="/tree">{% trans "Cancel" %}</a>
+</p> 
+</fieldset> 
+
+{% endblock %}
+
+{% block submenu %}
+<ul><li><a href = "/tree" >{% trans "Back to Answer list" %}</a></li></ul>
+<ul><li>{{ validationMsg }}</li></ul>
+{% endblock %}
