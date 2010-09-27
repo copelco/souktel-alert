@@ -80,3 +80,14 @@ class EntryTagForm(forms.ModelForm):
         model = Entry
         fields = ('tags',)
 
+
+class PathForm(forms.ModelForm):
+
+    class Meta:
+        model = Transition
+
+    def __init__(self, *args, **kwargs):
+        super(PathForm, self).__init__(*args, **kwargs)
+        self.fields['current_state'].label = 'Current State'
+        self.fields['answer'].label = 'Answer'
+        self.fields['next_state'].label = 'Next State'
