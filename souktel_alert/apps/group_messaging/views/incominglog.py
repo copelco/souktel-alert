@@ -29,7 +29,7 @@ def message_log(req):
     count = Message.objects.all().filter(direction="I").count()
     return render_to_response(
         "incoming.html", {"count": count,
-            "messages_table": MessageTable(Message.objects.all().filter(direction="I"), request=req)
+            "messages_table": MessageTable(Message.objects.all(), request=req)
         }, context_instance=RequestContext(req)
     )
 
