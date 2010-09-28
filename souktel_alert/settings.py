@@ -89,7 +89,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.contenttypes",
     "django.contrib.humanize",
-    "rapidsms.contrib.djangoadmin",
+    # "rapidsms.contrib.djangoadmin",
 
     # the rapidsms contrib apps.
     # "rapidsms.contrib.default",
@@ -223,7 +223,7 @@ TEST_EXCLUDED_APPS = [
 # the default ROOT_URLCONF module, bundled with rapidsms, detects and
 # maps the urls.py module of each app into a single project urlconf.
 # this is handy, but too magical for the taste of some. (remove it?)
-ROOT_URLCONF = "rapidsms.djangoproject.urls"
+ROOT_URLCONF = "souktel_alert.urls"
 
 
 # since we might hit the database from any thread during testing, the
