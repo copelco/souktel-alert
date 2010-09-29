@@ -50,8 +50,8 @@
                     {{ entry.transition.answer.answer }}
                     {% if entry %}
                         <a href='{% url update-entry entry.pk %}' title='Edit tags'>
-                            {% if entry.tags.all %}
-                                ({% for tag in entry.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                            {% if entry.cached_tags %}
+                                ({{ entry.cached_tags|join:", " }})
                             {% else %}
                             (Add tags)
                             {% endif %}

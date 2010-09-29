@@ -46,11 +46,20 @@ def data(request, id):
     # else:
     #     form = AnswerSearchForm(tree=tree)
 
+    entry_tags = Entry.tags.through.objects
+    entry_tags = entry_tags.filter(entry__session__tree=tree)
+    entry_tags = entry_tags.select_related('tag')
+    tag_map = {}
+    for entry_tag in entry_tags:
+        if entry_tag.entry_id not in tag_map:
+            tag_map[entry_tag.entry_id] = []
+        tag_map[entry_tag.entry_id].append(entry_tag.tag)
     # pre-fetch all entries for this tree and create a map so we can
     # efficiently pair everything up in Python, rather than lots of SQL
     entries = Entry.objects.filter(session__tree=tree).select_related()
     entry_map = {}
     for entry in entries:
+        entry.cached_tags = tag_map.get(entry.pk, [])
         state = entry.transition.current_state
         if entry.session.pk not in entry_map:
             entry_map[entry.session.pk] = {}

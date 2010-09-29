@@ -168,7 +168,7 @@ class TreeState(models.Model):
     def add_all_unique_children(self, added):
         ''' Adds all unique children of the state to the passed in list.  
             This happens recursively.'''
-        transitions = self.transition_set.all()
+        transitions = self.transition_set.select_related('next_state__question')
         for transition in transitions:
             if transition.next_state:
                 if transition.next_state not in added:
@@ -184,8 +184,7 @@ class Transition(models.Model):
     """ A Transition is a way to navigate from one
         TreeState to another, via an appropriate 
         Answer. """ 
-    current_state = models.ForeignKey(TreeState,
-                                      related_name='transitions_current')
+    current_state = models.ForeignKey(TreeState)
     answer = models.ForeignKey(Answer, related_name='transitions')
     next_state = models.ForeignKey(TreeState, blank=True, null=True,
                                    related_name='next_state')
