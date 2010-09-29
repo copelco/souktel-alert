@@ -4,7 +4,6 @@ django-uni-form==0.7
 rapidsms-xforms==0.1.1
 pygooglechart==0.3.0
 python-dateutil==1.5
-django-taggit==0.9.1
 django-filter==0.5.3
 -e git+http://github.com/caktus/rapidsms-rerouter.git#egg=rerouter
 -e git+http://github.com/caktus/rapidsms-clickatell.git#egg=rclickatell

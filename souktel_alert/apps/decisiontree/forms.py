@@ -114,12 +114,6 @@ class EntryTagForm(forms.ModelForm):
         fields = ('tags',)
 
 
-class AutoTagForm(forms.ModelForm):
-
-    class Meta:
-        model = Tagger
-
-
 class PathForm(forms.ModelForm):
     tags = TagField()
 

@@ -318,37 +318,6 @@ def update_entry(request, entry_id):
 
 
 @contact_required
-def list_auto_tags(request):
-    tags = Tagger.objects.all()
-    context = {
-        'auto_tags': tags,
-    }
-    return render_to_response("tree/tags/list.html", context,
-                              context_instance=RequestContext(request))
-
-
-@contact_required
-def create_edit_auto_tag(request, tag_id=None):
-    auto_tag = None
-    if tag_id:
-        auto_tag = get_object_or_404(Tagger, pk=tag_id)
-    if request.method == 'POST':
-        form = AutoTagForm(request.POST, instance=auto_tag)
-        if form.is_valid():
-            saved_auto_tag = form.save()
-            messages.info(request, 'Auto tag successfully saved')
-            return HttpResponseRedirect(reverse('list-auto-tags'))
-    else:
-        form = AutoTagForm(instance=auto_tag)
-    context = {
-        'auto_tag': auto_tag,
-        'form': form,
-    }
-    return render_to_response("tree/tags/edit.html", context,
-                              context_instance=RequestContext(request))
-
-
-@contact_required
 def addstate(request, stateid=None):
 
     validationMsg = ""

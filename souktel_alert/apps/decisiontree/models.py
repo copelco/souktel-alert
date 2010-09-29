@@ -252,19 +252,9 @@ class Entry(models.Model):
 
 class Tag(models.Model):
     name = models.SlugField(unique=True, max_length=100)
-
-
-class Tagger(models.Model):
-    answer = models.ForeignKey(Answer)
-    tags = TaggableManager()
-
-    @classmethod
-    def get_tags_for_answer(class_, answer):
-        taggers = Tagger.objects.filter(answer=answer)
-        tags = []
-        for tagger in taggers:
-            tags.extend(list(tagger.tags.all()))
-        return tags
+    
+    def __unicode__(self):
+        return self.name
 
 
 def entry_tagger(sender, **kwargs):

@@ -113,7 +113,6 @@ INSTALLED_APPS = [
     "goals",
     #"poll",
     "decisiontree",
-    "taggit",
     "django_filters",
 ]
 
