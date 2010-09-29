@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tree/base.html" %}
 {% load tree-tags %}
 
 {% block title %}Decision Trees{% endblock %}
@@ -7,9 +7,7 @@
 
 {% block content %}
 
-<div class="module">
-    <a href="/tree"><h2>Back to Surveys List</h2></a>
-</div>
+<h2>Survey Report</h2>
 {# <div class="module"> #}
 {#     <h1>Filter</h1> #}
 {# </div> #}
@@ -50,9 +48,13 @@
             {% for state, entry in session.ordered_states %}
                 <td scope="row">
                     {{ entry.transition.answer.answer }}
-                    {% if entry and entry.tags.all %}
+                    {% if entry %}
                         <a href='{% url update-entry entry.pk %}' title='Edit tags'>
-                            ({% for tag in entry.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                            {% if entry.tags.all %}
+                                ({% for tag in entry.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %})
+                            {% else %}
+                            (Add tags)
+                            {% endif %}
                         </a>
                     {% endif %}
                 </td>

@@ -1,18 +1,21 @@
 {% extends "tree/base.html" %}
+{% load i18n %}
 
 {% block title %}Edit Entry{% endblock %}
 
 {% block content %}
 
-<h1>Edit Entry #{{ entry.pk }}</h1>
-<br />
+<h2>Edit Entry #{{ entry.pk }}</h2>
 
 <form action="" method="post" accept-charset="utf-8">
     {% csrf_token %}
     <table class='auto'>
         {{ form }}
     </table>
-    <p><input type="submit" value="Update &rarr;"></p>
+    <p class="buttons"> 
+    <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+    <a class="button negative icon cross" href="{% url survey-report entry.session.tree.pk %}">{% trans "Cancel" %}</a>
+    </p>
 </form>
 
 {% endblock %}

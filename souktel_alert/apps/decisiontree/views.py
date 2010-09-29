@@ -304,8 +304,9 @@ def update_entry(request, entry_id):
         form = EntryTagForm(request.POST, instance=entry)
         if form.is_valid():
             form.save()
-            messages.info(request, 'Entry successfully updated')
-            return HttpResponseRedirect(reverse('list-entries'))
+            messages.info(request, 'Tags successfully updated')
+            return HttpResponseRedirect(reverse('survey-report',
+                                        args=[entry.session.tree.id]))
     else:
         form = EntryTagForm(instance=entry)
     context = {

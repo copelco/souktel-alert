@@ -4,6 +4,8 @@
 from django import forms
 from models import *
 
+from decisiontree.utils import parse_tags, edit_string_for_tags
+
 class TreeForm(forms.ModelForm):
 	class Meta:
 		model = Tree
@@ -82,7 +84,30 @@ class AnswerSearchForm(forms.Form):
         self.fields['analysis'].label = 'Calculator'
 
 
+class TagWidget(forms.TextInput):
+    def render(self, name, value, attrs=None):
+        if value is not None and not isinstance(value, basestring):
+            value = edit_string_for_tags(Tag.objects.filter(id__in=value))
+        return super(TagWidget, self).render(name, value, attrs)
+
+
+class TagField(forms.CharField):
+    widget = TagWidget
+
+    def clean(self, value):
+        try:
+            tag_names = parse_tags(value)
+        except ValueError:
+            raise forms.ValidationError(_("Please provide a comma-separated list of tags."))
+        tags = []
+        for tag_name in tag_names:
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            tags.append(tag)
+        return tags
+
+
 class EntryTagForm(forms.ModelForm):
+    tags = TagField()
 
     class Meta:
         model = Entry
@@ -96,6 +121,7 @@ class AutoTagForm(forms.ModelForm):
 
 
 class PathForm(forms.ModelForm):
+    tags = TagField()
 
     class Meta:
         model = Transition

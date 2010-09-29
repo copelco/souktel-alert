@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     url(r'^tree/$', views.index, name='list-surveys'),
     
     (r'^tree/data$', views.data),
-    (r'^tree/data/(?P<id>\d+)/$', views.data),
+    url(r'^tree/data/(?P<id>\d+)/$', views.data, name='survey-report'),
 
     url(r'^tree/entry/list/$', views.list_entries, name='list-entries'),
     url(r'^tree/entry/(?P<entry_id>\d+)/edit/$', views.update_entry,

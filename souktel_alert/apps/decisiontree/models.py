@@ -186,7 +186,9 @@ class Transition(models.Model):
         Answer. """ 
     current_state = models.ForeignKey(TreeState)
     answer = models.ForeignKey(Answer, related_name='transitions')
-    next_state = models.ForeignKey(TreeState, blank=True, null=True, related_name='next_state')     
+    next_state = models.ForeignKey(TreeState, blank=True, null=True, related_name='next_state')
+         
+    tags = models.ManyToManyField('Tag', related_name='transitions')
     
     def __unicode__(self):
       return ("%s : %s --> %s" %  (self.current_state, self.answer, self.next_state)).decode('utf-8')
@@ -226,7 +228,7 @@ class Entry(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     text = models.CharField(max_length=160)
     
-    tags = TaggableManager()
+    tags = models.ManyToManyField('Tag', related_name='entries')
     
     def __unicode__(self):
         return "%s-%s: %s - %s" % (self.session.id, self.sequence_id, self.transition.current_state.question, self.text)
@@ -248,6 +250,10 @@ class Entry(models.Model):
         ordering = ('sequence_id',)
 
 
+class Tag(models.Model):
+    name = models.SlugField(unique=True, max_length=100)
+
+
 class Tagger(models.Model):
     answer = models.ForeignKey(Answer)
     tags = TaggableManager()
@@ -263,6 +269,6 @@ class Tagger(models.Model):
 
 def entry_tagger(sender, **kwargs):
     instance = kwargs.get('instance')
-    tags = Tagger.get_tags_for_answer(instance.transition.answer)
-    instance.tags.add(*tags)
+    # tags = Tagger.get_tags_for_answer(instance.transition.answer)
+    # instance.tags.add(*tags)
 post_save.connect(entry_tagger, sender=Entry)
