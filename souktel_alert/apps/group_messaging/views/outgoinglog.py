@@ -14,6 +14,7 @@ from django.forms.formsets import formset_factory
 
 from group_messaging.models import OutgoingLog
 from group_messaging.decorators import contact_required
+from group_messaging.forms import logFilter
 
 
 
@@ -21,75 +22,17 @@ from group_messaging.decorators import contact_required
 def list(request):
     
     outgoinglog = OutgoingLog.objects.all()
-    paginator = Paginator(outgoinglog,10)
+    messagelog = logFilter(request.GET, queryset=OutgoingLog.objects.all())
     
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
+    mycontext = {'messagelog': messagelog,'count':outgoinglog.count()}
+    context = (mycontext)
+    return render_to_response('filter.html', context, context_instance=RequestContext(request))
+
+#@contact_required
+#def log_search(request):
     
-    try:
-        outgoinglog_list = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        outgoinglog_list = paginator.page(paginator.num_pages)
-
-
-    mycontext = {'outgoinglog': outgoinglog_list,'form':LogForm() , 'logs':outgoinglog , 'count':outgoinglog.count()}
-    context = (mycontext)
-    return render_to_response('outgoing_log.html', context, context_instance=RequestContext(request))
-
-
-@contact_required
-def filter(request):
-   
-    outgoinglog_list=""
-    form =""
-    outgoinglog=""
-    statusMsg=""
-    senderMsg=""
-    identityMsg=""
-    textMsg=""
-    outgoinglog2=""
-    #if request.method == 'POST':
-    form = LogForm(request.POST)
-
-    if form.is_valid():
-            statusMsg = form.cleaned_data['status']
-           # senderMsg = form.cleaned_data['sender']
-           # identityMsg  = form.cleaned_data['identity']
-           # textMsg  = form.cleaned_data['text']
-
-    else:
-             print "form is not valid"
-
-
-    outgoinglog = OutgoingLog.objects.filter(status=statusMsg)
-    outgoinglog2 = OutgoingLog.objects.all()
-    paginator = Paginator(outgoinglog,10)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        outgoinglog_list = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        outgoinglog_list = paginator.page(paginator.num_pages)
-     
-    mycontext = {'outgoinglog': outgoinglog_list,'form':form ,'count':0,'logs':outgoinglog2}
-    context = (mycontext)
-    return render_to_response('outgoing_log.html',context , context_instance=RequestContext(request))
-
-class LogForm(forms.Form):
-
-    #pass
-    #sender = forms.CharField(label=_(u"Sender"), max_length=50)
-    #identity  = forms.CharField(label=_(u"Identity"),max_length=50)
-     #text  = forms.CharField(label=_(u"text"),max_length=30)
-     status    = forms.CharField(label=_(u"Status"),required=False)
-    #site      = forms.ModelMultipleChoiceField(queryset= Site.objects.all(), required=True)
-
+ #   log = logFilter(request.GET, queryset=OutgoingLog.objects.all())
+  #  return render_to_response('filter.html', {'log': log  ,'list': list})
 
 
 

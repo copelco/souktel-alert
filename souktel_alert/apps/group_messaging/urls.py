@@ -35,6 +35,6 @@ urlpatterns = patterns('',
         name='recipients_delete'),
     url(r'^group-messaging/outgoinglog/$', outgoinglog.list, \
         name='outgoinglog_list'),
-    url(r'^group-messaging/outgoinglog/filter/$', outgoinglog.filter, \
-        name='outgoinglog_filter'),
+    #url(r'^group-messaging/outgoinglog/filter/$', outgoinglog.filter, \
+    #    name='outgoinglog_filter'),
 )

@@ -1,3 +1,4 @@
+import django_filters
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.utils.translation import ugettext_lazy as _
@@ -55,3 +56,14 @@ class ConnectionInlineForm(forms.ModelForm):
 ConnectionFormset = inlineformset_factory(Contact, Connection, extra=1,
                                           form=ConnectionInlineForm)
 
+
+class logFilter(django_filters.FilterSet):
+
+    sender = django_filters.CharFilter(name='sender',lookup_type='icontains')
+    status_text = django_filters.CharFilter(name='status_text',lookup_type='icontains')
+    identity = django_filters.CharFilter(name='identity',lookup_type='icontains')
+    short_text = django_filters.CharFilter(name='text',lookup_type='icontains')
+    
+    class Meta:
+        model = gm.OutgoingLog
+        fields = ['sender', 'status']
