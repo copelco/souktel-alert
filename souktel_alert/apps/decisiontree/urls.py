@@ -14,13 +14,6 @@ urlpatterns = patterns('',
     url(r'^tree/entry/list/$', views.list_entries, name='list-entries'),
     url(r'^tree/entry/(?P<entry_id>\d+)/edit/$', views.update_entry,
         name='update-entry'),
-
-    url(r'^tree/auto-tags/list/$', views.list_auto_tags, name='list-auto-tags'),
-    url(r'^tree/auto-tags/create/$', views.create_edit_auto_tag,
-        name='create-auto-tag'),
-    url(r'^tree/auto-tags/(?P<tag_id>\d+)/edit/$$', views.create_edit_auto_tag,
-        name='edit-auto-tag'),
-    
     
     (r'^tree/data/export$', views.export),
     (r'^tree/data/export/(?P<id>\d+)$', views.export),
