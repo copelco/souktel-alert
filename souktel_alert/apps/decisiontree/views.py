@@ -379,10 +379,24 @@ def deletestate(request, stateid):
     return redirect(statelist)
 
 
+@contact_required
 def questionpathlist(request):
-    table = tables.PathTable(Transition.objects.all(), request=request)
+    paths = Transition.objects.select_related('current_state__question',
+                                              'next_state__question',
+                                              'answer')
+    paths = paths.order_by('current_state__question__text')
+    trans_tags = Transition.tags.through.objects
+    trans_tags = trans_tags.filter(transition__in=[p.pk for p in paths])
+    trans_tags = trans_tags.select_related('tag')
+    path_map = {}
+    for trans_tag in trans_tags:
+        if trans_tag.transition_id not in path_map:
+            path_map[trans_tag.transition_id] = []
+        path_map[trans_tag.transition_id].append(trans_tag.tag)
+    for path in paths:
+        path.cached_tags = path_map.get(path.pk, [])
     context = {
-        'table': table,
+        'paths': paths,
     }
     return render_to_response('tree/path_list.html', context,
                               context_instance=RequestContext(request))

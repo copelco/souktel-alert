@@ -1,7 +1,7 @@
 {% extends "tree/base.html" %}
 {% load i18n %}
 
-{% block title %}Question Path{% endblock %}
+{% block title %}Paths{% endblock %}
 
 {% block content %}
 
@@ -10,6 +10,39 @@
     <li><a title='{% trans "Add path" %}' href="{% url add_path %}">{% trans "Add path" %}</a></li>
 </ul>
 
-{{ table.as_html }}
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Current State</th>
+            <th>Answer</th>
+            <th>Next State</th>
+            <th>Auto Tags</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for path in paths %}
+            <tr>
+                <td>{{ path.pk }}</td>
+                <td>{{ path.current_state }}</td>
+                <td>{{ path.answer }}</td>
+                <td>{{ path.next_state }}</td>
+                <td>{{ path.cached_tags|join:", " }}</td>
+                <td>
+                    <a href="{% url insert_path path.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url delete_path path.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

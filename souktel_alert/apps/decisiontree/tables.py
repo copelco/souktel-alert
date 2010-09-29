@@ -29,19 +29,3 @@ class QuestionTable(Table):
 
     class Meta:
         order_by = 'id'
-
-
-class PathTable(Table):
-
-    id = Column()
-    current_state = Column()
-    answer = Column()
-    next_state = Column()
-    tags = Column(value=lambda cell: ', '.join(cell.object.tags.values_list('name', flat=True)))
-    edit = EditLink(link=lambda cell: reverse("insert_path",
-                                              args=[cell.row.pk]))
-    delete = DeleteLink(link=lambda cell: reverse("delete_path",
-                                                  args=[cell.row.pk]))
-
-    class Meta:
-        order_by = 'id'

@@ -302,6 +302,11 @@ div.otherbrowsers {
   text-align: center;
 }
 
+img.action {
+    width: 20px;
+    height: 20px;
+}
+
 ul.horizontal {
     margin: 0;
     padding: 0;

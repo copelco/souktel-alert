@@ -184,15 +184,17 @@ class Transition(models.Model):
     """ A Transition is a way to navigate from one
         TreeState to another, via an appropriate 
         Answer. """ 
-    current_state = models.ForeignKey(TreeState)
+    current_state = models.ForeignKey(TreeState,
+                                      related_name='transitions_current')
     answer = models.ForeignKey(Answer, related_name='transitions')
-    next_state = models.ForeignKey(TreeState, blank=True, null=True, related_name='next_state')
-         
+    next_state = models.ForeignKey(TreeState, blank=True, null=True,
+                                   related_name='next_state')
     tags = models.ManyToManyField('Tag', related_name='transitions')
     
     def __unicode__(self):
       return ("%s : %s --> %s" %  (self.current_state, self.answer, self.next_state)).decode('utf-8')
- 
+
+
 class Session(models.Model):
     """ A Session represents a single person's current 
         status traversing through a Tree. It is a way

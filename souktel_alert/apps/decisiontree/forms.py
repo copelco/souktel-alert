@@ -122,6 +122,11 @@ class PathForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PathForm, self).__init__(*args, **kwargs)
+        states = TreeState.objects.select_related('question')
+        stats = states.order_by('question__text')
+        self.fields['current_state'].queryset = states
         self.fields['current_state'].label = 'Current State'
         self.fields['answer'].label = 'Answer'
         self.fields['next_state'].label = 'Next State'
+        self.fields['next_state'].queryset = states
+        self.fields['tags'].label = 'Auto tags'
