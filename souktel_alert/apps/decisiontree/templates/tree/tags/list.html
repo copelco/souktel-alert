@@ -1,27 +1,36 @@
 {% extends "tree/base.html" %}
-{% load tree-tags %}
+{% load i18n %}
 
-{% block title %}Auto tags{% endblock %}
-
-{% block stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
+{% block title %}Tags{% endblock %}
 
 {% block content %}
 
-<h1>Auto tags</h1>
+<h2>Tags</h2>
+<ul class='horizontal'>
+    <li><a title='{% trans "Add tag" %}' href="{% url create-tag %}">{% trans "Add tag" %}</a></li>
+</ul>
 
-<table class='auto'>
+<table class='list auto'>
     <thead>
-        <th></th>
-        <th>Keyword</th>
-        <th>Tags</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
     </thead>
     <tbody>
-    {% for auto_tag in auto_tags %}
+    {% for tag in tags %}
         <tr>
-            <td><a href='{% url edit-auto-tag auto_tag.pk %}'>{{ auto_tag.pk }}</a></td>
-            <td>{{ auto_tag.answer }}</td>
+            <td>{{ tag.pk }}</td>
+            <td>{{ tag.name }}</td>
             <td>
-                {% for tag in auto_tag.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                <a href="{% url edit-tag tag.id %}" title="Edit" class="edit-link">
+                    <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                </a>
+            </td>
+            <td>
+                <a href="{#% url delete_question question.id %#}" title="Edit" class="delete-link">
+                    <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                </a>
             </td>
         </tr>
     {% endfor %}

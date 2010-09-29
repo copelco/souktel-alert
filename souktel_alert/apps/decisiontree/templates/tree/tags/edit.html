@@ -1,18 +1,21 @@
 {% extends "tree/base.html" %}
+{% load i18n %}
 
-{% block title %}{% if auto_tag %}Edit{% else %}Create{% endif %} Auto Tag{% endblock %}
+{% block title %}{% if auto_tag %}Edit{% else %}Create{% endif %} Tag{% endblock %}
 
 {% block content %}
 
-<h1>{% if auto_tag %}Edit{% else %}Create{% endif %} Auto Tag</h1>
-<br />
+<h2>{% if auto_tag %}Edit{% else %}Create{% endif %} Tag</h2>
 
 <form action="" method="post" accept-charset="utf-8">
     {% csrf_token %}
-    <table class='auto'>
+    <table id='tags' class='auto'>
         {{ form }}
     </table>
-    <p><input type="submit" value="{% if auto_tag %}Save{% else %}Create{% endif %} Auto Tag &rarr;"></p>
+    <p class="buttons"> 
+    <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+    <a class="button negative icon cross" href="{% url list-tags %}">{% trans "Cancel" %}</a>
+    </p>
 </form>
 
 {% endblock %}

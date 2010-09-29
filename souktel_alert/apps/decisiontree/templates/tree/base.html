@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_stylesheets %}
+{% block stylesheets %}
     <link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}tree/stylesheets/tree.css" />
 {% endblock %}
 
@@ -11,7 +11,6 @@
         <li><a href='{% url anwser_list %}'>Answers</a></li>
         <li><a href='{% url state_list %}'>States</a></li>
         <li><a href='{% url path_list %}'>Paths</a></li>
-        {# <li><a href='{% url list-entries %}'>Entries</a></li> #}
-        {# <li><a href='{% url list-auto-tags %}'>Auto Tags</a></li> #}
+        <li><a href='{% url list-tags %}'>Tags</a></li>
     </ul>
 {% endblock %}

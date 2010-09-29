@@ -445,3 +445,33 @@ def questionpath(request, pathid=None):
     }
     return render_to_response('tree/path.html', context,
                               context_instance=RequestContext(request))
+
+
+@contact_required
+def list_tags(request):
+    context = {
+        'tags': Tag.objects.order_by('name'),
+    }
+    return render_to_response("tree/tags/list.html", context,
+                              context_instance=RequestContext(request))
+
+
+@contact_required
+def create_edit_tag(request, tag_id=None):
+    tag = None
+    if tag_id:
+        tag = get_object_or_404(Tag, pk=tag_id)
+    if request.method == 'POST':
+        form = TagForm(request.POST, instance=tag)
+        if form.is_valid():
+            saved_tag = form.save()
+            messages.info(request, 'Tag successfully saved')
+            return HttpResponseRedirect(reverse('list-tags'))
+    else:
+        form = TagForm(instance=tag)
+    context = {
+        'tag': tag,
+        'form': form,
+    }
+    return render_to_response("tree/tags/edit.html", context,
+                              context_instance=RequestContext(request))

@@ -14,6 +14,13 @@ urlpatterns = patterns('',
     url(r'^tree/entry/list/$', views.list_entries, name='list-entries'),
     url(r'^tree/entry/(?P<entry_id>\d+)/edit/$', views.update_entry,
         name='update-entry'),
+        
+        
+    url(r'^tree/tags/list/$', views.list_tags, name='list-tags'),
+    url(r'^tree/tags/create/$', views.create_edit_tag,
+        name='create-tag'),
+    url(r'^tree/tags/(?P<tag_id>\d+)/edit/$', views.create_edit_tag,
+        name='edit-tag'),
     
     (r'^tree/data/export$', views.export),
     (r'^tree/data/export/(?P<id>\d+)$', views.export),

@@ -130,3 +130,17 @@ class PathForm(forms.ModelForm):
         self.fields['next_state'].label = 'Next State'
         self.fields['next_state'].queryset = states
         self.fields['tags'].label = 'Auto tags'
+
+
+class TagForm(forms.ModelForm):
+    
+    class Meta:
+        model = Tag
+
+    def __init__(self, *args, **kwargs):
+        super(TagForm, self).__init__(*args, **kwargs)
+        self.fields['recipients'] = forms.ModelMultipleChoiceField(
+            queryset=Contact.objects.exclude(user__email=''),
+            widget=forms.CheckboxSelectMultiple,
+            required=False,
+        )
