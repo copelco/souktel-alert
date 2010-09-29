@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tree/base.html" %}
 
 {% block content %}
 {% load i18n %}
@@ -6,29 +6,19 @@
 <fieldset> 
 <legend>
 {% if stateid %}
-{% trans "Question Path Update Form" %}
+{% trans "Update Question Path" %}
 {% else %}
-{% trans "New Question Path Form" %}
+{% trans "New Question Path" %}
 {% endif %}
 </legend>
 
-<table>
-{% for field in form %}
-<tr>
-<td>{{ field.label_tag }}</td><td>{{ field }} {%if field.errors %}<div class='djangoerrors'>{% for error in field.errors %}{{ error }}{% endfor %}</div>{% endif %}</td>
-</tr>
-{% endfor %}
-</table>
+<table>{{ form }}</table>
 
 <p class="buttons"> 
 <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
-<a class="button negative icon cross" href="/tree">{% trans "Cancel" %}</a>
+<a class="button negative icon cross" href="{% url path_list %}">{% trans "Cancel" %}</a>
 </p> 
 </fieldset> 
+</form>
 
-{% endblock %}
-
-{% block submenu %}
-<ul><li><a href = "/tree" >{% trans "Back to Answer list" %}</a></li></ul>
-<ul><li>{{ validationMsg }}</li></ul>
 {% endblock %}

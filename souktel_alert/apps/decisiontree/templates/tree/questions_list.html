@@ -1,88 +1,14 @@
-{% extends "base.html" %}
-{% block javascript %}
-    <script>
-    function deleteMessage(url){
-    if (confirm("Do you really want to delete this Question ??")) {
-      window.location=url;
-    }
-    }
-</script>
-{% endblock %}
-{% block title %}Survey{% endblock %}
-{% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
+{% extends "tree/base.html" %}
 
-{% load tree-tags %}
+{% block title %}Survey{% endblock %}
+
 {% block content %}
 
-<div class="module">
-<h2> Questions List</h2>
-<table class='list'>
-    <colgroup> 
-  <col class='number' />
-    <col class='name' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    </colgroup>
-    <tr class='secondRow doNotFilter'>
-    <th class='name'>ID</th>
-    <th class='name'>Question Text</th>
-    <th class='name'>Edit</th>
-    <th class='name'>Delete</th>
-    <th class='name'>Answers</th>
-    <th class='name'>States</th>
-    <th class='name'>Questions Path</th>
-    <th class='name'></th>
-        {% if questions %}{% for question in questions %}
-    <tr>
-    <td class='name'>{{ question.id}}</td>
-    <td class='name'>{{ question.text }}</td>
-    <td class='name'><a  href="{% url insert_question question.id %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a href = "javascript:deleteMessage('{% url delete_question question.id %}')">
-        <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
-    </td>
-    <td class='name'><a  href="{% url anwser_list %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a  href="{% url state_list %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a  href="{% url path_list %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a href ="">     
-    </td>
-    </tr>
-        {% endfor %}
-        {% endif %}
+<h2>Questions</h2>
+<ul class='horizontal'>
+    <li><a href = "{% url add_question %}" >Add question</a></li>
+</ul>
 
-</div>
-       <tr class="">
-            <td colspan="6" ><span>
-                    {% if Glist.has_previous %}
-                    <a href="?page={{ Glist.previous_page_number }}">previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ Glist.number }} of {{ Glist.paginator.num_pages }}.
-                    </span>
-
-                    {% if Glist.has_next %}
-                    <a href="?page={{ Glist.next_page_number }}">next</a>
-                    {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the Questions = {{ qtotal }}</span> </td>
-
-        </tr>
-</table>
+{{ table.as_html }}
 
 {% endblock %}
-
-{% block submenu %}
-<ul><li><a href = "{% url add_question %}" >Add new Question</a></li>
-<li><a href = "/tree" >Back to Survey list</a></li></ul>
-{% endblock %}
-

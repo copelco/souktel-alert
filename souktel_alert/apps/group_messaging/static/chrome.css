@@ -15,20 +15,12 @@ h1 {
   margin: 0;
 }
 h2 {
-  font-size: 110%;
-  letter-spacing: -1px;
-  font-weight: normal;
-  color: #4a8ee6;
+  font-size: 125%;
+  font-weight: bold;
   padding: 0;
   margin: 0;
-  padding: 0.5em 1em;
-  color: #3a75bd;
-  margin-left: -38px;
-  padding-left: 38px;
- 
-  border-top: 1px solid #3a75bd;
+  color: #444;
   padding-top: 0.5em;
- 
 }
 h2:first-child {
   border-top: 0;
@@ -38,7 +30,7 @@ span.th {
   padding-left: 0.35em;
 }
 a {
-  color: black;
+  color: #5296DE;
 }
  
 div#header {
@@ -308,4 +300,22 @@ div.otherbrowsers {
   font-size: 84%;
   width: 100%;
   text-align: center;
+}
+
+ul.horizontal {
+    margin: 0;
+    padding: 0;
+    font-size: 93%;
+    padding-bottom: 10px;
+}
+
+ul.horizontal li {
+    display: inline;
+    border-left: 1px solid lightgray;
+    padding: 0 0.2em 0 0.5em;
+}
+
+ul.horizontal li:first-child {
+    padding: 0 0.2em 0 0;
+    border-left: none;
 }

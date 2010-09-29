@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tree/base.html" %}
 {% block javascript %}
     <script>
     function deleteMessage(url){
@@ -14,8 +14,11 @@
 {% load tree-tags %}
 {% block content %}
 
-<div class="module">
-<h2> Answers List</h2>
+<h2>Answers</h2>
+<ul class='horizontal'>
+    <li><a href = "{% url add_answer %}" >Add answer</a></li>
+</ul>
+
 <table class='list'>
     <colgroup> 
   <col class='number' />
@@ -51,7 +54,6 @@
         {% endfor %}
         {% endif %}
 
-</div>
        <tr class="">
             <td colspan="6" ><span>
                     {% if Glist.has_previous %}
@@ -71,9 +73,3 @@
 </table>
 
 {% endblock %}
-
-{% block submenu %}
-<ul><li><a href = "{% url add_answer %}" >Add new Answer</a></li>
-<li><a href = "tree" >Back to Question list</a></li></ul>
-{% endblock %}
-

@@ -1,77 +1,15 @@
-{% extends "base.html" %}
-{% block javascript %}
-    <script>
-    function deleteMessage(url){
-    if (confirm("Do you really want to delete this Path ??")) {
-      window.location=url;
-    }
-    }
-</script>
-{% endblock %}
-{% block title %}Question Path{% endblock %}
-{% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
+{% extends "tree/base.html" %}
+{% load i18n %}
 
-{% load tree-tags %}
+{% block title %}Question Path{% endblock %}
+
 {% block content %}
 
-<div class="module">
-<h2> states List</h2>
-<table class='list'>
-    <colgroup> 
-    <col class='number' />
-    <col class='name' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    </colgroup>
-    <tr class='secondRow doNotFilter'>
-    <th class='name'>ID</th>
-    <th class='name'>Current Question</th>
-    <th class='name'>Next Question</th>
-    <th class='name'>Edit</th>
-    <th class='name'>Delete</th>
-    
-        {% if paths %}{% for path in paths %}
-    <tr>
-    <td class='name'>{{ path.id}}</td>
-    <td class='name'>{{ path.current_state }}</td>
-    <td class='name'>{{ state.next_state }}</td>
-    
-    <td class='name'><a  href="{% url insert_path path.id %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a href = "javascript:deleteMessage('{% url delete_path path.id %}')">
-        <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
-    </td>
-    <td class='name'><a href =""></a>
-    </tr>
-        {% endfor %}
-        {% endif %}
+<h2>Paths</h2>
+<ul class='horizontal'>
+    <li><a title='{% trans "Add path" %}' href="{% url add_path %}">{% trans "Add path" %}</a></li>
+</ul>
 
-</div>
-       <tr class="">
-            <td colspan="6" ><span>
-                    {% if Glist.has_previous %}
-                    <a href="?page={{ Glist.previous_page_number }}">previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ Glist.number }} of {{ Glist.paginator.num_pages }}.
-                    </span>
-
-                    {% if Glist.has_next %}
-                    <a href="?page={{ Glist.next_page_number }}">next</a>
-                    {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the States = {{ ptotal }}</span> </td>
-
-        </tr>
-</table>
+{{ table.as_html }}
 
 {% endblock %}
-
-{% block submenu %}
-<ul><li><a href = "{% url add_path %}" >Add new Question Path</a></li>
-<li><a href = "tree" >Back to Question list</a></li></ul>
-{% endblock %}
-

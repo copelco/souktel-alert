@@ -15,6 +15,7 @@ from django.db.models import Count
 
 from decisiontree.forms import *
 from decisiontree.models import *
+from decisiontree import tables
 
 from group_messaging.decorators import contact_required
 
@@ -168,7 +169,6 @@ def addtree(request, treeid=None):
 
 @contact_required
 def deletetree(request, treeid):
-
     tree = Tree.objects.get(id=treeid)
     tree.delete()
     mycontext = {'tree': tree}
@@ -176,14 +176,12 @@ def deletetree(request, treeid):
 
     return redirect(index)
 
+
 @contact_required
 def addquestion(request, questionid=None):
-
-    validationMsg = ""
     question = None
     if questionid:
-           question = get_object_or_404(Question, pk=questionid)
-    
+        question = get_object_or_404(Question, pk=questionid)
 
     if request.method == 'POST':
         form = QuestionForm(request.POST, instance=question)
@@ -193,49 +191,36 @@ def addquestion(request, questionid=None):
                 validationMsg =("You have successfully updated the Question")
             else:                   
                 validationMsg = "You have successfully inserted a Question %s." % question.text
-                mycontext = {'validationMsg':validationMsg}                
-                context = (mycontext)
-                return redirect(questionlist)
-
+            messages.info(request, validationMsg)
+            return HttpResponseRedirect(reverse('list-questions'))
     else:
-        if question:
-            data = {'text':question.text,'error_response':question.error_response}
-        else:
-            data = {'text': '', 'error_response': ''}
-        form = QuestionForm(data)
+        form = QuestionForm(instance=question)
 
-    if not questionid:
-        questionid = 0
-
-    mycontext = {'question':question,'form':form, 'questionid': questionid,'validationMsg':validationMsg}
-    context = (mycontext)
+    context = {
+        'question': question,
+        'form': form,
+        'questionid': questionid,
+    }
     return render_to_response('tree/question.html', context,
                               context_instance=RequestContext(request))
 
 
-def questionlist(req):
-    allQuestions = Question.objects.all()
-    questions_count = Question.objects.count()
+@contact_required
+def questionlist(request):
+    table = tables.QuestionTable(Question.objects.all(), request=request)
+    context = {
+        'table': table,
+    }
+    return render_to_response('tree/questions_list.html', context,
+                              context_instance=RequestContext(request))
 
-    context_instance=RequestContext(req)
-    if len(allQuestions) != 0:
-        q = allQuestions[len(allQuestions) - 1]
-        context_instance["questions"] = allQuestions
-        context_instance["q"] = q
-        context_instance["qtotal"] = questions_count
-        return render_to_response("tree/questions_list.html", context_instance)
-    else:
-		return render_to_response("tree/questions_list.html", context_instance)
 
 @contact_required
 def deletequestion(request, questionid):
-
-    question = Question.objects.get(id=questionid)
-    question.delete()
-    mycontext = {'question': question}
-    context = (mycontext)
-
-    return redirect(questionlist)
+    tree = get_object_or_404(Question, pk=questionid)
+    tree.delete()
+    messages.info(request, 'Question successfully deleted')
+    return HttpResponseRedirect(reverse('list-questions'))
 
 
 @contact_required
@@ -423,19 +408,14 @@ def deletestate(request, stateid):
 
     return redirect(statelist)
 
-def questionpathlist(req):
-    allPaths =  Transition.objects.all()
-    paths_count =  Transition.objects.count()
 
-    context_instance=RequestContext(req)
-    if len(allPaths) != 0:
-        p = allPaths[len(allPaths) - 1]
-        context_instance["paths"] = allPaths
-        context_instance["p"] = p
-        context_instance["ptotal"] = paths_count
-        return render_to_response("tree/path_list.html", context_instance)
-    else:
-		return render_to_response("tree/path_list.html", context_instance)
+def questionpathlist(request):
+    table = tables.PathTable(Transition.objects.all(), request=request)
+    context = {
+        'table': table,
+    }
+    return render_to_response('tree/path_list.html', context,
+                              context_instance=RequestContext(request))
 
 
 @contact_required
@@ -450,12 +430,9 @@ def deletepath(request, pathid):
 
 @contact_required
 def questionpath(request, pathid=None):
-
-    validationMsg = ""
     path = None
     if pathid:
-           path = get_object_or_404(Transition, pk=pathid)
-
+        path = get_object_or_404(Transition, pk=pathid)
 
     if request.method == 'POST':
         form = PathForm(request.POST, instance=path)
@@ -465,23 +442,15 @@ def questionpath(request, pathid=None):
                 validationMsg =("You have successfully updated the Question Path")
             else:
                 validationMsg = "You have successfully inserted Question Path %s." % path.id
-                mycontext = {'validationMsg':validationMsg}
-                context = (mycontext)
-                return redirect(questionpathlist)
-
+            messages.info(request, validationMsg)
+            return HttpResponseRedirect(reverse('path_list'))
     else:
-        if path:
-            data = {'current state':path.current_state,'answer':path.answer, 'next state':path.next_state}
-        else:
-            data = {'current state': '', 'answer': '', 'next state': ''}
-        form = PathForm(data)
+        form = PathForm(instance=path)
 
-    if not pathid:
-        pathid = 0
-
-    mycontext = {'path':path,'form':form, 'pathid': pathid,'validationMsg':validationMsg}
-    context = (mycontext)
+    context = {
+        'path': path,
+        'form': form,
+        'pathid': pathid,
+    }
     return render_to_response('tree/path.html', context,
                               context_instance=RequestContext(request))
-
-

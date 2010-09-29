@@ -14,14 +14,10 @@
 {% load tree-tags %}
 {% block content %}
 
-<div class="module">
-    <a href="{% url add_tree %}" class="add">
-        <h2>Add new Survey</h2>
-    </a>
-</div>
-
-<div class="module">
-<h2> Survey List</h2>
+<h2>Surveys</h2>
+<ul class='horizontal'>
+    <li><a href = "{% url add_tree %}" >Add survey</a></li>
+</ul>
 <table class='list'>
     <colgroup> 
     <col class='number' />
@@ -35,7 +31,7 @@
     <th class='name'>First Question</th>
     <th class='name'>Edit</th>
     <th class='name'>Delete</th>
-    <th class='name'>Questions</th>
+    {# <th class='name'>Questions</th> #}
     <th class='name'>Report</th>
         {% if trees %}{% for tree in trees %}
     <tr>
@@ -47,9 +43,9 @@
     <td class='name'><a href = "javascript:deleteMessage('{% url delete_tree tree.id %}')">
         <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
     </td>
-    <td class='name'><a href ="{% url list %}">
-        <img style="border:0px" src="/static/group_messaging/question.png" width="20" height="20"/> </a>
-    </td>
+    {# <td class='name'><a href ="{% url list %}"> #}
+    {#     <img style="border:0px" src="/static/group_messaging/question.png" width="20" height="20"/> </a> #}
+    {# </td> #}
     <td class='name'><a href ="/tree/data/{{tree.id}}">
         <img style="border:0px" src="/static/group_messaging/report.gif" width="20" height="20"/> </a>
     </td>
@@ -57,7 +53,6 @@
         {% endfor %}
         {% endif %}
 
-</div>
        <tr class="">
             <td colspan="6" ><span>
                     {% if Glist.has_previous %}

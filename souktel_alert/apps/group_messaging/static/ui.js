@@ -39,3 +39,12 @@ function enableHelpTooltips() {
     helpEl.onmouseout = handleHelpTooltipMouseOut;
   }
 }
+
+
+$(function() {
+    $('a.delete-link').click(function(e) {
+        if (!confirm("Are you sure you want to delete this item?")) {
+            e.preventDefault();
+        }
+    });
+});
