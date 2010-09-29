@@ -250,7 +250,7 @@ class Entry(models.Model):
 
 
 class Tag(models.Model):
-    name = models.SlugField(unique=True, max_length=100)
+    name = models.CharField(unique=True, max_length=100)
     recipients = models.ManyToManyField(Contact, related_name='tags')
 
     def __unicode__(self):

@@ -115,7 +115,7 @@ class EntryTagForm(forms.ModelForm):
 
 
 class PathForm(forms.ModelForm):
-    tags = TagField()
+    tags = TagField(required=False)
 
     class Meta:
         model = Transition
