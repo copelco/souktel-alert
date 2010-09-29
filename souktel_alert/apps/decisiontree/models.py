@@ -8,8 +8,6 @@ from django.db.models.signals import post_save
 
 from rapidsms.models import Contact, Connection
 
-from taggit.managers import TaggableManager
-
 
 class Question(models.Model):
     '''A question, which is just some text to be sent to the user,
@@ -260,6 +258,5 @@ class Tag(models.Model):
 
 def entry_tagger(sender, **kwargs):
     instance = kwargs.get('instance')
-    # tags = Tagger.get_tags_for_answer(instance.transition.answer)
-    # instance.tags.add(*tags)
+    instance.tags = instance.transition.tags.all()
 post_save.connect(entry_tagger, sender=Entry)

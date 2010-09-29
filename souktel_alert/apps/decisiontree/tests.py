@@ -11,8 +11,6 @@ from rapidsms.messages.outgoing import OutgoingMessage
 
 from decisiontree import models as dt
 
-from taggit.models import Tag
-
 
 class TaggingTest(TestCase):
     def setUp(self):
@@ -36,20 +34,12 @@ class TaggingTest(TestCase):
                                                  tree=self.tree1,
                                                  state=self.state1,
                                                  num_tries=1)
-        self.fruit_tag = Tag.objects.create(name='fruit', slug='fruit')
-        self.vegetable_tag = Tag.objects.create(name='vegetable',
-                                                slug='vegetable')
-
-    def test_proper_tagging(self):
-        tagger = dt.Tagger.objects.create(answer=self.fruit)
-        tagger.tags.add(self.fruit_tag)
-        tags = dt.Tagger.get_tags_for_answer(self.fruit)
-        self.assertTrue(self.fruit_tag in tags)
-        self.assertFalse(self.vegetable_tag in tags)
+        self.fruit_tag = dt.Tag.objects.create(name='fruit')
+        self.vegetable_tag = dt.Tag.objects.create(name='vegetable')
 
     def test_entry_tagging_on_save(self):
-        tagger = dt.Tagger.objects.create(answer=self.fruit)
-        tagger.tags.add(self.fruit_tag)
+        self.trans1.tags = [self.fruit_tag]
+        self.trans1.save()
         entry = dt.Entry.objects.create(session=self.session, sequence_id=1,
                                         transition=self.trans1, text='apples')
         self.assertTrue(self.fruit_tag in entry.tags.all(),
