@@ -9,6 +9,33 @@
     <li><a href = "{% url add_question %}" >Add question</a></li>
 </ul>
 
-{{ table.as_html }}
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Text</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for question in questions %}
+            <tr>
+                <td>{{ question.pk }}</td>
+                <td>{{ question.text }}</td>
+                <td>
+                    <a href="{% url insert_question question.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url delete_question question.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}

@@ -15,7 +15,6 @@ from django.db.models import Count
 
 from decisiontree.forms import *
 from decisiontree.models import *
-from decisiontree import tables
 
 from group_messaging.decorators import contact_required
 
@@ -216,9 +215,8 @@ def addquestion(request, questionid=None):
 
 @contact_required
 def questionlist(request):
-    table = tables.QuestionTable(Question.objects.all(), request=request)
     context = {
-        'table': table,
+        'questions': Question.objects.order_by('text')
     }
     return render_to_response('tree/questions_list.html', context,
                               context_instance=RequestContext(request))
