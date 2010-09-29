@@ -114,7 +114,7 @@ INSTALLED_APPS = [
     #"poll",
     "decisiontree",
     "taggit",
-    "django_filters"
+    "django_filters",
 ]
 
 

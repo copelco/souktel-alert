@@ -23,7 +23,6 @@ def list(request):
     
     outgoinglog = OutgoingLog.objects.all()
     messagelog = logFilter(request.GET, queryset=OutgoingLog.objects.all())
-    
     mycontext = {'messagelog': messagelog,'count':outgoinglog.count()}
     context = (mycontext)
     return render_to_response('filter.html', context, context_instance=RequestContext(request))

@@ -6,17 +6,6 @@
 {% get_available_languages as LANGUAGES %}
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 
-
-{% block javascript %}
-<script>
-function deleteRecipient(url){
- if (confirm("{% trans 'Do you really want to delete this recipient ??' %}")) {
-   window.location=url;
- } 
-}
-</script>
-{% endblock %}
-
 {% block content %}
 <h2>{% trans "Outgoing log" %}</h2>
 <form action="" method="get">{% csrf_token %}
