@@ -117,3 +117,7 @@ table.auto {
 #id_start_date_1 {
     margin-left: 1em;
 }
+
+button[type=submit] {
+    padding-bottom: 6px;
+}
