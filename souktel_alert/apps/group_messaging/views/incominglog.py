@@ -36,4 +36,3 @@ def message_log(req):
     context = (mycontext)
     return render_to_response("incoming.html",context, context_instance=RequestContext(req))
 
-

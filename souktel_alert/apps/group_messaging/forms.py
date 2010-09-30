@@ -75,7 +75,7 @@ class messageslogFilter(django_filters.FilterSet):
 
     contact = django_filters.CharFilter(name='contact',lookup_type='icontains')
     connection = django_filters.CharFilter(name='connection',lookup_type='icontains')
-    direction = django_filters.CharFilter(name='direction',lookup_type='icontains')
+    direction = django_filters.CharFilter(name='direction')
     date = django_filters.CharFilter(name='date',lookup_type='icontains')
     text = django_filters.CharFilter(name='text',lookup_type='icontains')
 

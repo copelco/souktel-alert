@@ -9,7 +9,7 @@
 {% block content %}
 <h2>{% trans "Outgoing log" %}</h2>
 <form action="" method="get">{% csrf_token %}
-{{ messagelogfilter.form.as_p }}
+{{ messagelog.form.as_p }}
 <input type="submit" />
 </form>
 <table class='list'>

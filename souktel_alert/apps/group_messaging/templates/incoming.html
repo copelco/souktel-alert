@@ -1,50 +1,64 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
-{% block title %}Message Log - {{ block.super }}{% endblock %}
+{% load i18n %}
 
-{% block stylesheets %}
-{{ block.super }}
-<link type="text/css" rel="stylesheet" href="{{ MEDIA_URL }}messagelog/stylesheets/messagelog.css" />
-{% endblock %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 
 {% block content %}
-
+<h2>{% trans "Incoming / Outgoing Messages log" %}</h2>
 <form action="" method="get">{% csrf_token %}
 {{ messagelogfilter.form.as_p }}
 <input type="submit" />
 </form>
-<!--<div class="messages module">
-	<h2>Messages Log</h2>
-	{{ messages_table.as_html }}
-        <h1>Total No. of Messages |{{ count }} </h1>
-</div>
--->
-
 <table class='list'>
 <colgroup>
-    <col class='name' />
-    <col class='name' />
+    <col class='number' />
     <col class='number' />
     <col class='name' />
     <col class='name' />
 </colgroup>
 <tr class='secondRow doNotFilter'>
-<th class='name' >Contact</th>
+<th class='name' > Contact</th>
+<th class='name' >Direction</th>
 <th class='name' >Connection</th>
-<th class='number' >Direction</th>
-<th class='name' >Date</th>
 <th class='name' >Text</th>
 
+
 </tr>
-{% for message in messages_log %}
+{% for message in messagelogfilter %}
 <tr {% if forloop.last %} class=""{% endif %}>
 <td class='name'>{{message.contact}}</td>
+<td class='name'>{{message.direction}}</td>
 <td class='name'>{{message.connection}}</td>
-<td class='number'>{{message.direction}}</td>
-<td class='name'>{{message.date}}</td>
 <td class='name'>{{message.text}}</td>
 </tr>
 {% endfor %}
 
+<tr class="">
+<td colspan="5"><span>
+        {% if outgoinglog.has_previous %}
+            <a href="?page={{ outgoinglog.previous_page_number }}">{% trans "previous" %}</a>
+        {% endif %}
 
+        <span class="current">
+            {% trans "Page" %} {{ outgoinglog.number }} {% trans "of" %} {{ outgoinglog.paginator.num_pages }}.
+        </span>
+
+        {% if outgoinglog.has_next %}
+            <a href="?page={{ outgoinglog.next_page_number }}">{% trans "next" %}</a>
+        {% endif %}
+    </span> &nbsp;&nbsp; |&nbsp;&nbsp;<span> {% trans "Total number" %} = {{ count }}</span> </td>
+
+</tr>
+</table>
+<p> {{ validationMsg }} </p>
+{% endblock %}
+
+{% block submenu %}
+<!--ul>
+<li><a href = "{% url recipient_add %}" >{% trans " Add new recipient" %}</a></li>
+<li><a href = "{% url manage_recipients %}" >{% trans " Add bulk recipients" %}</a></li>
+</ul-->
 {% endblock %}
