@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tree/base.html" %}
 
 {% block content %}
 {% load i18n %}
@@ -13,22 +13,13 @@
 </legend>
 
 <table>
-{% for field in form %}
-<tr>
-<td>{{ field.label_tag }}</td><td>{{ field }} {%if field.errors %}<div class='djangoerrors'>{% for error in field.errors %}{{ error }}{% endfor %}</div>{% endif %}</td>
-</tr>
-{% endfor %}
+{{ form }}
 </table>
 
 <p class="buttons"> 
 <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
-<a class="button negative icon cross" href="/tree">{% trans "Cancel" %}</a>
+<a class="button negative icon cross" href="{% url list-surveys %}">{% trans "Cancel" %}</a>
 </p> 
 </fieldset> 
 
-{% endblock %}
-
-{% block submenu %}
-<ul><li><a href = "/tree" >{% trans "Back to Survey list" %}</a></li></ul>
-<ul><li>{{ validationMsg }}</li></ul>
 {% endblock %}

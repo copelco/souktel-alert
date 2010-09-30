@@ -39,11 +39,9 @@ class Tree(models.Model):
        tree with no possible transitions.
        '''
     trigger = models.CharField(max_length=30, help_text="The incoming message which triggers this Tree")
-    #root_question = models.ForeignKey("Question", related_name="tree_set", help_text="The first Question sent when this Tree is triggered, which may lead to many more")
-    # making this compatible with the UI
-    root_state = models.ForeignKey("TreeState", null=True, blank=True, related_name="tree_set", help_text="The first Question sent when this Tree is triggered, which may lead to many more")
-    completion_text = models.CharField(max_length=160, null=True, blank=True, help_text="The message that will be sent when the tree is completed")
-     
+    root_state = models.ForeignKey("TreeState", related_name="tree_set", help_text="The first Question sent when this Tree is triggered, which may lead to many more")
+    completion_text = models.CharField(max_length=160, blank=True, help_text="The message that will be sent when the tree is completed")
+
     def __unicode__(self):
         return "T%s: %s -> %s" % (
             self.pk,
@@ -130,7 +128,7 @@ class TreeState(models.Model):
         associated with a question and a set of answers
         (transitions) that allow traversal to other states.""" 
     name = models.CharField(max_length=100)
-    question = models.ForeignKey(Question, blank=True, null=True)
+    question = models.ForeignKey(Question)
     # the number of tries they have to get out of this state
     # if empty there is no limit.  When the num_retries is hit
     # a user's session will be terminated.

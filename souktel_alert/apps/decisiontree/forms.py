@@ -7,15 +7,6 @@ from models import *
 from decisiontree.utils import parse_tags, edit_string_for_tags
 
 
-class TreeForm(forms.ModelForm):
-    class Meta:
-        model = Tree
-
-    def clean_alias(self):
-        data = self.cleaned_data["trigger"]
-        return data.lower()
-
-
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
@@ -32,8 +23,11 @@ class TreesForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TreesForm, self).__init__(*args, **kwargs)
+        states = TreeState.objects.select_related('question')
+        states = states.order_by('question__text')
+        self.fields['root_state'].label = 'First State'
+        self.fields['root_state'].queryset = states
         self.fields['trigger'].label = 'Keyword'
-        self.fields['root_state'].label = 'First Question'
         self.fields['completion_text'].label = 'Completion Text'
 
 

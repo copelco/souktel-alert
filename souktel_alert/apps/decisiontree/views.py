@@ -20,19 +20,14 @@ from decisiontree.models import *
 from group_messaging.decorators import contact_required
 
 
-def index(req):
-    allTrees = Tree.objects.all()
-    tree_count = Tree.objects.count()
-    
-    context_instance=RequestContext(req)
-    if len(allTrees) != 0:
-        t = allTrees[len(allTrees) - 1]
-        context_instance["trees"] = allTrees
-        context_instance["t"] = t
-        context_instance["total"] = tree_count
-        return render_to_response("tree/index.html", context_instance)
-    else:
-		return render_to_response("tree/index.html", context_instance)
+def index(request):
+    trees = Tree.objects.select_related('root_state__question')
+    trees = trees.annotate(count=Count('sessions'))
+    context = {
+        'surveys': trees.order_by('trigger'),
+    }
+    return render_to_response("tree/index.html", context,
+                              context_instance=RequestContext(request))
 
 
 @contact_required
@@ -133,22 +128,10 @@ def export(req, id = None):
     else:
         return render_to_response("tree/index.html", request_context=RequestContext(req))
 
-def get_tree(id):
-    '''Gets a tree.  If id is specified it gets the tree with that Id.
-       If Id is not specified it gets the latest tree.  If there are 
-       no trees, it returns an empty tree.'''
-    if id:
-        return Tree.objects.get(id=id)
-    else:
-        if len(Tree.objects.all()) > 0:
-            return Tree.objects.all()[len(Tree.objects.all()) - 1]
-        else:
-            return Tree()  
-    
 
 @contact_required
+@transaction.commit_on_success
 def addtree(request, treeid=None):
-    validationMsg = ""
     tree = None
     if treeid:
         tree = get_object_or_404(Tree, pk=treeid)
@@ -158,35 +141,33 @@ def addtree(request, treeid=None):
         if form.is_valid():
             tree = form.save()
             if treeid:
-                validationMsg =("You have successfully updated the Survey")
+                validationMsg =("Survey successfully updated")
             else:
                 validationMsg = "You have successfully inserted a Survey %s." % tree.trigger
-                mycontext = {'validationMsg':validationMsg}
-                context = (mycontext)
-                return redirect(index)
+            messages.info(request, validationMsg)
+            return HttpResponseRedirect(reverse('list-surveys'))
     else:
-        if tree:
-            data = {'trigger':tree.trigger,'root_state':tree.root_state,'completion_text':tree.completion_text}
-        else:
-            data = {'trigger': '', 'root_state': '', 'completion_text': ''}
-        form = TreesForm(data)
+        form = TreesForm(instance=tree)
 
-    mycontext = {'tree':tree, 'form':form, 'validationMsg':validationMsg}
-    context = (mycontext)
+    context = {
+        'tree': tree,
+        'form': form,
+    }
     return render_to_response('tree/survey.html', context,
                               context_instance=RequestContext(request))
 
+
 @contact_required
+@transaction.commit_on_success
 def deletetree(request, treeid):
-    tree = Tree.objects.get(id=treeid)
+    tree = get_object_or_404(Tree, pk=treeid)
     tree.delete()
-    mycontext = {'tree': tree}
-    context = (mycontext)
-
-    return redirect(index)
+    messages.info(request, 'Survey successfully deleted')
+    return HttpResponseRedirect(reverse('list-surveys'))
 
 
 @contact_required
+@transaction.commit_on_success
 def addquestion(request, questionid=None):
     question = None
     if questionid:
@@ -224,6 +205,7 @@ def questionlist(request):
 
 
 @contact_required
+@transaction.commit_on_success
 def deletequestion(request, questionid):
     tree = get_object_or_404(Question, pk=questionid)
     tree.delete()
@@ -232,6 +214,7 @@ def deletequestion(request, questionid):
 
 
 @contact_required
+@transaction.commit_on_success
 def addanswer(request, answerid=None):
     answer = None
     if answerid:
@@ -262,6 +245,7 @@ def addanswer(request, answerid=None):
 
 
 @contact_required
+@transaction.commit_on_success
 def deleteanswer(request, answerid):
     answer = get_object_or_404(Answer, pk=answerid)
     answer.delete()
@@ -290,6 +274,7 @@ def list_entries(request):
 
 
 @contact_required
+@transaction.commit_on_success
 def update_entry(request, entry_id):
     """ Manually update survey entry tags """
     entry = get_object_or_404(Entry, pk=entry_id)
@@ -350,6 +335,7 @@ def statelist(request):
 
 
 @contact_required
+@transaction.commit_on_success
 def deletestate(request, stateid):
     state = get_object_or_404(TreeState, pk=stateid)
     state.delete()
@@ -381,6 +367,7 @@ def questionpathlist(request):
 
 
 @contact_required
+@transaction.commit_on_success
 def deletepath(request, pathid):
     path = get_object_or_404(Transition, pk=pathid)
     path.delete()
@@ -389,6 +376,7 @@ def deletepath(request, pathid):
 
 
 @contact_required
+@transaction.commit_on_success
 def questionpath(request, pathid=None):
     path = None
     if pathid:
@@ -426,6 +414,7 @@ def list_tags(request):
 
 
 @contact_required
+@transaction.commit_on_success
 def create_edit_tag(request, tag_id=None):
     tag = None
     if tag_id:

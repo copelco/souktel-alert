@@ -1,87 +1,49 @@
 {% extends "tree/base.html" %}
-{% block javascript %}
-    <script>
-    function deleteMessage(url){
-    if (confirm("Do you really want to delete this Survey ??")) {
-      window.location=url;
-    }
-    }
-</script>
-{% endblock %}
-{% block title %}Survey{% endblock %}
-{% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 
-{% load tree-tags %}
+{% block title %}Survey{% endblock %}
+
 {% block content %}
 
 <h2>Surveys</h2>
 <ul class='horizontal'>
     <li><a href = "{% url add_tree %}" >Add survey</a></li>
 </ul>
-<table class='list'>
-    <colgroup> 
-    <col class='number' />
-    <col class='name' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    </colgroup> 
-    <tr class='secondRow doNotFilter'>
-    <th class='name'>Keyword</th> 
-    <th class='name'>First Question</th>
-    <th class='name'>Edit</th>
-    <th class='name'>Delete</th>
-    {# <th class='name'>Questions</th> #}
-    <th class='name'>Report</th>
-        {% if trees %}{% for tree in trees %}
-    <tr>
-    <td class='name'>{{ tree.trigger }}</td>
-    <td class='name'>{{ tree.root_state.question}}</td>
-    <td class='name'><a  href="{% url insert tree.id %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a href = "javascript:deleteMessage('{% url delete_tree tree.id %}')">
-        <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
-    </td>
-    {# <td class='name'><a href ="{% url list %}"> #}
-    {#     <img style="border:0px" src="/static/group_messaging/question.png" width="20" height="20"/> </a> #}
-    {# </td> #}
-    <td class='name'><a href ="/tree/data/{{tree.id}}">
-        <img style="border:0px" src="/static/group_messaging/report.gif" width="20" height="20"/> </a>
-    </td>
-    </tr>
-        {% endfor %}
-        {% endif %}
 
-       <tr class="">
-            <td colspan="6" ><span>
-                    {% if Glist.has_previous %}
-                    <a href="?page={{ Glist.previous_page_number }}">previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ Glist.number }} of {{ Glist.paginator.num_pages }}.
-                    </span>
-
-                    {% if Glist.has_next %}
-                    <a href="?page={{ Glist.next_page_number }}">next</a>
-                    {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the Surveys = {{ total }}</span> </td>
-
+<table class='list auto'>
+    <thead>
+        <th>ID</th>
+        <th>Keyword</th>
+        <th>First State</th>
+        <th># Sessions</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>Report</th>
+    </thead>
+    <tbody>
+    {% for survey in surveys %}
+        <tr>
+            <td>{{ survey.pk }}</td>
+            <td>{{ survey.trigger }}</td>
+            <td>{{ survey.root_state.question.text }}</td>
+            <td>{{ survey.count }}</td>
+            <td>
+                <a href="{% url insert_tree survey.id %}" title="Edit" class="edit-link">
+                    <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                </a>
+            </td>
+            <td>
+                <a href="{% url delete_tree survey.id %}" title="Edit" class="delete-link">
+                    <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                </a>
+            </td>
+            <td>
+                <a href="{% url survey-report survey.id %}" title="Edit" class="report-link">
+                    <img class='action' alt='Report' src="{{ MEDIA_URL }}group_messaging/report.gif" />
+                </a>
+            </td>
         </tr>
+    {% endfor %}
+    </tbody>
 </table>
 
 {% endblock %}
-<!--<div class="module dt">
-	<h2>Edit a Decision Tree</h2>
-	{% if t %}{% render_state t.root_state %}{% endif %}
-</div> -->
-
-<!--<div class="module">
-	<h2>Add a Decision Tree</h2>
-	<form method="post" action="/">
-		<label for="dt-add-trigger">Trigger</label>
-		<input id="dt-add-trigger" type="text" name="trigger" />
-	</form
-</div>-->
-
