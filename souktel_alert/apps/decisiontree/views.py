@@ -12,6 +12,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import Count
+from django.db import transaction
 
 from decisiontree.forms import *
 from decisiontree.models import *
@@ -310,38 +311,30 @@ def update_entry(request, entry_id):
 
 
 @contact_required
+@transaction.commit_on_success
 def addstate(request, stateid=None):
-
-    validationMsg = ""
     state = None
     if stateid:
-           state = get_object_or_404(TreeState, pk=stateid)
-
+        state = get_object_or_404(TreeState, pk=stateid)
 
     if request.method == 'POST':
         form = StateForm(request.POST, instance=state)
         if form.is_valid():
             state = form.save()
             if stateid:
-                validationMsg =("You have successfully updated the Question state")
+                validationMsg =("State updated sucessfully")
             else:
                 validationMsg = "You have successfully inserted State %s." % state.name
-                mycontext = {'validationMsg':validationMsg}
-                context = (mycontext)
-                return redirect(statelist)
-
+            messages.info(request, validationMsg)
+            return HttpResponseRedirect(reverse('state_list'))
     else:
-        if state:
-            data = {'name':state.name,'question':state.question, 'answer':state.num_retries}
-        else:
-            data = {'name': '', 'question': '', 'num retries': ''}
-        form = StateForm(data)
+        form = StateForm(instance=state)
 
-    if not stateid:
-        stateid = 0
-
-    mycontext = {'state':state,'form':form, 'stateid': stateid,'validationMsg':validationMsg}
-    context = (mycontext)
+    context = {
+        'state': state,
+        'form': form,
+        'stateid': stateid,
+    }
     return render_to_response('tree/state.html', context,
                               context_instance=RequestContext(request))
 
@@ -358,13 +351,10 @@ def statelist(request):
 
 @contact_required
 def deletestate(request, stateid):
-
-    state = TreeState.objects.get(id=stateid)
+    state = get_object_or_404(TreeState, pk=stateid)
     state.delete()
-    mycontext = {'state': state}
-    context = (mycontext)
-
-    return redirect(statelist)
+    messages.info(request, 'State successfully deleted')
+    return HttpResponseRedirect(reverse('state_list'))
 
 
 @contact_required
@@ -392,13 +382,11 @@ def questionpathlist(request):
 
 @contact_required
 def deletepath(request, pathid):
-
-    path = Transition.objects.get(id=pathid)
+    path = get_object_or_404(Transition, pk=pathid)
     path.delete()
-    mycontext = {'path': path}
-    context = (mycontext)
+    messages.info(request, 'Path successfully deleted')
+    return HttpResponseRedirect(reverse('path_list'))
 
-    return redirect(statelist)
 
 @contact_required
 def questionpath(request, pathid=None):
@@ -411,7 +399,7 @@ def questionpath(request, pathid=None):
         if form.is_valid():
             path = form.save()
             if pathid:
-                validationMsg =("You have successfully updated the Question Path")
+                validationMsg =("Path successfully updated")
             else:
                 validationMsg = "You have successfully inserted Question Path %s." % path.id
             messages.info(request, validationMsg)

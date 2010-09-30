@@ -186,7 +186,10 @@ class Transition(models.Model):
     next_state = models.ForeignKey(TreeState, blank=True, null=True,
                                    related_name='next_state')
     tags = models.ManyToManyField('Tag', related_name='transitions')
-    
+
+    class Meta:
+        unique_together = ('current_state', 'answer')
+
     def __unicode__(self):
       return ("%s : %s --> %s" %  (self.current_state, self.answer, self.next_state)).decode('utf-8')
 

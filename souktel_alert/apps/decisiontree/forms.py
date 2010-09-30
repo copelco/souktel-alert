@@ -6,6 +6,7 @@ from models import *
 
 from decisiontree.utils import parse_tags, edit_string_for_tags
 
+
 class TreeForm(forms.ModelForm):
     class Meta:
         model = Tree
@@ -35,6 +36,7 @@ class TreesForm(forms.ModelForm):
         self.fields['root_state'].label = 'First Question'
         self.fields['completion_text'].label = 'Completion Text'
 
+
 class QuestionForm(forms.ModelForm):
 
     class Meta:
@@ -51,11 +53,6 @@ class StateForm(forms.ModelForm):
     class Meta:
         model = TreeState
 
-    def __init__(self, *args, **kwargs):
-        super(StateForm, self).__init__(*args, **kwargs)
-        self.fields['name'].label = 'name'
-        self.fields['question'].label = 'question'
-        self.fields['num_retries'].label = 'num retries'
 
 class ReportForm(forms.Form):
 
@@ -125,10 +122,11 @@ class PathForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PathForm, self).__init__(*args, **kwargs)
         states = TreeState.objects.select_related('question')
-        stats = states.order_by('question__text')
+        states = states.order_by('question__text')
         self.fields['current_state'].queryset = states
         self.fields['current_state'].label = 'Current State'
         self.fields['answer'].label = 'Answer'
+        self.fields['answer'].queryset = Answer.objects.order_by('answer')
         self.fields['next_state'].label = 'Next State'
         self.fields['next_state'].queryset = states
         self.fields['tags'].label = 'Auto tags'
