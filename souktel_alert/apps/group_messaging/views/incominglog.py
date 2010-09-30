@@ -23,16 +23,17 @@ from rapidsms.contrib.messagelog.models import Message
 from group_messaging.forms import messageslogFilter
 
 
-
-
-
 @contact_required
-def message_log(req):
-
-    count = Message.objects.count()
-    messages_log = Message.objects.all()
-    messagelogfilter = messageslogFilter(req.GET, queryset=Message.objects.all())
-    mycontext = {"messagelogfilter": messagelogfilter,"messages_log": messages_log,"count": count,"messages_table": MessageTable(Message.objects.all(), request=req)}
-    context = (mycontext)
-    return render_to_response("incoming.html",context, context_instance=RequestContext(req))
-
+def message_log(request):
+    messages = Message.objects.select_related('contact',
+                                              'connection__backend')
+    messages = messages.order_by('-date')
+    messagelogfilter = messageslogFilter(request.GET, queryset=messages)
+    context = {
+        "messagelogfilter": messagelogfilter,
+        "messages_log": messages,
+        "count": messages.count(),
+        "messages_table": MessageTable(messages, request=request),
+    }
+    return render_to_response("incoming.html", context,
+                              context_instance=RequestContext(request))
