@@ -158,7 +158,7 @@ table.list {
   width: 100%;
   line-height: 200%;
   border-collapse: collapse;
-  font-size: 84%;
+  font-size: 90%;
   table-layout: fixed;
 }
 table.list:not([class*='filtered']) tr:nth-child(odd) td {
