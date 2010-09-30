@@ -33,13 +33,14 @@ def index(request):
 @contact_required
 def data(request, id):
     tree = get_object_or_404(Tree, pk=id)
-    # if req.method == 'POST':
-    #     form = AnswerSearchForm(req.POST, tree=tree)
-    #     if form.is_valid():
-    #         answer = form.cleaned_data['answer']
-    #         # what now?
-    # else:
-    #     form = AnswerSearchForm(tree=tree)
+    if request.method == 'POST':
+        form = AnswerSearchForm(request.POST, tree=tree)
+        if form.is_valid():
+            tag = form.cleaned_data['tag']
+            # what now?
+    else:
+        form = AnswerSearchForm(tree=tree)
+        tag = None
 
     entry_tags = Entry.tags.through.objects
     entry_tags = entry_tags.filter(entry__session__tree=tree)
@@ -52,6 +53,8 @@ def data(request, id):
     # pre-fetch all entries for this tree and create a map so we can
     # efficiently pair everything up in Python, rather than lots of SQL
     entries = Entry.objects.filter(session__tree=tree).select_related()
+    if tag:
+        entries = entries.filter(tags=tag)
     entry_map = {}
     for entry in entries:
         entry.cached_tags = tag_map.get(entry.pk, [])
@@ -60,7 +63,9 @@ def data(request, id):
             entry_map[entry.session.pk] = {}
         entry_map[entry.session.pk][state.pk] = entry
     states = tree.get_all_states()
-    sessions = tree.sessions.select_related().order_by('-start_date')
+    sessions = tree.sessions.select_related('connection__contact',
+                                            'connection__backend')
+    sessions = sessions.order_by('-start_date')
     # for each session, created an ordered list of (state, entry) pairs
     # using the map from above. this will ease template display.
     for session in sessions:
@@ -87,7 +92,7 @@ def data(request, id):
     for state in states:
         state.stats = stat_map.get(state.pk, {})
     context = {
-        # 'form': form,
+        'form': form,
         'tree': tree,
         'sessions': sessions,
         'states': states,

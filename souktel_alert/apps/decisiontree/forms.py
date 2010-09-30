@@ -60,21 +60,26 @@ class ReportForm(forms.Form):
 
 
 class AnswerSearchForm(forms.Form):
-    ANALYSIS_TYPES = (
-        ('A', 'Mean'),
-        ('R', 'Median'),
-        ('C', 'Mode'),
-    )
-    answer = forms.ModelChoiceField(queryset=Answer.objects.none())
-    analysis = forms.ChoiceField(choices=ANALYSIS_TYPES)
+    # ANALYSIS_TYPES = (
+    #     ('A', 'Mean'),
+    #     ('R', 'Median'),
+    #     ('C', 'Mode'),
+    # )
+    # answer = forms.ModelChoiceField(queryset=Answer.objects.none())
+    # analysis = forms.ChoiceField(choices=ANALYSIS_TYPES)
+    tag = forms.ModelChoiceField(queryset=Tag.objects.none())
 
-    def __init__(self, tree, *args, **kwargs):
-        self.tree = tree
+    def __init__(self, *args, **kwargs):
+        tree = kwargs.pop('tree')
         super(AnswerSearchForm, self).__init__(*args, **kwargs)
-        answers = \
-            Answer.objects.filter(transitions__entries__session__tree=tree)
-        self.fields['answer'].queryset = answers.distinct()
-        self.fields['analysis'].label = 'Calculator'
+        # answers = \
+        #     Answer.objects.filter(transitions__entries__session__tree=tree)
+        tags = Tag.objects.filter(entries__session__tree=tree).distinct()
+        
+        # self.fields['answer'].queryset = answers.distinct()
+        self.fields['tag'].queryset = tags
+        # self.fields['analysis'].label = 'Calculator'
+        # self.fields['tag'].label = 'Calculator'
 
 
 class TagWidget(forms.TextInput):

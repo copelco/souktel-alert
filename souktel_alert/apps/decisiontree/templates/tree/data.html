@@ -1,5 +1,5 @@
 {% extends "tree/base.html" %}
-{% load tree-tags %}
+{% load i18n %}
 
 {% block title %}Decision Trees{% endblock %}
 
@@ -8,23 +8,20 @@
 {% block content %}
 
 <h2>Survey Report</h2>
-{# <div class="module"> #}
-{#     <h1>Filter</h1> #}
-{# </div> #}
-{# <form action="{% url answer_filter %}" method="POST" class="pretty"> #}
-{#     {% csrf_token %} #}
-{#     <fieldset> #}
-{#         <legend>Filter by Answer</legend> #}
-{#         <table> #}
-{#             {{ form }} #}
-{#             <tr> #}
-{#                 <td>&nbsp;</td> #}
-{#                 <td><button type="submit" class="button positive icon tick">Search</button></td> #}
-{#             </tr> #}
-{#         </table> #}
-{#     </fieldset> #}
-{# </form> #}
 
+<form action="" method="POST" class="pretty">
+    {% csrf_token %}
+    <table class='auto'>
+        {{ form }}
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <button type="submit" class="button positive icon tick">Search</button>
+                <a class="button negative icon cross" href="{% url survey-report tree.id %}">{% trans "Cancel" %}</a>
+            </td>
+        </tr>
+    </table>
+</form>
 
 <table class='list auto'>
     <thead>
