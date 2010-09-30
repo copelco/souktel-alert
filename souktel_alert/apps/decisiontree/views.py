@@ -345,19 +345,15 @@ def addstate(request, stateid=None):
     return render_to_response('tree/state.html', context,
                               context_instance=RequestContext(request))
 
-def statelist(req):
-    allStates =  TreeState.objects.all()
-    states_count =  TreeState.objects.count()
 
-    context_instance=RequestContext(req)
-    if len(allStates) != 0:
-        s = allStates[len(allStates) - 1]
-        context_instance["states"] = allStates
-        context_instance["s"] = s
-        context_instance["stotal"] = states_count
-        return render_to_response("tree/states_list.html", context_instance)
-    else:
-		return render_to_response("tree/states_list.html", context_instance)
+@contact_required
+def statelist(request):
+    states = TreeState.objects.select_related('question').order_by('question')
+    context = {
+        'states': states,
+    }
+    return render_to_response("tree/states_list.html", context,
+                              context_instance=RequestContext(request))
 
 
 @contact_required

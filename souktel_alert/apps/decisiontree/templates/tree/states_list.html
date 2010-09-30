@@ -1,74 +1,45 @@
 {% extends "tree/base.html" %}
-{% block javascript %}
-    <script>
-    function deleteMessage(url){
-    if (confirm("Do you really want to delete this State ??")) {
-      window.location=url;
-    }
-    }
-</script>
-{% endblock %}
-{% block title %}States{% endblock %}
-{% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 
-{% load tree-tags %}
+{% block title %}States{% endblock %}
+
 {% block content %}
+
 <h2>States</h2>
 <ul class='horizontal'>
     <li><a href = "{% url add_state %}" >Add state</a></li>
 </ul>
 
-<table class='list'>
-    <colgroup> 
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    </colgroup>
-    <tr class='secondRow doNotFilter'>
-    <th class='name'>ID</th>
-    <th class='name'>State Name</th>
-    <th class='name'>Question</th>
-    <th class='name'></th>
-    <th class='name'>Edit</th>
-    <th class='name'>Delete</th>
-
-    
-        {% if states %}{% for state in states %}
-    <tr>
-    <td class='name'>{{ state.id}}</td>
-    <td class='name'>{{ state.name }}</td>
-    <td class='name'>{{ state.question }}</td>
-    
-    <td class='name'><a  href="{% url insert_state state.id %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a href = "javascript:deleteMessage('{% url delete_state state.id %}')">
-        <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
-    </td>
-    <td class='name'><a href =""></a>
-    </tr>
-        {% endfor %}
-        {% endif %}
-
-       <tr class="">
-            <td colspan="6" ><span>
-                    {% if Glist.has_previous %}
-                    <a href="?page={{ Glist.previous_page_number }}">previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ Glist.number }} of {{ Glist.paginator.num_pages }}.
-                    </span>
-
-                    {% if Glist.has_next %}
-                    <a href="?page={{ Glist.next_page_number }}">next</a>
-                    {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the States = {{ stotal }}</span> </td>
-
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Question</th>
+            <th># Retries</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
+    </thead>
+    <tbody>
+        {% for state in states %}
+            <tr>
+                <td>{{ state.pk }}</td>
+                <td>{{ state.name }}</td>
+                <td>{{ state.question.text }}</td>
+                <td>{{ state.num_retries }}</td>
+                <td>
+                    <a href="{% url insert_state state.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url delete_state state.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 {% endblock %}

@@ -134,7 +134,7 @@ class TreeState(models.Model):
     # the number of tries they have to get out of this state
     # if empty there is no limit.  When the num_retries is hit
     # a user's session will be terminated.
-    num_retries = models.PositiveIntegerField(blank=True,null=True)
+    num_retries = models.PositiveIntegerField(blank=True, null=True)
 
     def has_loops_below(self):
         return TreeState.path_has_loops([self])
