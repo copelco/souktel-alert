@@ -31,7 +31,7 @@ class App(AppBase):
         if not sessions:
             self.debug("No session found")
             try:
-                tree = Tree.objects.get(trigger=msg.text)
+                tree = Tree.objects.get(trigger=msg.text.lower())
                 # start a new session for this person and save it
                 self.start_tree(tree, msg.connection, msg)
                 return True
