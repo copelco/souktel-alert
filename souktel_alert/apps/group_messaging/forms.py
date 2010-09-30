@@ -73,11 +73,11 @@ class logFilter(django_filters.FilterSet):
 
 class messageslogFilter(django_filters.FilterSet):
 
-    contact = django_filters.CharFilter(name='contact',lookup_type='icontains')
-    connection = django_filters.CharFilter(name='connection',lookup_type='icontains')
+    contact = django_filters.CharFilter(name='contact')
+    connection = django_filters.CharFilter(name='connection')
     direction = django_filters.CharFilter(name='direction')
-    date = django_filters.CharFilter(name='date',lookup_type='icontains')
-    text = django_filters.CharFilter(name='text',lookup_type='icontains')
+    date = django_filters.CharFilter(name='date')
+    text = django_filters.CharFilter(name='text')
 
     class Meta:
         model = Message
