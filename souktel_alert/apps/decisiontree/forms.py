@@ -7,20 +7,22 @@ from models import *
 from decisiontree.utils import parse_tags, edit_string_for_tags
 
 class TreeForm(forms.ModelForm):
-	class Meta:
-		model = Tree
+    class Meta:
+        model = Tree
 
-	def clean_alias(self):
-		data = self.cleaned_data["trigger"]
-		return data.lower()
+    def clean_alias(self):
+        data = self.cleaned_data["trigger"]
+        return data.lower()
+
 
 class AnswerForm(forms.ModelForm):
-	class Meta:
-		model = Answer 
+    class Meta:
+        model = Answer
 
-	def clean_alias(self):
-		data = self.cleaned_data["trigger"]
-		return data.lower()
+    def clean_alias(self):
+        data = self.cleaned_data["trigger"]
+        return data.lower()
+
 
 class TreesForm(forms.ModelForm):
 

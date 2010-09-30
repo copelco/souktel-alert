@@ -232,12 +232,9 @@ def deletequestion(request, questionid):
 
 @contact_required
 def addanswer(request, answerid=None):
-
-    validationMsg = ""
     answer = None
     if answerid:
            answer = get_object_or_404(Answer, pk=answerid)
-
 
     if request.method == 'POST':
         form = AnswerForm(request.POST, instance=answer)
@@ -248,48 +245,36 @@ def addanswer(request, answerid=None):
             else:
                 validationMsg = "You have successfully inserted Answer %s." % answer.answer
                 mycontext = {'validationMsg':validationMsg}
-                context = (mycontext)
-                return redirect(answerlist)
+            messages.info(request, validationMsg)
+            return HttpResponseRedirect(reverse('answer_list'))
 
     else:
-        if answer:
-            data = {'name':answer.name,'type':answer.type, 'answer':answer.answer, 'description':answer.description}
-        else:
-            data = {'name': '', 'type': '', 'answer': '', 'description': ''}
-        form = AnswerForm(data)
+        form = AnswerForm(instance=answer)
 
-    if not answerid:
-        answerid = 0
-
-    mycontext = {'answer':answer,'form':form, 'answerid': answerid,'validationMsg':validationMsg}
-    context = (mycontext)
+    context = {
+        'answer': answer,
+        'form': form,
+        'answerid': answerid,
+    }
     return render_to_response('tree/answer.html', context,
                               context_instance=RequestContext(request))
 
+
 @contact_required
 def deleteanswer(request, answerid):
-
-    answer = Answer.objects.get(id=answerid)
+    answer = get_object_or_404(Answer, pk=answerid)
     answer.delete()
-    mycontext = {'answer': answer}
-    context = (mycontext)
+    messages.info(request, 'Answer successfully deleted')
+    return HttpResponseRedirect(reverse('answer_list'))
 
-    return redirect(answerlist)
 
-def answerlist(req):
-    allAnswers = Answer.objects.all()
-    answer_count = Answer.objects.count()
-
-    context_instance=RequestContext(req)
-    if len(allAnswers) != 0:
-        a = allAnswers[len(allAnswers) - 1]
-        context_instance["answers"] = allAnswers
-        context_instance["a"] = a
-        context_instance["atotal"] = answer_count
-        return render_to_response("tree/answers_list.html", context_instance)
-    else:
-		return render_to_response("tree/answers_list.html", context_instance)
-
+@contact_required
+def answerlist(request):
+    context = {
+        'answers': Answer.objects.order_by('name'),
+    }
+    return render_to_response("tree/answers_list.html", context,
+                              context_instance=RequestContext(request))
 
 
 @contact_required

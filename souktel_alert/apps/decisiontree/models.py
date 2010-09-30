@@ -96,19 +96,18 @@ class Answer(models.Model):
        
        
     ANSWER_TYPES = (
-        ('A', 'Answer (exact)'),
+        ('A', 'Exact Match'),
         ('R', 'Regular Expression'),
-        ('C', 'Custom logic'),
+        ('C', 'Custom Logic'),
     )
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     type = models.CharField(max_length=1, choices=ANSWER_TYPES)
     answer = models.CharField(max_length=160)
-    description = models.CharField(max_length=100, null=True)
-    
+    description = models.CharField(max_length=100, blank=True)
+
     def __unicode__(self):
         return self.name
-        #return "%s %s (%s)" % (self.helper_text(), self.type)
-    
+
     def helper_text(self):
         if self.type == "A":
             if self.description:

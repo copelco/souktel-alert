@@ -1,75 +1,47 @@
 {% extends "tree/base.html" %}
-{% block javascript %}
-    <script>
-    function deleteMessage(url){
-    if (confirm("Do you really want to delete this Question ??")) {
-      window.location=url;
-    }
-    }
-</script>
-{% endblock %}
-{% block title %}Survey{% endblock %}
-{% block page_stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 
-{% load tree-tags %}
+{% block title %}Answers{% endblock %}
+
 {% block content %}
 
 <h2>Answers</h2>
 <ul class='horizontal'>
-    <li><a href = "{% url add_answer %}" >Add answer</a></li>
+    <li><a href="{% url add_answer %}">Add answer</a></li>
 </ul>
 
-<table class='list'>
-    <colgroup> 
-  <col class='number' />
-    <col class='name' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-    </colgroup>
-    <tr class='secondRow doNotFilter'>
-    <th class='name'>ID</th>
-    <th class='name'>Answer Text</th>
-    <th class='name'>Edit</th>
-    <th class='name'>Delete</th>
-    <th class='name'></th>
-    <th class='name'></th>
-        {% if answers %}{% for answer in answers %}
-    <tr>
-    <td class='name'>{{ answer.id}}</td>
-    <td class='name'>{{ answer.answer }}</td>
-    <td class='name'><a  href="{% url insert_answer answer.id %}"><img style="border:0px"
-        src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a>
-    </td>
-    <td class='name'><a href = "javascript:deleteMessage('{% url delete_answer answer.id %}')">
-        <img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20"/> </a>
-    </td>
-    <td class='name'><a href ="">
-        
-    </td>
-    <td class='name'><a href ="">
-        
-    </td>
-    </tr>
-        {% endfor %}
-        {% endif %}
-
-       <tr class="">
-            <td colspan="6" ><span>
-                    {% if Glist.has_previous %}
-                    <a href="?page={{ Glist.previous_page_number }}">previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ Glist.number }} of {{ Glist.paginator.num_pages }}.
-                    </span>
-
-                    {% if Glist.has_next %}
-                    <a href="?page={{ Glist.next_page_number }}">next</a>
-                    {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span>No. of the Questions = {{ atotal }}</span> </td>
-
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Answer</th>
+            <th>Description</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
+    </thead>
+    <tbody>
+        {% for answer in answers %}
+            <tr>
+                <td>{{ answer.pk }}</td>
+                <td>{{ answer.name }}</td>
+                <td>{{ answer.get_type_display }}</td>
+                <td>{{ answer.answer }}</td>
+                <td>{{ answer.description }}</td>
+                <td>
+                    <a href="{% url insert_answer answer.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url delete_answer answer.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 {% endblock %}
