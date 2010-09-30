@@ -114,6 +114,7 @@ INSTALLED_APPS = [
     #"poll",
     "decisiontree",
     "django_filters",
+    "pagination",
 ]
 
 
@@ -194,6 +195,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'group_messaging.middleware.ContactRequestMiddleware',
+    'pagination.middleware.PaginationMiddleware',
 )
 
 TEMPLATE_DIRS = [
