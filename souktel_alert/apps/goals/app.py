@@ -60,4 +60,5 @@ class GoalsApp(AppBase):
                 self.exception(e)
             goal.date_last_notified = now
             goal.date_next_notified = goal.get_next_date()
+            goal.in_session = True
             goal.save()
