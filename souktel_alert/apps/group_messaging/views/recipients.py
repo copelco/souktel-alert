@@ -12,22 +12,24 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
 from django.contrib import messages
+from django.db import transaction
 
 from django.http import HttpResponseRedirect
 
-from rapidsms.models import Contact
+from rapidsms.models import Contact, Connection, Backend
 
 from group_messaging.models import Recipient
 from group_messaging.models import Site
 from group_messaging.models import Group
 from group_messaging.decorators import contact_required
 
-from group_messaging.forms import RecipientForm, ConnectionFormset
+from group_messaging.forms import RecipientForm, ConnectionFormset,\
+                                  CSVUploadForm
 
 
 @contact_required
 def list_recipients(request):
-    recipients = Contact.objects.filter(site=request.contact.site)
+    recipients = Contact.objects.all()
     paginator = Paginator(recipients,10)
     
     try:
@@ -96,46 +98,31 @@ class BulkRecipientForm(forms.Form):
     identity  = forms.CharField(label=_(u"Identity"),max_length=30)
     active    = forms.BooleanField(label=_(u"Active"),required=False)
 
+
 @contact_required
-def manage_recipients(request,context):
-
-    RecipientFormSet = formset_factory(BulkRecipientForm, extra=3)
+@transaction.commit_on_success
+def manage_recipients(request):
     if request.method == 'POST':
-        groupid = request.POST['group']
-        if groupid and groupid.__len__() > 0:
-            group = Group.objects.get(id=groupid)
-        #groupSite = Group.objects.get(site=request.contact.site)
-        #print groupSite
-        #if groupSite.id <> request.contact.site.id :
-            #raise forms.ValidationError('Invalid user site : user site is different than entered site??')
-        formset = RecipientFormSet(request.POST, request.FILES)
-        if formset.is_valid():
-            try:
-                for form in formset.forms:                
-                    if form.is_valid() and form.cleaned_data:
-                        recipient = Recipient(first_name=form.cleaned_data['firstName'] ,\
-                                           last_name=form.cleaned_data['lastName'],\
-                                           identity=form.cleaned_data['identity'],\
-                                           active=form.cleaned_data['active'],\
-                                           site = request.contact.site)
-                        recipient.save()
-                        if groupid and groupid.__len__() > 0:
-                            group.recipients.add(recipient)
-            
-            except Exception, e :
-                    validationMsg = "Failed to add new recipient %s." % e
-                    raise
-       
-            mycontext = {}  #{'validationMsg':validationMsg}
-            context = (mycontext)
-            return redirect(list)
-        else:
-            print "ddsadsd"
-    else:
-        formset = RecipientFormSet()
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            backend = Backend.objects.get(name='javna')
+            rows = form.save()
+            for row in rows:
+                first_name, last_name, identity = row
+                contact, _ = Contact.objects.get_or_create(first_name=first_name,
+                                                           last_name=last_name)
+                conn, _ = Connection.objects.get_or_create(identity=identity,
+                                                           backend=backend)
+                conn.contact = contact
+                conn.save()
+            msg = "Import successful"
+            messages.info(request, msg)
+            return HttpResponseRedirect(reverse('recipients_list'))
 
-    groups = Group.objects.filter(site=request.contact.site, active=True)
-    mycontext = {'formset': formset, 'groups': groups}
-    context = (mycontext)
-    return render_to_response('manage_recipients.html', context, context_instance=RequestContext(request))
-   
+    else:
+        form = CSVUploadForm()
+    context = {
+        'form': form,
+    }
+    return render_to_response('manage_recipients.html', context,
+                              context_instance=RequestContext(request))

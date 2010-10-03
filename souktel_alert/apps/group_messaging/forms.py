@@ -1,3 +1,5 @@
+import csv
+
 import django_filters
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -83,3 +85,17 @@ class messageslogFilter(django_filters.FilterSet):
         model = Message
         fields = ['contact', 'connection', 'direction', 'date', 'text']
 
+
+class CSVUploadForm(forms.Form):
+    csv_file = forms.FileField(label='CSV File')
+    group = forms.ModelChoiceField(queryset=gm.Group.objects.all(),
+                                   required=False)
+
+    def save(self):
+        fh = self.cleaned_data['csv_file']
+        try:
+            dialect = csv.Sniffer().sniff(fh.read(1024))
+        except csv.Error:
+            dialect = csv.excel
+        fh.seek(0)
+        return csv.reader(fh)
