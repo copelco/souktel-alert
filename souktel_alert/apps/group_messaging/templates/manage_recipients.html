@@ -3,7 +3,7 @@
 {% block content %}
 {% load i18n %}
 
-<form action="" method="POST" class="pretty" enctype="multipart/form-data">{% csrf_token %}
+<form id='recipient' action="" method="POST" class="pretty" enctype="multipart/form-data">{% csrf_token %}
     <table>
         {{ form }}
     </table>
