@@ -31,19 +31,28 @@ class GroupForm(forms.ModelForm):
 
 
 class RecipientForm(forms.ModelForm):
+    groups = forms.ModelMultipleChoiceField(queryset=gm.Group.objects.all(),
+                                            widget=forms.CheckboxSelectMultiple,
+                                            required=False)
     
     class Meta:
         model = Contact
-        exclude = ('language', 'name')
+        exclude = ('language', 'name', 'site')
 
     def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+        kwargs['initial'] = {'groups': instance.group_recipients.all()}
         super(RecipientForm, self).__init__(*args, **kwargs)
-        self.fields['site'].required = True
         self.fields['active'].required = True
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
-        self.fields.keyOrder = ('first_name', 'last_name', 'comment',
-                                'site', 'user', 'active')
+        self.fields.keyOrder = ('first_name', 'last_name', 'comment', 'groups',
+                                'user', 'active')
+
+    def save(self):
+        instance = super(RecipientForm, self).save()
+        instance.group_recipients = self.cleaned_data['groups']
+        return instance
 
 
 class ConnectionInlineForm(forms.ModelForm):

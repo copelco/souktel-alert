@@ -2,31 +2,17 @@
 
 {% block content %}
 {% load i18n %}
-<form action="" method="POST" class="pretty"> {% csrf_token %}
+<form id='add-edit-recipient' action="" method="POST" class="pretty"> {% csrf_token %}
     <fieldset> 
         <legend>
-            {% if recipientid %}
-                {% trans "Recipient Update Form" %}
+            {% if recipient %}
+                {% trans "Update Recipient" %}
             {% else %}
-                {% trans "New Recipient Form" %}
+                {% trans "New Recipient" %}
             {% endif %}
         </legend>
         <table>
-        {% for field in form %}
-            <tr>
-                <td>{{ field.label_tag }}</td>
-                <td>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class='djangoerrors'>
-                            {% for error in field.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
+            {{ form }}
         </table>
         {{ formset.management_form }}
         <table>
@@ -55,12 +41,12 @@
 
         <p class="buttons"> 
             <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
-            <a class="button negative icon cross" href="{% url recipients_list %}">{% trans "Cancel" %}</a>
+            <a class="button negative icon cross" href="{% url list_recipients %}">{% trans "Cancel" %}</a>
         </p>
     </fieldset>
 </form>
 {% endblock %}
 
 {% block submenu %}
-<ul><li><a href = "{% url recipients_list %}" >{% trans "Back to recipient list" %}</a></li></ul>
+<ul><li><a href = "{% url list_recipients %}" >{% trans "Back to recipient list" %}</a></li></ul>
 {% endblock %}

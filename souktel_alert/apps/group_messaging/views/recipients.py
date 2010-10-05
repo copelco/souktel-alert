@@ -13,6 +13,7 @@ from django.template import RequestContext
 from django.forms.formsets import formset_factory
 from django.contrib import messages
 from django.db import transaction
+from django.core.urlresolvers import reverse
 
 from django.http import HttpResponseRedirect
 
@@ -48,6 +49,7 @@ def list_recipients(request):
 
 
 @contact_required
+@transaction.commit_on_success
 def recipient(request, recipientid=None):
     instance = Contact()
     if recipientid:
@@ -67,8 +69,8 @@ def recipient(request, recipientid=None):
             else:
                 msg = "You have successfully inserted a recipient %s."
                 msg = _(msg % saved_contact.name)
-            messages.add_message(request, messages.INFO, msg)
-            return redirect(list_recipients)
+            messages.info(request, msg)
+            return HttpResponseRedirect(reverse('list_recipients'))
     else:
         form = RecipientForm(instance=instance)
         formset = ConnectionFormset(instance=instance)

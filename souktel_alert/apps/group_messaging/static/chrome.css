@@ -325,8 +325,12 @@ ul.horizontal li:first-child {
     border-left: none;
 }
 
-table#tags ul {
+table#tags ul, form#add-edit-recipient ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+
+label input[type=checkbox] {
+    top: 0;
 }
