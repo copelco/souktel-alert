@@ -8,7 +8,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from group_messaging.decorators import contact_required
-from group_messaging.models import SendingLog, Recipient, Group, OutgoingLog
+from group_messaging.models import SendingLog, Group, OutgoingLog
+
+from rapidsms.models import Contact
 
 
 @contact_required
@@ -25,7 +27,7 @@ def index(request):
     stats = []
 
     # Number of recipients
-    recipients_num = Recipient.objects.filter(site=contact.site, active=True).count()
+    recipients_num = Contact.objects.filter(active=True).count()
     stats.append((_(u"Total Number of Recipients"), recipients_num))
 
     # Number of groups

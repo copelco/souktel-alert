@@ -41,7 +41,8 @@ class RecipientForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
-        kwargs['initial'] = {'groups': instance.group_recipients.all()}
+        if instance.pk:
+            kwargs['initial'] = {'groups': instance.group_recipients.all()}
         super(RecipientForm, self).__init__(*args, **kwargs)
         self.fields['active'].required = True
         self.fields['first_name'].required = True

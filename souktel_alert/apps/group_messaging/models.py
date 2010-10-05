@@ -55,39 +55,6 @@ class Group(models.Model):
         return _(u"%(name)s") % {'name': self.name}
 
 
-class Recipient(models.Model):
-    ''' Recipient Model
-
-    A person with phone number and backend '''
-
-    class Meta:
-        unique_together = ('identity', 'backend')
-
-    first_name = models.CharField(max_length=50, \
-                                  verbose_name=ugettext_lazy(u"First Name"))
-    last_name = models.CharField(max_length=50, \
-                                 verbose_name=ugettext_lazy(u"Last Name"))
-
-    identity = models.CharField(max_length=30, \
-                                verbose_name=ugettext_lazy(u"Phone Number"))
-    backend = models.CharField(max_length=15, default='dataentry', \
-                               verbose_name=ugettext_lazy(u"Backend"), \
-                               help_text=ugettext_lazy(u"Leave Default."))
-
-    active = models.BooleanField(default=True, \
-                                 verbose_name=ugettext_lazy(u"Enabled?"))
-
-    site = models.ForeignKey('Site', verbose_name=ugettext_lazy(u"Site"))
-
-    def __unicode__(self):
-        return _(u"%(full_name)s") % {'full_name': self.full_name}
-
-    @property
-    def full_name(self):
-        return _(u"%(first)s %(last)s") % {'first': self.first_name.title(), \
-                                        'last': self.last_name.upper()}
-
-
 class Message(models.Model):
     ''' Message Model '''
 

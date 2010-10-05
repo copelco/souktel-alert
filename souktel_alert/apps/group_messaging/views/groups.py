@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from rapidsms.models import Contact
 
 from group_messaging.decorators import contact_required
-from group_messaging.models import Group, Site, Recipient
+from group_messaging.models import Group, Site
 from group_messaging.forms import GroupForm
 
 
