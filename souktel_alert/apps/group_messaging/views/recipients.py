@@ -90,15 +90,7 @@ def delete(request, recipientid):
     recipient.delete()
     msg = "You have successfully deleted this record"
     messages.add_message(request, messages.INFO, msg)
-    return redirect(list_recipients)
-
-
-class BulkRecipientForm(forms.Form):
-       
-    firstName = forms.CharField(label=_(u"First Name"), max_length=50)
-    lastName  = forms.CharField(label=_(u"Last Name"),max_length=50)
-    identity  = forms.CharField(label=_(u"Identity"),max_length=30)
-    active    = forms.BooleanField(label=_(u"Active"),required=False)
+    return HttpResponseRedirect(reverse('list_recipients'))
 
 
 @contact_required
@@ -113,13 +105,15 @@ def manage_recipients(request):
                 first_name, last_name, identity = row
                 contact, _ = Contact.objects.get_or_create(first_name=first_name,
                                                            last_name=last_name)
+                if form.cleaned_data['group']:
+                    contact.group_recipients.add(form.cleaned_data['group'])
                 conn, _ = Connection.objects.get_or_create(identity=identity,
                                                            backend=backend)
                 conn.contact = contact
                 conn.save()
             msg = "Import successful"
             messages.info(request, msg)
-            return HttpResponseRedirect(reverse('recipients_list'))
+            return HttpResponseRedirect(reverse('list_recipients'))
 
     else:
         form = CSVUploadForm()
