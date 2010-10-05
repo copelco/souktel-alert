@@ -42,7 +42,7 @@ def list_recipients(request):
         recipient_list = paginator.page(paginator.num_pages)
 
     context = {'recipients': recipient_list,'count':recipients.count()}
-    return render_to_response('recipients_list.html', context,
+    return render_to_response('groups_users/recipients/list.html', context,
                               context_instance=RequestContext(request))
 
 
@@ -78,7 +78,7 @@ def recipient(request, recipientid=None):
         'form': form,
         'formset': formset,
     }
-    return render_to_response('recipient.html', context,
+    return render_to_response('groups_users/recipients/create_edit.html', context,
                               context_instance=RequestContext(request))
 
 
@@ -118,5 +118,5 @@ def manage_recipients(request):
     context = {
         'form': form,
     }
-    return render_to_response('manage_recipients.html', context,
+    return render_to_response('groups_users/recipients/csv.html', context,
                               context_instance=RequestContext(request))

@@ -46,7 +46,7 @@ def list(request):
         Group_list = paginator.page(paginator.num_pages)
 
     context = {'title': 'regyo', 'Glist': Group_list,'count':Groups_obj.count()}
-    return render_to_response('groups.html', context, context_instance=RequestContext(request))
+    return render_to_response('groups_users/groups/list.html', context, context_instance=RequestContext(request))
 
 
 @contact_required
@@ -60,7 +60,7 @@ def add(request):
     else:
         form = GroupForm(site=request.contact.site)  # An unbound form
     context = {'form': form}
-    return render_to_response('new_group.html', context,
+    return render_to_response('groups_users/groups/create_edit.html', context,
                               context_instance=RequestContext(request))
 
 
@@ -126,4 +126,4 @@ def update(request, group_id):
 
     context = {'form': form, 'group': group}
 
-    return render_to_response('update_group.html', context, context_instance=RequestContext(request))
+    return render_to_response('groups_users/groups/create_edit.html', context, context_instance=RequestContext(request))

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "groups_users/base.html" %}
 {% load i18n %}
 {% block title %}{% trans "Groups" %}{% endblock %}
 {% block javascript %}
@@ -11,9 +11,12 @@
 </script>
 {% endblock %}
 {% block content %}
-<br>
-<h2>{% trans "Groups List" %}</h2>
-<br>
+
+<h2>{% trans "Groups" %}</h2>
+<ul class='horizontal'>
+    <li><a href = "{% url new_group %}" >Add group</a></li>
+</ul>
+
 <table class='list'>
     <colgroup>
         <col class='name' />
@@ -64,8 +67,4 @@
 </table>
 
 
-{% endblock %}
-
-{% block submenu %}
-<ul ><li><a href="{% url new_group %}">{% trans "Add New Group" %}</a></li></ul>
 {% endblock %}

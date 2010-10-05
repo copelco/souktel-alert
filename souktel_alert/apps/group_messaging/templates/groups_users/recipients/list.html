@@ -1,6 +1,7 @@
-﻿{% extends "base.html" %}
-
+﻿{% extends "groups_users/base.html" %}
 {% load i18n %}
+
+{% block title %}{% trans "Recipients" %}{% endblock %}
 
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
@@ -18,7 +19,13 @@ function deleteRecipient(url){
 {% endblock %}
 
 {% block content %}
-<h2>{% trans "Recipients list" %}</h2>
+
+<h2>{% trans "Recipients" %}</h2>
+<ul class='horizontal'>
+    <li><a href="{% url recipient_add %}" >Add recipient</a></li>
+    <li><a href="{% url manage_recipients %}" >CSV Upload</a></li>
+</ul>
+
 <table class='list'>
 <colgroup> 
     <col class='name' />
@@ -64,12 +71,4 @@ function deleteRecipient(url){
   
 </tr>
 </table>
-<p> {{ validationMsg }} </p>
-{% endblock %}
-
-{% block submenu %}
-<ul>
-<li><a href = "{% url recipient_add %}" >{% trans " Add new recipient" %}</a></li>
-<li><a href = "{% url manage_recipients %}" >{% trans " Add bulk recipients" %}</a></li>
-</ul>
 {% endblock %}

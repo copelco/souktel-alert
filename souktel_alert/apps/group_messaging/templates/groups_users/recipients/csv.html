@@ -1,0 +1,23 @@
+{% extends "groups_users/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Recipients" %}{% endblock %}
+
+{% block content %}
+{% load i18n %}
+
+<form id='recipient' action="" method="POST" class="pretty" enctype="multipart/form-data">{% csrf_token %}
+    <fieldset>
+        <legend>
+            {% trans "CSV Upload" %}
+        </legend>
+        <table>
+            {{ form }}
+        </table>
+        <p class="buttons"> 
+        <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+        <a class="button negative icon cross" href="{% url list_recipients %}">{% trans "Cancel" %}</a>
+        </p>
+    </fieldset>
+</form>
+{% endblock %}

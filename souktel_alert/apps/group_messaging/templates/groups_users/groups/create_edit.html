@@ -1,7 +1,9 @@
-{% extends "base.html" %}
+{% extends "groups_users/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Groups" %}{% endblock %}
 
 {% block content %}
-{% load i18n %}
 <form action="{% url new_group %}" method="POST" class="pretty">{% csrf_token %}
     <fieldset>
         <legend>
@@ -20,12 +22,4 @@
 </p>
     </fieldset>
 </form>
-
-
-
-{% endblock %}
-
-{% block submenu %}
-<ul><li><a href = "{% url groups %}" >{% trans "Back to Group list" %}</a></li></ul>
-<ul><li>{{ validationMsg }}</li></ul>
 {% endblock %}
