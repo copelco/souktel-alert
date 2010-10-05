@@ -41,16 +41,16 @@
 
 <tr class="">
 <td colspan="5"><span>
-        {% if outgoinglog.has_previous %}
-            <a href="?page={{ outgoinglog.previous_page_number }}">{% trans "previous" %}</a>
+        {% if messagelog.has_previous %}
+            <a href="?page={{ messagelog.previous_page_number }}">{% trans "previous" %}</a>
         {% endif %}
 
         <span class="current">
-            {% trans "Page" %} {{ outgoinglog.number }} {% trans "of" %} {{ outgoinglog.paginator.num_pages }}.
+            {% trans "Page" %} {{ messagelog.number }} {% trans "of" %} {{ messagelog.paginator.num_pages }}.
         </span>
 
-        {% if outgoinglog.has_next %}
-            <a href="?page={{ outgoinglog.next_page_number }}">{% trans "next" %}</a>
+        {% if messagelog.has_next %}
+            <a href="?page={{ messagelog.next_page_number }}">{% trans "next" %}</a>
         {% endif %}
     </span> &nbsp;&nbsp; |&nbsp;&nbsp;<span> {% trans "Total number" %} = {{ count }}</span> </td>
 

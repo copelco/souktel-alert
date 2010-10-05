@@ -28,10 +28,23 @@ def message_log(request):
     messages = Message.objects.select_related('contact',
                                               'connection__backend')
     messages = messages.order_by('-date')
+    paginator = Paginator(messages, 25)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    # If page request (9999) is out of range, deliver last page of results.
+    try:
+        messagelog = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        messagelog = paginator.page(paginator.num_pages)
+
     messagelogfilter = messageslogFilter(request.GET, queryset=messages)
     context = {
         "messagelogfilter": messagelogfilter,
         "messages_log": messages,
+        "messagelog":messagelog,
         "count": messages.count(),
         "messages_table": MessageTable(messages, request=request),
     }
