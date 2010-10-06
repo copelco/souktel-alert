@@ -37,18 +37,18 @@ class RecipientForm(forms.ModelForm):
     
     class Meta:
         model = Contact
-        exclude = ('language', 'name', 'site')
+        exclude = ('language', 'name', 'site', 'active')
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
         if instance.pk:
             kwargs['initial'] = {'groups': instance.group_recipients.all()}
         super(RecipientForm, self).__init__(*args, **kwargs)
-        self.fields['active'].required = True
+        self.fields['user'].queryset = self.fields['user'].queryset.order_by('username')
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields.keyOrder = ('first_name', 'last_name', 'comment', 'groups',
-                                'user', 'active')
+                                'user')
 
     def save(self):
         instance = super(RecipientForm, self).save()
