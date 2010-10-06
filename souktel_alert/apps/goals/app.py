@@ -58,6 +58,10 @@ class GoalsApp(AppBase):
                 msg.send()
             except Exception, e:
                 self.exception(e)
+            # Disable this goal if it was a one-time notification (we just
+            # sent it).  This will make get_next_date() return None below.
+            if goal.schedule_frequency == 'one-time':
+                goal.schedule_frequency = ''
             goal.date_last_notified = now
             goal.date_next_notified = goal.get_next_date()
             goal.in_session = True
