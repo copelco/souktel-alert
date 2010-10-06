@@ -10,6 +10,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 
 from rapidsms.models import Contact
 
@@ -20,33 +21,12 @@ from group_messaging.forms import GroupForm
 
 @contact_required
 def list(request):
-    contact = request.user.get_profile()
-    ''' List Group '''
-
-    try:
-        Site_obj = Site.objects.get(id=contact.site.id)
-    except Exception, e:
-        return HttpResponse("Error 1 : %s" % e)
-
-    try:
-        Groups_obj = Group.objects.filter(site=Site_obj)
-        paginator = Paginator(Groups_obj,10)
-
-    except Exception, e:
-        return HttpResponse("Error 2 : %s" % e)
-
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        Group_list = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        Group_list = paginator.page(paginator.num_pages)
-
-    context = {'title': 'regyo', 'Glist': Group_list,'count':Groups_obj.count()}
-    return render_to_response('groups_users/groups/list.html', context, context_instance=RequestContext(request))
+    groups = Group.objects.annotate(count=Count('recipients'))
+    context = {
+        'groups': groups.order_by('code'),
+    }
+    return render_to_response('groups_users/groups/list.html', context,
+                              context_instance=RequestContext(request))
 
 
 @contact_required

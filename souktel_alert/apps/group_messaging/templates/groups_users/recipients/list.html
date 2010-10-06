@@ -3,72 +3,39 @@
 
 {% block title %}{% trans "Recipients" %}{% endblock %}
 
-{% get_current_language as LANGUAGE_CODE %}
-{% get_available_languages as LANGUAGES %}
-{% get_current_language_bidi as LANGUAGE_BIDI %}
-
-
-{% block javascript %}
-<script>
-function deleteRecipient(url){
- if (confirm("{% trans 'Do you really want to delete this recipient ??' %}")) {
-   window.location=url;
- } 
-}
-</script>
-{% endblock %}
-
 {% block content %}
-
 <h2>{% trans "Recipients" %}</h2>
 <ul class='horizontal'>
     <li><a href="{% url recipient_add %}" >Add recipient</a></li>
     <li><a href="{% url manage_recipients %}" >CSV Upload</a></li>
 </ul>
 
-<table class='list'>
-<colgroup> 
-    <col class='name' />
-    <col class='name' />
-    <col class='number' />
-    <col class='number' />
-    <col class='number' />
-</colgroup> 
-<tr class='secondRow doNotFilter'>
-<th class='name' > {% trans "Recipient name" %}</th>
-<th class='name' > {% trans "Recipient identity" %}</th>
-<th class='number' style='text-align:center;'> {% trans "Active" %} </th>
-<th class='number' >{% trans "Edit" %}</th>
-<th class='number' >{% trans "Delete" %}</th>
-</tr>
-{% for recipient in recipients.object_list %}
-<tr {% if forloop.last %} class=""{% endif %}>
-<td class='name'>{{recipient.name}}</td>
-<td class='name'>{{recipient.default_connection.identity}}</td>
-<td class='' style='text-align:center;'>{{recipient.active}}</td>
-<td class='number'><a style = "text-decoration:none" href = "{% url update_recipient recipient.id %}" >
-<img style="border:0px" src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a></td>
-
-<td class='number'><a style = "text-decoration:none" href = "javascript:deleteRecipient('{% url recipients_delete recipient.id %}')" >
-<img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20" /> </a></td>
-</tr>
-{% endfor %}
-
-<tr class="">
-<td colspan="5"><span>
-        {% if recipients.has_previous %}
-            <a href="?page={{ recipients.previous_page_number }}">{% trans "previous" %}</a>
-        {% endif %}
-
-        <span class="current">
-            {% trans "Page" %} {{ recipients.number }} {% trans "of" %} {{ recipients.paginator.num_pages }}.
-        </span>
-
-        {% if recipients.has_next %}
-            <a href="?page={{ recipients.next_page_number }}">{% trans "next" %}</a>
-        {% endif %}
-    </span> &nbsp;&nbsp; |&nbsp;&nbsp;<span> {% trans "No. of the recipients" %} = {{ count }}</span> </td>
-  
-</tr>
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Text</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for recipient in recipients %}
+            <tr>
+                <td>{{ recipient.pk }}</td>
+                <td>{{ recipient.name }}</td>
+                <td>
+                    <a href="{% url update_recipient recipient.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url recipients_delete recipient.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 {% endblock %}

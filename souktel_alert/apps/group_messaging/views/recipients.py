@@ -28,20 +28,9 @@ from group_messaging.forms import RecipientForm, ConnectionFormset,\
 
 @contact_required
 def list_recipients(request):
-    recipients = Contact.objects.all()
-    paginator = Paginator(recipients,10)
-    
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    
-    try:
-        recipient_list = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        recipient_list = paginator.page(paginator.num_pages)
-
-    context = {'recipients': recipient_list,'count':recipients.count()}
+    context = {
+        'recipients': Contact.objects.order_by('last_name', 'first_name'),
+    }
     return render_to_response('groups_users/recipients/list.html', context,
                               context_instance=RequestContext(request))
 

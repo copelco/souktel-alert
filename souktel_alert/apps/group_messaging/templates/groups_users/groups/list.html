@@ -1,70 +1,44 @@
 {% extends "groups_users/base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Groups" %}{% endblock %}
-{% block javascript %}
-<script>
-    function deleteGroup(url){
-        if (confirm("Do you really want to delete this Group ??")) {
-            window.location=url;
-        }
-    }
-</script>
-{% endblock %}
-{% block content %}
 
+{% block title %}{% trans "Groups" %}{% endblock %}
+
+{% block content %}
 <h2>{% trans "Groups" %}</h2>
 <ul class='horizontal'>
-    <li><a href = "{% url new_group %}" >Add group</a></li>
+    <li><a href="{% url new_group %}" >Add group</a></li>
 </ul>
 
-<table class='list'>
-    <colgroup>
-        <col class='name' />
-        <col class='name' />
-        <col class='name' />
-        <col class='number' />
-        <col class='number' />
-        <col class='number' />
-    </colgroup>
-        <tr class='secondRow doNotFilter'>
-            <th>{% trans "Group Code" %}</th>
-            <th>{% trans "Group Name" %}</th>
-            <th>{% trans "Group Manager" %}</th>
-            <th>{% trans "# Recipients" %}</th>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
-        </tr>
-        {% for group in Glist.object_list %}
+<table class='list auto'>
+    <thead>
         <tr>
-            <td class='name'> {{ group.code }}</td>
-            <td class='name'> {{ group.name }}</td>
-            <td class='name'> {% for manager in group.managers.select_related %}{{ manager.get_full_name }}, {% endfor %}</td>
-            <td class='name'> {{ group.recipients.select_related|length }}</td>
-            <td align="center"> <a href="{% url update_group group.id %}"><img style="border:0px" src="/static/group_messaging/edit-icon.jpeg" width="20" height="20" /> </a></td>
-            <td align="center"> <a href = "javascript:deleteGroup('{% url delete_group group.id %}')"><img style="border:0px" src="/static/group_messaging/delete-icon.png" width="20" height="20" /></a> </td>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th># Recipients</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
-        {% empty %}
-        <tr>
-            <td >{% trans "No group" %}</td>
-        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+            <tr>
+                <td>{{ group.pk }}</td>
+                <td>{{ group.name }}</td>
+                <td>{{ group.code }}</td>
+                <td>{{ group.count }}</td>
+                <td>
+                    <a href="{% url update_group group.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url delete_group group.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
         {% endfor %}
-        <tr class="">
-            <td colspan="6" ><span>
-                    {% if Glist.has_previous %}
-                    <a href="?page={{ Glist.previous_page_number }}">{% trans "previous" %}</a>
-                    {% endif %}
-
-                    <span class="current">
-                        {% trans "Page" %} {{ Glist.number }} {% trans "of" %} {{ Glist.paginator.num_pages }}.
-                    </span>
-
-                    {% if Glist.has_next %}
-                    <a href="?page={{ Glist.next_page_number }}">{% trans "next" %}</a>
-                    {% endif %}
-                </span > &nbsp;&nbsp; |&nbsp;&nbsp;<span> {% trans "No. of the Groups" %} = {{ count }}</span> </td>
-
-        </tr>
+    </tbody>
 </table>
-
-
 {% endblock %}
