@@ -1,0 +1,42 @@
+{% extends "groups_users/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Recipients" %}{% endblock %}
+
+{% block content %}
+<h2>{% trans "Recipients" %}</h2>
+<ul class='horizontal'>
+    <li><a href="{% url add_user %}" >Add User</a></li>
+</ul>
+
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.pk }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <a href="{% url update_user user.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url delete_user user.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

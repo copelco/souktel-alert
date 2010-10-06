@@ -1,7 +1,9 @@
-{% extends "base.html" %}
+{% extends "groups_users/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Recipients" %}{% endblock %}
 
 {% block content %}
-{% load i18n %}
 <form id='add-edit-recipient' action="" method="POST" class="pretty"> {% csrf_token %}
     <fieldset> 
         <legend>
@@ -45,8 +47,4 @@
         </p>
     </fieldset>
 </form>
-{% endblock %}
-
-{% block submenu %}
-<ul><li><a href = "{% url list_recipients %}" >{% trans "Back to recipient list" %}</a></li></ul>
 {% endblock %}

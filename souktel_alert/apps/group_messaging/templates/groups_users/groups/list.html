@@ -1,0 +1,44 @@
+{% extends "groups_users/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Groups" %}{% endblock %}
+
+{% block content %}
+<h2>{% trans "Groups" %}</h2>
+<ul class='horizontal'>
+    <li><a href="{% url new_group %}" >Add group</a></li>
+</ul>
+
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th># Recipients</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for group in groups %}
+            <tr>
+                <td>{{ group.pk }}</td>
+                <td>{{ group.name }}</td>
+                <td>{{ group.code }}</td>
+                <td>{{ group.count }}</td>
+                <td>
+                    <a href="{% url update_group group.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url delete_group group.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

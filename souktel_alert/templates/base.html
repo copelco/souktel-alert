@@ -44,8 +44,8 @@
 <div id='menu'>
 <ul class='mainmenu'>
 <li><a href="{% url index %}">{% trans "Dashboard" %}</a> {% include "help_menu_dashboard.html" %}</li>
-<li><a href="{% url groups %}">{% trans "Manage Groups" %}</a> {% include "help_menu_groups.html" %}</li>
-<li><a href="{% url list_recipients %}">{% trans "Manage Recipients" %}</a> {% include "help_menu_recipients.html" %}</li>
+<li><a href="{% url groups %}">{% trans "Groups and Users" %}</a> {% include "help_menu_groups.html" %}</li>
+{# <li><a href="{% url list_recipients %}">{% trans "Manage Recipients" %}</a> {% include "help_menu_recipients.html" %}</li> #}
 <li><a href="{% url messages_list %}">{% trans "Manage Message Templates" %}</a> {% include "help_menu_messages.html" %} </li>
 <li><a href="/tree">{% trans "Surveys" %}</a> {% include "help_menu_messages.html" %} </li>
 <li><a href="{% url goal-summary %}">{% trans "Goal Summary" %}</a> {% include "help_menu_messages.html" %} </li>

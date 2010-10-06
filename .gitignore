@@ -6,3 +6,4 @@ local_settings.py
 .coverage
 coverage.xml
 nosetests.xml
+local_test_settings.py
