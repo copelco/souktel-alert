@@ -2,7 +2,8 @@
 # vim: ai ts=4 sts=4 et sw=4
 
 from django import forms
-from models import *
+from django.contrib.auth.models import User
+from decisiontree.models import *
 
 from decisiontree.utils import parse_tags, edit_string_for_tags
 
@@ -132,14 +133,14 @@ class PathForm(forms.ModelForm):
 
 
 class TagForm(forms.ModelForm):
-    
+
     class Meta:
         model = Tag
 
     def __init__(self, *args, **kwargs):
         super(TagForm, self).__init__(*args, **kwargs)
         self.fields['recipients'] = forms.ModelMultipleChoiceField(
-            queryset=Contact.objects.exclude(user__email=''),
+            queryset=User.objects.exclude(email=''),
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
