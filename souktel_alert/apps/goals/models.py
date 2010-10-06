@@ -20,7 +20,6 @@ class Goal(models.Model):
         ('daily', 'Daily'),
         ('weekly', 'Weekly'),
         ('monthly', 'Monthly'),
-        ('yearly', 'Yearly'),
     )
     
     contact = models.ForeignKey(Contact, related_name='goals')
@@ -47,7 +46,6 @@ class Goal(models.Model):
                 'daily': relativedelta(days=+1),
                 'weekly': relativedelta(weeks=+1),
                 'monthly': relativedelta(months=+1),
-                'yearly': relativedelta(years=+1),
             }
             if self.schedule_frequency in frequency_map:
                 now = datetime.datetime.now()
