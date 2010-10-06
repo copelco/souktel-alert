@@ -1,4 +1,6 @@
 import logging
+import string
+import random
 
 from django.test import TransactionTestCase, TestCase
 from django.contrib.auth.models import User
@@ -14,6 +16,7 @@ from rapidsms.messages.incoming import IncomingMessage
 from decisiontree import models as dt
 
 from decisiontree.handlers.results import ResultsHandler
+from decisiontree.app import App as DecisionApp
 
 
 class TaggingTest(TestCase):
@@ -89,3 +92,94 @@ class ResultsTest(TestCase):
         handler = self._send('food')
         response = handler.msg.responses[0].text
         self.assertEqual(response, '10 people like food')
+
+
+class CreateDataTest(TestCase):
+
+    def random_string(self, length=255, extra_chars=''):
+        chars = string.letters + extra_chars
+        return ''.join([random.choice(chars) for i in range(length)])
+
+    def create_tree(self, data={}):
+        defaults = {
+            'trigger': self.random_string(5),
+        }
+        defaults.update(data)
+        if 'root_state' not in data:
+            defaults['root_state'] = self.create_state()
+        return dt.Tree.objects.create(**defaults)
+
+    def create_state(self, data={}):
+        defaults = {
+            'name': self.random_string(10),
+        }
+        defaults.update(data)
+        if 'question' not in defaults:
+            defaults['question'] = self.create_question()
+        return dt.TreeState.objects.create(**defaults)
+
+    def create_question(self, data={}):
+        defaults = {
+            'text': self.random_string(15),
+        }
+        defaults.update(data)
+        return dt.Question.objects.create(**defaults)
+    
+    def create_trans(self, data={}):
+        defaults = {}
+        defaults.update(data)
+        if 'current_state' not in defaults:
+            defaults['current_state'] = self.create_state()
+        if 'answer' not in defaults:
+            defaults['answer'] = self.create_answer()
+        if 'next_state' not in defaults:
+            defaults['next_state'] = self.create_state()
+        return dt.Transition.objects.create(**defaults)
+
+    def create_answer(self, data={}):
+        defaults = {
+            'name': self.random_string(15),
+            'type': 'A',
+            'answer': self.random_string(5),
+        }
+        defaults.update(data)
+        return dt.Answer.objects.create(**defaults)
+
+
+class BasicSurveyTest(CreateDataTest):
+    def setUp(self):
+        self.backend = Backend.objects.create(name='test-backend')
+        self.contact = Contact.objects.create(first_name='John',
+                                              last_name='Doe')
+        self.connection = Connection.objects.create(contact=self.contact,
+                                                    backend=self.backend,
+                                                    identity='1112223333')
+        self.router = MockRouter()
+        self.app = DecisionApp(router=self.router)
+
+    def _send(self, text):
+        msg = IncomingMessage(self.connection, text)
+        self.app.handle(msg)
+        return msg
+
+    def test_invalid_trigger(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans = self.create_trans(data={'current_state': tree.root_state})
+        msg = self._send('i-do-not-exist')
+        self.assertTrue(len(msg.responses) == 0)
+
+    def test_valid_trigger(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans = self.create_trans(data={'current_state': tree.root_state})
+        msg = self._send('food')
+        question = trans.current_state.question.text
+        self.assertTrue(question in msg.responses[0].text)
+
+    def test_basic_response(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans = self.create_trans(data={'current_state': tree.root_state})
+        self._send('food')
+        answer = trans.answer.answer
+        msg = self._send(answer)
+        next_question = trans.next_state.question.text
+        self.assertTrue(next_question in msg.responses[0].text)

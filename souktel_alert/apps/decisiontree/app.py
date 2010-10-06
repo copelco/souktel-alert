@@ -22,34 +22,18 @@ class App(AppBase):
         self.last_message = last_message
     
     def handle(self, msg):
-        # if this caller doesn't have a session attribute,
-        # they're not currently answering a question tree, so
-        # just search for triggers and return
-        sessions = Session.objects.all().filter(state__isnull=False)\
-            .filter(connection=msg.connection)
-
-        if not sessions:
+        sessions = Session.objects.filter(state__isnull=False,
+                                          connection=msg.connection)
+        # if no open sessions exist for this contact, find the tree's trigger
+        if sessions.count() == 0:
             self.debug("No session found")
             try:
                 tree = Tree.objects.get(trigger=msg.text.lower())
-                # start a new session for this person and save it
-                self.start_tree(tree, msg.connection, msg)
-                return True
-            # no trigger found? 
-            # put them on a default tree - changed by Mike
             except Tree.DoesNotExist:
-                # This is a hack - the text will only encode in ascii if it doesn't have pashto chars
-                try:
-                  msg.text.encode('ascii')
-                  tree, _ = Tree.objects.get_or_create(trigger="default-en")
-                  self.debug("No trigger found using default-en")
-                except UnicodeEncodeError:
-                  tree, _ = Tree.objects.get_or_create(trigger="default-pus")
-                  self.debug("No trigger found using default-pus")
-
-                # start a new session for this person and save it
-                self.start_tree(tree, msg.connection, msg)
-                return True
+                return False
+            # start a new session for this person and save it
+            self.start_tree(tree, msg.connection, msg)
+            return True
         
         # the caller is part-way though a question
         # tree, so check their answer and respond

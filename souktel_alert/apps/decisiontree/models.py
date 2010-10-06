@@ -39,7 +39,7 @@ class Tree(models.Model):
        that will be sent to the user when they reach a node in the 
        tree with no possible transitions.
        '''
-    trigger = models.CharField(max_length=30, help_text="The incoming message which triggers this Tree")
+    trigger = models.CharField(max_length=30, unique=True, help_text="The incoming message which triggers this Tree")
     root_state = models.ForeignKey("TreeState", related_name="tree_set", help_text="The first Question sent when this Tree is triggered, which may lead to many more")
     completion_text = models.CharField(max_length=160, blank=True, help_text="The message that will be sent when the tree is completed")
     summary = models.CharField(max_length=160, blank=True)
