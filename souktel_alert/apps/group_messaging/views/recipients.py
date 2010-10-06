@@ -149,7 +149,7 @@ def create_edit_user(request, user_id=None):
 @contact_required
 @transaction.commit_on_success
 def delete_user(request, user_id):
-    user = get_object_or_404(Answer, pk=userid)
+    user = get_object_or_404(User, pk=user_id)
     user.delete()
-    messages.info(request, 'Answer successfully deleted')
-    return HttpResponseRedirect(reverse('user_list'))
+    messages.info(request, 'User successfully deleted')
+    return HttpResponseRedirect(reverse('list_users'))
