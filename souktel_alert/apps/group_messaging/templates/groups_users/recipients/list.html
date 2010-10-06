@@ -15,6 +15,8 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Comment</th>
+            <th># Groups</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -24,6 +26,8 @@
             <tr>
                 <td>{{ recipient.pk }}</td>
                 <td>{{ recipient.name }}</td>
+                <td>{{ recipient.comment }}</td>
+                <td>{{ recipient.count }}</td>
                 <td>
                     <a href="{% url update_recipient recipient.id %}" title="Edit" class="edit-link">
                         <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />

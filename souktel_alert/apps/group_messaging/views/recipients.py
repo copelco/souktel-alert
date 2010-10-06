@@ -15,6 +15,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.db.models import Count
 
 from django.http import HttpResponseRedirect
 
@@ -29,8 +30,9 @@ from group_messaging.forms import RecipientForm, ConnectionFormset,\
 
 @contact_required
 def list_recipients(request):
+    recipients = Contact.objects.annotate(count=Count('group_recipients'))
     context = {
-        'recipients': Contact.objects.order_by('last_name', 'first_name'),
+        'recipients': recipients.order_by('last_name', 'first_name'),
     }
     return render_to_response('groups_users/recipients/list.html', context,
                               context_instance=RequestContext(request))
@@ -116,7 +118,7 @@ def manage_recipients(request):
 @contact_required
 def list_users(request):
     context = {
-      'users': User.objects.order_by('last_name', 'first_name'),
+      'users': User.objects.order_by('username'),
     }
     return render_to_response('groups_users/users/list.html', context,
                               context_instance=RequestContext(request))
