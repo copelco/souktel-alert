@@ -77,10 +77,10 @@ class TestGoals(TestScript):
         goal = Goal.objects.create(contact=self.contact, body='test')
         self.assertInteraction("""
         1112223333 > goal next
-        1112223333 < In Sep., "test" was your goal. Text "goal" with a # from 0 to 5, where 5 = great progress, 0 = no progress, e.g. "goal 4"
+        1112223333 < In {0}., "test" was your goal. Text "goal" with a # from 0 to 5, where 5 = great progress, 0 = no progress, e.g. "goal 4"
         1112223333 > goal 5
         1112223333 < Thank you for your response!
-        """)
+        """.format(datetime.date.today().strftime('%b')))
 
     def test_close_non_staff(self):
         """ Non-staff cannot close goals """
