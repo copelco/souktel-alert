@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<h2>Survey Report</h2>
+<h2>"{{ tree.trigger }}" Report</h2>
 
 <form action="" method="POST" class="pretty">
     {% csrf_token %}
@@ -22,6 +22,10 @@
         </tr>
     </table>
 </form>
+
+<div class='summary'>
+    <p><strong>Summary:</strong> {{ tree.trigger }} <a title='{% trans "Edit Survey Summary" %}' href="{% url update_tree_summary tree.pk %}">({% trans "Edit" %})</a></p>
+</div>
 
 <table class='list auto'>
     <thead>

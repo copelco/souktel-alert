@@ -144,3 +144,14 @@ class TagForm(forms.ModelForm):
             widget=forms.CheckboxSelectMultiple,
             required=False,
         )
+
+
+class TreeSummaryForm(forms.ModelForm):
+
+    class Meta:
+        model = Tree
+        fields = ('summary',)
+
+    def __init__(self, *args, **kwargs):
+        super(TreeSummaryForm, self).__init__(*args, **kwargs)
+        self.fields['summary'].widget = forms.Textarea()

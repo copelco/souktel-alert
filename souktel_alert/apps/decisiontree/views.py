@@ -101,6 +101,26 @@ def data(request, id):
                               context_instance=RequestContext(request))
 
 
+def update_tree_summary(request, tree_id):
+    tree = get_object_or_404(Tree, pk=tree_id)
+    
+    if request.method == 'POST':
+        form = TreeSummaryForm(request.POST, instance=tree)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Survey summary updated')
+            url = reverse('survey-report', args=[tree.pk])
+            return HttpResponseRedirect(url)
+    else:
+        form = TreeSummaryForm(instance=tree)
+    context = {
+        'form': form,
+        'tree': tree,
+    }
+    return render_to_response("tree/summary.html", context,
+                              context_instance=RequestContext(request))
+
+
 def export(req, id = None):
     t = get_tree(id)
     all_states = t.get_all_states()

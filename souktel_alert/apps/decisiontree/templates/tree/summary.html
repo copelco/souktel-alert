@@ -1,0 +1,19 @@
+{% extends "tree/base.html" %}
+
+{% block content %}
+{% load i18n %}
+<form action="" method="POST" class="pretty"> {% csrf_token %}
+    <fieldset> 
+        <legend>
+            {% trans "Survey Summary" %}
+        </legend>
+        <table>
+            {{ form }}
+        </table>
+        <p class="buttons"> 
+        <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+        <a class="button negative icon cross" href="{% url survey-report tree.pk %}">{% trans "Cancel" %}</a>
+        </p>
+    </fieldset>
+</form>
+{% endblock %}
