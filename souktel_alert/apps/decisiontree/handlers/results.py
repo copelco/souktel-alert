@@ -20,6 +20,7 @@ class ResultsHandler(KeywordHandler):
             tree = Tree.objects.get(trigger=text)
         except Tree.DoesNotExist:
             self.respond('Survey "%s" does not exist' % text)
+            return True
         if tree.summary:
             self.respond(tree.summary)
         else:
