@@ -109,3 +109,39 @@ class CSVUploadForm(forms.Form):
             dialect = csv.excel
         fh.seek(0)
         return csv.reader(fh)
+
+
+class UserForm(forms.ModelForm):
+
+    password1 = forms.CharField(label=_("Password"), required=False,
+                                widget=forms.PasswordInput)
+    password2 = forms.CharField(label=_("Password (again)"), required=False,
+                                widget=forms.PasswordInput)
+
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = True
+        if not self.instance.pk:
+            self.fields['password1'].required = True
+            self.fields['password2'].required = True
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1", "")
+        password2 = self.cleaned_data["password2"]
+        if password1 != password2:
+            msg = _("The two password fields didn't match.")
+            raise forms.ValidationError(msg)
+        return password2
+    
+    def save(self):
+        user = super(UserForm, self).save(commit=False)
+        password1 = self.cleaned_data["password1"]
+        password2 = self.cleaned_data["password2"]
+        if password1 and password2:
+            user.set_password(password1)
+        user.save()
+        return user

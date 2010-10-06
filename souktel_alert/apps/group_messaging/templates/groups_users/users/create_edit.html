@@ -1,0 +1,21 @@
+{% extends "groups_users/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Users" %}{% endblock %}
+
+{% block content %}
+<form action="" method="POST" class="pretty">{% csrf_token %}
+    <fieldset>
+        <legend>
+            {% trans "User" %}
+        </legend>
+        <table>
+            {{ form }}
+        </table>
+        <p class="buttons">
+        <button type="submit" class="button positive icon tick">{% trans "Save" %}</button>
+        <a class="button negative icon cross" href="{% url list_users %}">{% trans "Cancel" %}</a>
+        </p>
+    </fieldset>
+</form>
+{% endblock %}

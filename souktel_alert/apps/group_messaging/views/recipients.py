@@ -24,7 +24,7 @@ from group_messaging.models import Site, Group
 from group_messaging.decorators import contact_required
 
 from group_messaging.forms import RecipientForm, ConnectionFormset,\
-                                  CSVUploadForm
+                                  CSVUploadForm, UserForm
 
 
 @contact_required
@@ -125,38 +125,29 @@ def list_users(request):
 @contact_required
 @transaction.commit_on_success
 def create_edit_user(request, user_id=None):
-    answer = None
-    if answerid:
-           answer = get_object_or_404(Answer, pk=answerid)
-
+    user = None
+    if user_id:
+           user = get_object_or_404(User, pk=user_id)
     if request.method == 'POST':
-        form = AnswerForm(request.POST, instance=answer)
+        form = UserForm(request.POST, instance=user)
         if form.is_valid():
-            answer = form.save()
-            if answerid:
-                validationMsg =("You have successfully updated the Answer")
-            else:
-                validationMsg = "You have successfully inserted Answer %s." % answer.answer
-                mycontext = {'validationMsg':validationMsg}
-            messages.info(request, validationMsg)
-            return HttpResponseRedirect(reverse('answer_list'))
-
+            user = form.save()
+            messages.info(request, "User saved successfully")
+            return HttpResponseRedirect(reverse('list_users'))
     else:
-        form = AnswerForm(instance=answer)
-
+        form = UserForm(instance=user)
     context = {
-        'answer': answer,
+        'user': user,
         'form': form,
-        'answerid': answerid,
     }
-    return render_to_response('tree/answer.html', context,
+    return render_to_response('groups_users/users/create_edit.html', context,
                               context_instance=RequestContext(request))
 
 
 @contact_required
 @transaction.commit_on_success
 def delete_user(request, user_id):
-    answer = get_object_or_404(Answer, pk=answerid)
-    answer.delete()
+    user = get_object_or_404(Answer, pk=userid)
+    user.delete()
     messages.info(request, 'Answer successfully deleted')
-    return HttpResponseRedirect(reverse('answer_list'))
+    return HttpResponseRedirect(reverse('user_list'))
