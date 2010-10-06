@@ -1,0 +1,32 @@
+{% extends "tree/report/base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+{{ block.super }}
+
+<table class='auto'>
+    <thead>
+        <th>Connection</th>
+        <th>Date</th>
+    </thead>
+    <tbody>
+    {% for session in ordered_sessions %}
+        <tr>
+            <td>{{ session.connection }}</td>
+            <td>{{ session.start_date|date:"Y-m-d h:i a" }}</td>
+            {% for entry in session.entries.select_related %}
+                <td scope="row">
+                    <span class='question'>{{ entry.transition.current_state.question.text }}</span>
+                    <span class='answer'>{{ entry.transition.answer.answer }}</span>
+                </td>
+                {% if not forloop.last %}
+                    <td class='transition'>&rarr;</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

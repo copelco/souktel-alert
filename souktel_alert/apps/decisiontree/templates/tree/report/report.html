@@ -1,13 +1,9 @@
-{% extends "tree/base.html" %}
+{% extends "tree/report/base.html" %}
 {% load i18n %}
-
-{% block title %}Decision Trees{% endblock %}
-
-{% block stylesheets %}<link type="text/css" rel="stylesheet" href="/static/tree/stylesheets/tree.css" />{% endblock %}
 
 {% block content %}
 
-<h2>"{{ tree.trigger }}" Report</h2>
+{{ block.super }}
 
 <form action="" method="POST" class="pretty">
     {% csrf_token %}

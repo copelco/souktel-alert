@@ -97,7 +97,18 @@ def data(request, id):
         'sessions': sessions,
         'states': states,
     }
-    return render_to_response("tree/data.html", context,
+    return render_to_response("tree/report/report.html", context,
+                              context_instance=RequestContext(request))
+
+
+def recent_sessions(request, tree_id):
+    tree = get_object_or_404(Tree, pk=tree_id)
+    sessions = tree.sessions.select_related()
+    context = {
+        'tree': tree,
+        'ordered_sessions': sessions.order_by('-start_date')[:25],
+    }
+    return render_to_response("tree/report/sessions.html", context,
                               context_instance=RequestContext(request))
 
 

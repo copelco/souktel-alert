@@ -1,0 +1,13 @@
+{% extends "tree/base.html" %}
+
+{% block title %}Decision Trees{% endblock %}
+
+{% block content %}
+
+<h2>Survey Report: "{{ tree.trigger }}"</h2>
+<ul class='horizontal'>
+    <li><a href="{% url survey-report tree.pk %}">Report</a></li>
+    <li><a href="{% url recent_sessions tree.pk %}">Recent Sessions</a></li>
+</ul>
+
+{% endblock %}

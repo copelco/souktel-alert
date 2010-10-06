@@ -7,9 +7,14 @@ import decisiontree.views as views
 
 urlpatterns = patterns('',
     url(r'^tree/$', views.index, name='list-surveys'),
-    url(r'^tree/data/(?P<id>\d+)/$', views.data, name='survey-report'),
+    url(r'^tree/(?P<id>\d+)/report/$', views.data, name='survey-report'),
     url(r'^tree/(?P<tree_id>\d+)/summary/edit/$', views.update_tree_summary,
         name='update_tree_summary'),
+    url(r'^tree/(?P<tree_id>\d+)/report/sessions/$', views.recent_sessions,
+        name='recent_sessions'),
+
+
+
 
     url(r'^tree/entry/list/$', views.list_entries, name='list-entries'),
     url(r'^tree/entry/(?P<entry_id>\d+)/edit/$', views.update_entry,
