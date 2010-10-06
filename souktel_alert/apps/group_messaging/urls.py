@@ -37,4 +37,12 @@ urlpatterns = patterns('',
         name='outgoinglog_list'),
     #url(r'^group-messaging/outgoinglog/filter/$', outgoinglog.filter, \
     #    name='outgoinglog_filter'),
+    url(r'^group-messaging/users/$', recipients.list_users, \
+        name='list_users'),
+    url(r'^group-messaging/users/(\d+)/$', recipients.create_edit_user, \
+        name='update_user'),
+    url(r'^group-messaging/users/add/$', recipients.create_edit_user, \
+        name='add_user'),
+    url(r'^group-messaging/users/delete/(\d+)/$', recipients.delete_user, \
+        name='delete_user'),
 )

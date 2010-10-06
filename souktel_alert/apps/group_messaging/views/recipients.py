@@ -14,6 +14,7 @@ from django.forms.formsets import formset_factory
 from django.contrib import messages
 from django.db import transaction
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from django.http import HttpResponseRedirect
 
@@ -109,3 +110,53 @@ def manage_recipients(request):
     }
     return render_to_response('groups_users/recipients/csv.html', context,
                               context_instance=RequestContext(request))
+
+
+
+@contact_required
+def list_users(request):
+    context = {
+      'users': User.objects.order_by('last_name', 'first_name'),
+    }
+    return render_to_response('groups_users/users/list.html', context,
+                              context_instance=RequestContext(request))
+
+
+@contact_required
+@transaction.commit_on_success
+def create_edit_user(request, user_id=None):
+    answer = None
+    if answerid:
+           answer = get_object_or_404(Answer, pk=answerid)
+
+    if request.method == 'POST':
+        form = AnswerForm(request.POST, instance=answer)
+        if form.is_valid():
+            answer = form.save()
+            if answerid:
+                validationMsg =("You have successfully updated the Answer")
+            else:
+                validationMsg = "You have successfully inserted Answer %s." % answer.answer
+                mycontext = {'validationMsg':validationMsg}
+            messages.info(request, validationMsg)
+            return HttpResponseRedirect(reverse('answer_list'))
+
+    else:
+        form = AnswerForm(instance=answer)
+
+    context = {
+        'answer': answer,
+        'form': form,
+        'answerid': answerid,
+    }
+    return render_to_response('tree/answer.html', context,
+                              context_instance=RequestContext(request))
+
+
+@contact_required
+@transaction.commit_on_success
+def delete_user(request, user_id):
+    answer = get_object_or_404(Answer, pk=answerid)
+    answer.delete()
+    messages.info(request, 'Answer successfully deleted')
+    return HttpResponseRedirect(reverse('answer_list'))
