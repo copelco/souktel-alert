@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding=utf-8
 import logging
+import csv
 
 from django import forms
 from django.http import HttpResponse
@@ -50,3 +51,24 @@ def message_log(request):
     }
     return render_to_response("incoming.html", context,
                               context_instance=RequestContext(request))
+
+
+import csv
+
+def export_to_csv(request):
+    # get the response object, this can be used as a stream.
+    response = HttpResponse(mimetype='text/csv')
+    # force download.
+    response['Content-Disposition'] = 'attachment;filename="Messages_log.csv"'
+
+    # the csv writer
+    writer = csv.writer(response)
+
+    # just any model...
+    messages = Message.objects.select_related('contact',
+                                              'connection__backend')
+
+    for message in messages:
+        writer.writerow([message.contact, message.connection, message.direction, message.date, message.text])
+
+    return response
