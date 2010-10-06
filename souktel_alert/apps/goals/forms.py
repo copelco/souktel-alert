@@ -18,4 +18,4 @@ GoalFormSet = modelformset_factory(Goal, form=GoalForm, extra=0)
 
 class ScheduleForm(forms.Form):
     start_date = forms.DateTimeField(widget=forms.SplitDateTimeWidget)
-    frequency = forms.ChoiceField(choices=Goal.REPEAT_CHOICES)
+    frequency = forms.ChoiceField(choices=Goal.REPEAT_CHOICES, required=False)

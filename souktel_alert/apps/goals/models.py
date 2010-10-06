@@ -15,6 +15,7 @@ class ActiveGoalManager(models.Manager):
 
 class Goal(models.Model):
     REPEAT_CHOICES = (
+        ('', 'Disabled'),
         ('one-time', 'One Time'),
         ('daily', 'Daily'),
         ('weekly', 'Weekly'),
