@@ -157,6 +157,14 @@ class TestSchedule(TestCase):
         self.assertEqual(self.goal.get_next_date(),
                          self.goal.schedule_start_date + delta)
 
+    def test_one_time(self):
+        """ date_next_notified should equal schedule_start_date if one time """
+        now = datetime.datetime.now()
+        self.goal.schedule_start_date = now
+        self.goal.schedule_frequency = 'one-time'
+        self.assertEqual(self.goal.get_next_date(),
+                         self.goal.schedule_start_date)
+
     def test_goals_to_send_cron_job(self):
         """ make sure date_next_notified is updated on cron job """
         now = datetime.datetime.now()

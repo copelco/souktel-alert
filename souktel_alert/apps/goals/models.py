@@ -15,6 +15,7 @@ class ActiveGoalManager(models.Manager):
 
 class Goal(models.Model):
     REPEAT_CHOICES = (
+        ('one-time', 'One Time'),
         ('daily', 'Daily'),
         ('weekly', 'Weekly'),
         ('monthly', 'Monthly'),
@@ -40,21 +41,19 @@ class Goal(models.Model):
 
     def get_next_date(self):
         if self.schedule_start_date and self.schedule_frequency:
-            now = datetime.datetime.now()
-            if self.schedule_start_date > now:
-                return self.schedule_start_date
+            next_date = self.schedule_start_date
             frequency_map = {
                 'daily': relativedelta(days=+1),
                 'weekly': relativedelta(weeks=+1),
                 'monthly': relativedelta(months=+1),
                 'yearly': relativedelta(years=+1),
             }
-            delta = frequency_map[self.schedule_frequency]
-            next_date = self.schedule_start_date
-            while next_date < now:
-                next_date += delta
+            if self.schedule_frequency in frequency_map:
+                now = datetime.datetime.now()
+                delta = frequency_map[self.schedule_frequency]
+                while next_date < now:
+                    next_date += delta
             return next_date
-
 
     def save(self, **kwargs):
         if not self.pk:
