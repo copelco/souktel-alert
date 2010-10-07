@@ -88,17 +88,19 @@ class App(AppBase):
 
         # create an entry for this response
         # first have to know what sequence number to insert
-        ids = Entry.objects.filter(session=session).order_by('sequence_id')
-        ids = ids.values_list('sequence_id', flat=True)
-        if ids:
-            # not sure why pop() isn't allowed...
-            sequence = ids[len(ids) -1] + 1
+        try:
+            last_entry = session.entries.order_by('-sequence_id')[0]
+        except IndexError:
+            last_entry = None
+        if last_entry:
+            sequence = last_entry.sequence_id + 1
         else:
             sequence = 1
-        entry = Entry(session=session,sequence_id=sequence,transition=found_transition,text=msg.text)
-        entry.save()
+        entry = Entry.objects.create(session=session, sequence_id=sequence,
+                                     transition=found_transition,
+                                     text=msg.text)
         self.debug("entry %s saved" % entry)
-            
+
         # advance to the next question, or remove
         # this caller's state if there are no more
         

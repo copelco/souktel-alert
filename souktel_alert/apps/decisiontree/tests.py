@@ -206,3 +206,22 @@ class BasicSurveyTest(CreateDataTest):
         self._send('food')
         msg = self._send('bad-answer')
         self.assertTrue('my error response' == msg.responses[0].text)
+
+    def test_sequence_start(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans = self.create_trans(data={'current_state': tree.root_state})
+        self._send('food')
+        answer = trans.answer.answer
+        msg = self._send(answer)
+        entry = trans.entries.all()[0]
+        self.assertEqual(entry.sequence_id, 1)
+
+    def test_sequence_increment(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans1 = self.create_trans(data={'current_state': tree.root_state})
+        trans2 = self.create_trans(data={'current_state': trans1.next_state})
+        self._send('food')
+        msg = self._send(trans1.answer.answer)
+        msg = self._send(trans2.answer.answer)
+        entry = trans2.entries.order_by('-sequence_id')[0]
+        self.assertEqual(entry.sequence_id, 2)
