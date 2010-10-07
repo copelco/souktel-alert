@@ -24,126 +24,111 @@ class App(AppBase):
     def handle(self, msg):
         sessions = Session.objects.filter(state__isnull=False,
                                           connection=msg.connection)
+        sessions = sessions.select_related('state')
         # if no open sessions exist for this contact, find the tree's trigger
         if sessions.count() == 0:
             self.debug("No session found")
             try:
                 tree = Tree.objects.get(trigger=msg.text.lower())
             except Tree.DoesNotExist:
+                self.info('Tree not found: %s' % msg.text)
                 return False
             # start a new session for this person and save it
             self.start_tree(tree, msg.connection, msg)
             return True
-        
+
         # the caller is part-way though a question
         # tree, so check their answer and respond
-        else:
-            session = sessions[0]
-            state = session.state
+        session = sessions[0]
+        state = session.state
+        self.debug(state)
 
-            self.debug(state)
-            # loop through all transitions starting with  
-            # this state and try each one depending on the type
-            # this will be a greedy algorithm and NOT safe if 
-            # multiple transitions can match the same answer
+        if msg.text == "reset":
+          self._end_session(session)
+          return True
 
-            if msg.text == "reset":
-              self._end_session(session)
-              return True
+        # loop through all transitions starting with  
+        # this state and try each one depending on the type
+        # this will be a greedy algorithm and NOT safe if 
+        # multiple transitions can match the same answer
+        transitions = Transition.objects.filter(current_state=state)
+        found_transition = None
+        for transition in transitions:
+            if self.matches(transition.answer, msg):
+                found_transition = transition
+                break
 
-            transitions = Transition.objects.filter(current_state=state)
-            found_transition = None
-            for transition in transitions:
-                if self.matches(transition.answer, msg):
-                    found_transition = transition
-                    break
-            
-            # the number of tries they have to get out of this state
-            # if empty there is no limit.  When the num_retries is hit
-            # a user's session will be terminated.
-    
-            # not a valid answer, so remind
-            # the user of the valid options.
-            if not found_transition:
-                transitions = Transition.objects.filter(current_state=state)
-                # there are no defined answers.  therefore there are no more questions to ask 
-                if len(transitions) == 0:
-                    official_name = Report.objects.get(session=session).official_name
-                    location = Report.objects.get(session=session).location
-                    count = Report.objects.filter(official_name=official_name, location=location).count()
-                    msg.respond(_("Thank you for reporting this incident. You and %s other people have reported on %s in %s.") % (count,official_name,location))
-                    # end the connection so the caller can start a new session
-                    self._end_session(session)
-                    return
-                else:
-                    # send them some hints about how to respond
-                    if state.question.error_response:
-                        response = state.question.error_response
-                    else:
-                        flat_answers = " or ".join([trans.answer.helper_text() for trans in transitions])
-                        # Make translation happen all at the end.  This is currently more practical
-                        #translated_answers = _(flat_answers, get_language_code(session.connection))
-                        #response = _('"%(answer)s" is not a valid answer. You must enter %(hint)s', 
-                        #             get_language_code(session.connection))% ({"answer" : msg.text, "hint": translated_answers})
-                        response ='"%(answer)s" is not a valid answer. You must enter ' + flat_answers
-                    
-                    msg.respond(response, {"answer":msg.text})
-                    
-                    # update the number of times the user has tried
-                    # to answer this.  If they have reached the 
-                    # maximum allowed then end their session and
-                    # send them an error message.
-                    session.num_tries = session.num_tries + 1
-                    if state.num_retries and session.num_tries >= state.num_retries:
-                        session.state = None
-                        msg.respond("Sorry, invalid answer %(retries)s times. Your session will now end. Please try again later.", 
-                                    {"retries": session.num_tries })
-                        
-                    session.save()
-                    return True
-            
-            # create an entry for this response
-            # first have to know what sequence number to insert
-            ids = Entry.objects.all().filter(session=session).order_by('sequence_id').values_list('sequence_id', flat=True)
-            if ids:
-                # not sure why pop() isn't allowed...
-                sequence = ids[len(ids) -1] + 1
-            else:
-                sequence = 1
-            entry = Entry(session=session,sequence_id=sequence,transition=found_transition,text=msg.text)
-            entry.save()
-            self.debug("entry %s saved" % entry)
-                
-            # advance to the next question, or remove
-            # this caller's state if there are no more
-            
-            # this might be "None" but that's ok, it will be the 
-            # equivalent of ending the session
-            session.state = found_transition.next_state
-            session.num_tries = 0
-            session.save()
-            
-            # if this was the last message, end the session, 
-            # and also check if the tree has a defined 
-            # completion text and if so send it
-            if not session.state:
-                if session.tree.completion_text:
-                    msg.respond(session.tree.completion_text)
-                else:
-                    official_name = Report.objects.get(session=session).official_name
-                    location = Report.objects.get(session=session).location
-                    count = Report.objects.filter(official_name=official_name, location=location).count()
-                    msg.respond(_("Thank you for reporting this incident. You and %s other people have reported on %s in %s.") % (count,official_name,location))
-
-                # end the connection so the caller can start a new session
+        # not a valid answer, so remind the user of the valid options.
+        if not found_transition:
+            if transitions.count() == 0:
+                self.error('No questions found!')
+                msg.respond(_("No questions found"))
                 self._end_session(session)
-                
-            # if there is a next question ready to ask
-            # send it along
-            self._send_question(session, msg)
-            # if we haven't returned long before now, we're
-            # long committed to dealing with this message
+            else:
+                # send them some hints about how to respond
+                if state.question.error_response:
+                    msg.respond(state.question.error_response)
+                else:
+                    answers = [t.answer.helper_text() for t in transitions]
+                    answers = " or ".join(answers)
+                    response = '"%(answer)s" is not a valid answer. You must enter ' + answers
+                    msg.respond(response, answer=msg.text)
+
+                # update the number of times the user has tried
+                # to answer this.  If they have reached the 
+                # maximum allowed then end their session and
+                # send them an error message.
+                session.num_tries = session.num_tries + 1
+                if state.num_retries and session.num_tries >= state.num_retries:
+                    session.state = None
+                    msg.respond("Sorry, invalid answer %(retries)s times. Your session will now end. Please try again later.", 
+                                retries=session.num_tries)
+                session.save()
             return True
+
+        # create an entry for this response
+        # first have to know what sequence number to insert
+        ids = Entry.objects.filter(session=session).order_by('sequence_id')
+        ids = ids.values_list('sequence_id', flat=True)
+        if ids:
+            # not sure why pop() isn't allowed...
+            sequence = ids[len(ids) -1] + 1
+        else:
+            sequence = 1
+        entry = Entry(session=session,sequence_id=sequence,transition=found_transition,text=msg.text)
+        entry.save()
+        self.debug("entry %s saved" % entry)
+            
+        # advance to the next question, or remove
+        # this caller's state if there are no more
+        
+        # this might be "None" but that's ok, it will be the 
+        # equivalent of ending the session
+        session.state = found_transition.next_state
+        session.num_tries = 0
+        session.save()
+        
+        # if this was the last message, end the session, 
+        # and also check if the tree has a defined 
+        # completion text and if so send it
+        if not session.state:
+            if session.tree.completion_text:
+                msg.respond(session.tree.completion_text)
+            else:
+                official_name = Report.objects.get(session=session).official_name
+                location = Report.objects.get(session=session).location
+                count = Report.objects.filter(official_name=official_name, location=location).count()
+                msg.respond(_("Thank you for reporting this incident. You and %s other people have reported on %s in %s.") % (count,official_name,location))
+
+            # end the connection so the caller can start a new session
+            self._end_session(session)
+            
+        # if there is a next question ready to ask
+        # send it along
+        self._send_question(session, msg)
+        # if we haven't returned long before now, we're
+        # long committed to dealing with this message
+        return True
     
     def start_tree(self, tree, connection, msg=None):
         '''Initiates a new tree sequence, terminating any active sessions'''

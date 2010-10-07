@@ -11,18 +11,16 @@ from rapidsms.models import Contact, Connection
 
 
 class Question(models.Model):
-    '''A question, which is just some text to be sent to the user,
-       and an optional error message if the question is not answered
-       properly'''
-    text = models.TextField()
-    # allow the question to specify a default error
-    # message
-    error_response = models.TextField(null=True, blank=True)
-    
+    '''
+    A question, which is just some text to be sent to the user,
+    and an optional error message if the question is not answered properly
+    '''
+    text = models.CharField(max_length=160)
+    error_response = models.CharField(max_length=160, blank=True)
+
     def __unicode__(self):
-        return "Q%s: %s" % (
-            self.pk,
-            self.text)
+        return "Q%s: %s" % (self.pk, self.text)
+
 
 class Tree(models.Model):
     '''A decision tree.  

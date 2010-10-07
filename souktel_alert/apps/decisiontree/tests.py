@@ -190,3 +190,19 @@ class BasicSurveyTest(CreateDataTest):
         msg = self._send(answer)
         next_question = trans.next_state.question.text
         self.assertTrue(next_question in msg.responses[0].text)
+
+    def test_error_response(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans = self.create_trans(data={'current_state': tree.root_state})
+        self._send('food')
+        msg = self._send('bad-answer')
+        self.assertTrue('is not a valid answer' in msg.responses[0].text)
+
+    def test_error_response_from_question(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans = self.create_trans(data={'current_state': tree.root_state})
+        tree.root_state.question.error_response = 'my error response'
+        tree.root_state.question.save()
+        self._send('food')
+        msg = self._send('bad-answer')
+        self.assertTrue('my error response' == msg.responses[0].text)
