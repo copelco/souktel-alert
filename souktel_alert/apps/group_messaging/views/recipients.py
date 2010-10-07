@@ -30,9 +30,17 @@ from group_messaging.forms import RecipientForm, ConnectionFormset,\
 
 @contact_required
 def list_recipients(request):
+    identity_map = {}
+    for connection in Connection.objects.exclude(contact__isnull=True):
+        if connection.contact_id not in identity_map:
+            identity_map[connection.contact_id] = set()
+        identity_map[connection.contact_id].add(connection.identity)
     recipients = Contact.objects.annotate(count=Count('group_recipients'))
+    recipients = recipients.order_by('last_name', 'first_name')
+    for recipient in recipients:
+        recipient.identities = identity_map.get(recipient.pk, set())
     context = {
-        'recipients': recipients.order_by('last_name', 'first_name'),
+        'recipients': recipients,
     }
     return render_to_response('groups_users/recipients/list.html', context,
                               context_instance=RequestContext(request))
