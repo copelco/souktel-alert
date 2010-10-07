@@ -1,26 +1,25 @@
 #!/usr/bin/env python
 # vim: ai ts=4 sts=4 et sw=4 encoding=utf-8
+from django.utils.translation import ugettext as _
 
 from rapidsms.apps.base import AppBase
 from rapidsms.models import Connection
 from rapidsms.messages import OutgoingMessage
-from models import *
 
-from django.utils.translation import ugettext as _
+from decisiontree.models import *
 
-#from afghansms_extensions.models import Report
 
 class App(AppBase):
-    
+
     registered_functions = {}
     session_listeners = {}
-    
+
     def start(self):
         pass
-    
+
     def configure(self, last_message="You are done with this survey.  Thanks for participating!", **kwargs):
         self.last_message = last_message
-    
+
     def handle(self, msg):
         sessions = Session.objects.filter(state__isnull=False,
                                           connection=msg.connection)
@@ -103,13 +102,13 @@ class App(AppBase):
 
         # advance to the next question, or remove
         # this caller's state if there are no more
-        
+
         # this might be "None" but that's ok, it will be the 
         # equivalent of ending the session
         session.state = found_transition.next_state
         session.num_tries = 0
         session.save()
-        
+
         # if this was the last message, end the session, 
         # and also check if the tree has a defined 
         # completion text and if so send it
@@ -124,14 +123,14 @@ class App(AppBase):
 
             # end the connection so the caller can start a new session
             self._end_session(session)
-            
+
         # if there is a next question ready to ask
         # send it along
         self._send_question(session, msg)
         # if we haven't returned long before now, we're
         # long committed to dealing with this message
         return True
-    
+
     def start_tree(self, tree, connection, msg=None):
         '''Initiates a new tree sequence, terminating any active sessions'''
         self.end_sessions(connection)
@@ -146,7 +145,7 @@ class App(AppBase):
             for func in self.session_listeners[tree.trigger]:
                 func(session, False)
         self._send_question(session, msg)
-    
+
     def _send_question(self, session, msg=None):
         '''Sends the next question in the session, if there is one''' 
         state = session.state
@@ -177,20 +176,20 @@ class App(AppBase):
         if self.session_listeners.has_key(session.tree.trigger):
             for func in self.session_listeners[session.tree.trigger]:
                 func(session, True)
-                    
+
     def end_sessions(self, connection):
         ''' Ends all open sessions with this connection.  
             does nothing if there are no open sessions ''' 
         sessions = Session.objects.filter(connection=connection).exclude(state=None)
         for session in sessions:
             self._end_session(session, True)
-            
+    
     def register_custom_transition(self, name, function):
         ''' Registers a handler for custom logic within a 
             state transition '''
         self.info("Registering keyword: %s for function %s" %(name, function.func_name))
         self.registered_functions[name] = function  
-        
+
     def set_session_listener(self, tree_key, function):
         '''Adds a session listener to this.  These functions
            get called at the beginning and end of every session.
@@ -209,7 +208,7 @@ class App(AppBase):
         #                self.session_listeners[tree_key].append(function)
         #        else: 
         self.session_listeners[tree_key] = [function]
-        
+
     def matches(self, answer, message):
         answer_value = message.text
         '''returns True if the answer is a match for this.'''
@@ -225,5 +224,3 @@ class App(AppBase):
             else:
                 raise Exception("Can't find a function to match custom key: %s", answer)
         raise Exception("Don't know how to process answer type: %s", answer.type)
-        
-        
