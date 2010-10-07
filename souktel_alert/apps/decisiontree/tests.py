@@ -93,6 +93,13 @@ class ResultsTest(TestCase):
         response = handler.msg.responses[0].text
         self.assertEqual(response, '10 people like food')
 
+    def test_percent_in_summary(self):
+        self.tree.summary = 'we are 100%'
+        self.tree.save()
+        handler = self._send('food')
+        response = handler.msg.responses[0].text
+        self.assertEqual(response, 'we are 100%')
+
 
 class CreateDataTest(TestCase):
 

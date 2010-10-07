@@ -22,7 +22,7 @@ class ResultsHandler(KeywordHandler):
             self.respond('Survey "%s" does not exist' % text)
             return True
         if tree.summary:
-            self.respond(tree.summary)
+            self.respond(tree.summary.replace('%', '%%'))
         else:
             self.respond('No summary for "%s" survey' % text)
         return True
