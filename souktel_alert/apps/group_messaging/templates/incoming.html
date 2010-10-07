@@ -1,17 +1,20 @@
 {% extends "base.html" %}
-
 {% load i18n %}
-
-{% get_current_language as LANGUAGE_CODE %}
-{% get_available_languages as LANGUAGES %}
-{% get_current_language_bidi as LANGUAGE_BIDI %}
-
+{% load pagination_tags %}
 {% block content %}
-<h2>{% trans "Incoming / Outgoing Messages log" %}</h2>
-<form action="" method="get">{% csrf_token %}
-{{ messagelogfilter.form.as_p }}
-<input type="submit" />
-</form>
+
+<h2>Incoming / Outgoing Messages log</h2>
+<table >
+    <TR dir="LTR">
+    <form action="" method="get" class="pretty">{% csrf_token %}
+        <td >{{ messagelogfilter.form.as_p }}</td>
+    </TR>
+    <TR>
+        <td><input type="submit" /></td>
+    </form>
+    </TR>
+</table>
+
 <table class='list'>
 <colgroup>
     <col class='name' />
@@ -26,41 +29,41 @@
 <th class='name' >Direction</th>
 <th class='name' >Connection</th>
 <th class='name' >Text</th>
-
-
 </tr>
-{% for message in messagelogfilter %}
-<tr {% if forloop.last %} class=""{% endif %}>
-<td class='name'>{{message.date|date:"Y-m-d h:i a"}}</td>
-<td class='name'>{{message.contact}}</td>
-<td class='name'>{{message.direction}}</td>
-<td class='name'>{{message.connection}}</td>
-<td class='name'>{{message.text}}</td>
+<tr>
+     
+    {% for message in messageslogs.object_list %}
+    <td class='name'>{{message.date|date:"Y-m-d h:i a"}}</td>
+    <td class='name'>{{message.contact}}</td>
+    <td class='name'>{{message.direction}}</td>
+    <td class='name'>{{message.connection}}</td>
+    <td class='name'>{{message.text}}</td>
 </tr>
-{% endfor %}
+    {% endfor %}
+    
+</table>
 
-<tr class="">
-<td colspan="5"><span>
-        {% if messagelog.has_previous %}
-            <a href="?page={{ messagelog.previous_page_number }}">{% trans "previous" %}</a>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if messageslogs.has_previous %}
+            <a href="?page={{ contacts.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">
-            {% trans "Page" %} {{ messagelog.number }} {% trans "of" %} {{ messagelog.paginator.num_pages }}.
+            Page {{ messageslogs.number }} of {{ messageslogs.paginator.num_pages }}.
         </span>
 
-        {% if messagelog.has_next %}
-            <a href="?page={{ messagelog.next_page_number }}">{% trans "next" %}</a>
+        {% if messageslogs.has_next %}
+            <a href="?page={{ messageslogs.next_page_number }}">next</a>
         {% endif %}
-    </span> &nbsp;&nbsp; |&nbsp;&nbsp;<span> {% trans "Total number" %} = {{ count }}</span> </td>
-
-</tr>
-</table>
+    </span>
+</div>
 <p> {{ validationMsg }} </p>
 {% endblock %}
-
 {% block submenu %}
 <ul>
 <li><a href = "{% url export %}" >Export to csv</a></li>
 </ul>
 {% endblock %}
+

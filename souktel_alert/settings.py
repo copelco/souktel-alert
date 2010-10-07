@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     "django_nose",
     "djtables",
     "rapidsms",
+    "pagination",
 
     # common dependencies (which don't clutter up the ui).
     "rapidsms.contrib.handlers",
@@ -114,7 +115,7 @@ INSTALLED_APPS = [
     #"poll",
     "decisiontree",
     "django_filters",
-    "pagination",
+    
 ]
 
 

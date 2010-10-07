@@ -29,7 +29,9 @@ def message_log(request):
     messages = Message.objects.select_related('contact',
                                               'connection__backend')
     messages = messages.order_by('-date')
-    paginator = Paginator(messages, 25)
+    paginator = Paginator(messages, 25) # Show 25 contacts per page
+
+    # Make sure page request is an int. If not, deliver first page.
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
@@ -37,16 +39,18 @@ def message_log(request):
 
     # If page request (9999) is out of range, deliver last page of results.
     try:
-        messagelog = paginator.page(page)
+        messageslogs = paginator.page(page)
     except (EmptyPage, InvalidPage):
-        messagelog = paginator.page(paginator.num_pages)
+        messageslogs = paginator.page(paginator.num_pages)
+
+    
 
     messagelogfilter = messageslogFilter(request.GET, queryset=messages)
     context = {
         "messagelogfilter": messagelogfilter,
         "messages_log": messages,
-        "messagelog":messagelog,
         "count": messages.count(),
+        "messageslogs":messageslogs,
         "messages_table": MessageTable(messages, request=request),
     }
     return render_to_response("incoming.html", context,
