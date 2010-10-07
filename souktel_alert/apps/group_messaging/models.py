@@ -42,7 +42,8 @@ class Group(models.Model):
                             verbose_name=ugettext_lazy(u"Code"))
     name = models.CharField(max_length='50', \
                             verbose_name=ugettext_lazy(u"Name"))
-    site = models.ForeignKey('Site', verbose_name=ugettext_lazy(u"Site"))
+    site = models.ForeignKey('Site', verbose_name=ugettext_lazy(u"Site"),
+                             null=True, blank=True)
     active = models.BooleanField(default=True, \
                                  verbose_name=ugettext_lazy(u"Enabled?"))
     recipients = models.ManyToManyField(Contact, blank=True,
