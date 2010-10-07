@@ -1,13 +1,13 @@
 {% extends "groups_users/base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Users" %}{% endblock %}
+{% block title %}{% trans "Admins" %}{% endblock %}
 
 {% block content %}
 <form action="" method="POST" class="pretty">{% csrf_token %}
     <fieldset>
         <legend>
-            {% trans "User" %}
+            {% trans "Admin" %}
         </legend>
         <table>
             {{ form }}
