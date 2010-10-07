@@ -52,6 +52,8 @@
                 <td>
                     {% if goal.schedule_frequency %}
                         {{ goal.get_schedule_frequency_display }} starting at {{ goal.schedule_start_date|date:"Y-m-d h:i a" }}
+                    {% else %}
+                        Disabled
                     {% endif %}
                 </td>
                 <td>{{ goal.date_last_notified|date:"Y-m-d h:i a" }}</td>
