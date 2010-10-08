@@ -100,6 +100,11 @@ class App(AppBase):
                                      text=msg.text)
         self.debug("entry %s saved" % entry)
 
+        # link message log to entry for tag relationship
+        if hasattr(msg, 'logger_msg'):
+            msg.logger_msg.entry = entry
+            msg.logger_msg.save()
+
         # advance to the next question, or remove
         # this caller's state if there are no more
 

@@ -29,7 +29,10 @@ def message_log(request):
     messages = Message.objects.select_related('contact',
                                               'connection__backend')
     messages = messages.order_by('-date')
-    paginator = Paginator(messages, 25) # Show 25 contacts per page
+    
+    messagelogfilter = messageslogFilter(request.GET, queryset=messages)
+    
+    paginator = Paginator(messagelogfilter.qs, 25) # Show 25 contacts per page
 
     # Make sure page request is an int. If not, deliver first page.
     try:
@@ -45,13 +48,13 @@ def message_log(request):
 
     
 
-    messagelogfilter = messageslogFilter(request.GET, queryset=messages)
+    
     context = {
         "messagelogfilter": messagelogfilter,
-        "messages_log": messages,
+        # "messages_log": messages,
         "count": messages.count(),
         "messageslogs":messageslogs,
-        "messages_table": MessageTable(messages, request=request),
+        # "messages_table": MessageTable(messages, request=request),
     }
     return render_to_response("incoming.html", context,
                               context_instance=RequestContext(request))

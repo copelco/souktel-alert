@@ -12,6 +12,8 @@ from group_messaging import models as gm
 from rapidsms.contrib.messagelog.tables import MessageTable
 from rapidsms.contrib.messagelog.models import Message
 
+from decisiontree.models import Tag
+
 
 class GroupForm(forms.ModelForm):
 
@@ -87,7 +89,18 @@ class messageslogFilter(django_filters.FilterSet):
     connection = django_filters.CharFilter(name='connection')
     direction = django_filters.CharFilter(name='direction')
     date = django_filters.CharFilter(name='date')
-    text = django_filters.CharFilter(name='text')
+    text = django_filters.CharFilter(name='text', lookup_type='icontains')
+    tag = django_filters.ModelChoiceFilter(name='tag')
+
+    def __init__(self, *args, **kwargs):
+        super(messageslogFilter, self).__init__(*args, **kwargs)
+        self.filters['tag'].extra.update({'queryset': Tag.objects.all()})
+        self.filters['tag'].filter = self.tag_filter
+
+    def tag_filter(self, qs, value):
+        if not value:
+            return qs
+        return qs.filter(entry__tags=value)
 
     class Meta:
         model = Message
