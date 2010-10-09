@@ -1,12 +1,28 @@
 #!/usr/bin/env python
 # vim: ai ts=4 sts=4 et sw=4 encoding=utf-8
+import smtplib
+import datetime
+
 from django.utils.translation import ugettext as _
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
 from rapidsms.apps.base import AppBase
 from rapidsms.models import Connection
 from rapidsms.messages import OutgoingMessage
 
+from rapidsms.contrib.scheduler.models import EventSchedule
+
 from decisiontree.models import *
+
+
+SCHEDULE_DESC = 'decisiontree-cron-job'
+CALLBACK = 'decisiontree.app.scheduler_callback'
+
+
+def scheduler_callback(router):
+    app = router.get_app("decisiontree")
+    app.status_update()
 
 
 class App(AppBase):
@@ -15,10 +31,14 @@ class App(AppBase):
     session_listeners = {}
 
     def start(self):
-        pass
-
-    def configure(self, last_message="You are done with this survey.  Thanks for participating!", **kwargs):
-        self.last_message = last_message
+        try:
+            schedule = EventSchedule.objects.get(description=SCHEDULE_DESC)
+        except EventSchedule.DoesNotExist:
+            schedule = EventSchedule(description=SCHEDULE_DESC)
+        schedule.callback = CALLBACK
+        schedule.minutes = '*'
+        schedule.save()
+        self.info('started')
 
     def handle(self, msg):
         sessions = Session.objects.filter(state__isnull=False,
@@ -229,3 +249,34 @@ class App(AppBase):
             else:
                 raise Exception("Can't find a function to match custom key: %s", answer)
         raise Exception("Don't know how to process answer type: %s", answer.type)
+    
+    def status_update(self):
+        self.debug('{0} running'.format(SCHEDULE_DESC))
+        now = datetime.datetime.now()
+        notifications = TagNotification.objects.filter(sent=False)
+        notifications = notifications.select_related().order_by('tag', 'entry')
+        self.info('found {0} notifications'.format(notifications.count()))
+        users = {}
+        for notification in notifications:
+            email = notification.user.email
+            if email not in users:
+                users[email] = []
+            users[email].append(notification)
+        for email, notifications in users.iteritems():
+            context = {'notifications': notifications}
+            body = render_to_string('tree/digest.txt', context)
+            try:
+                send_mail(subject='Survey Response Report', message=body,
+                          recipient_list=[email],
+                          from_email='no-reply@souktel.com',
+                          fail_silently=False)
+                sent = True
+            except smtplib.SMTPException, e:
+                self.exception(e)
+                sent = False
+            if sent:
+                for notification in notifications:
+                    notification.sent = True
+                    notification.date_sent = datetime.datetime.now()
+                    notification.save()
+                self.info('Sent report to %s' % email)

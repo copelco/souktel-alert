@@ -4,6 +4,7 @@ import random
 
 from django.test import TransactionTestCase, TestCase
 from django.contrib.auth.models import User
+from django.core import mail
 
 from rapidsms.models import Connection, Contact, Backend
 
@@ -225,3 +226,36 @@ class BasicSurveyTest(CreateDataTest):
         msg = self._send(trans2.answer.answer)
         entry = trans2.entries.order_by('-sequence_id')[0]
         self.assertEqual(entry.sequence_id, 2)
+
+
+class DigestTest(CreateDataTest):
+    def setUp(self):
+        self.backend = Backend.objects.create(name='test-backend')
+        self.contact = Contact.objects.create(first_name='John',
+                                              last_name='Doe')
+        self.connection = Connection.objects.create(contact=self.contact,
+                                                    backend=self.backend,
+                                                    identity='1112223333')
+        self.router = MockRouter()
+        self.app = DecisionApp(router=self.router)
+        self.user = User.objects.create_user('test', 'a@a.com', 'abc')
+        self.fruit_tag = dt.Tag.objects.create(name='fruit')
+        self.fruit_tag.recipients.add(self.user)
+
+    def _send(self, text):
+        msg = IncomingMessage(self.connection, text)
+        self.app.handle(msg)
+        return msg
+
+    def test_cron_job(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans1 = self.create_trans(data={'current_state': tree.root_state})
+        trans2 = self.create_trans(data={'current_state': trans1.next_state})
+        trans1.tags.add(self.fruit_tag)
+        self._send('food')
+        msg = self._send(trans1.answer.answer)
+        msg = self._send(trans2.answer.answer)
+        self.app.status_update()
+        self.assertEquals(len(mail.outbox), 1)
+        notification = dt.TagNotification.objects.all()[0]
+        self.assertTrue(notification.sent)

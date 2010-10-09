@@ -243,7 +243,16 @@ class Entry(models.Model):
         # since this is what it is for free text entries
         return self.text
     
-    
+    def save(self, **kwargs):
+        super(Entry, self).save(**kwargs)
+        tags = self.transition.tags.all()
+        if tags.count() > 0:
+            self.tags = tags
+            for tag in tags:
+                for recipient in tag.recipients.all():
+                    TagNotification.objects.create(tag=tag, entry=self,
+                                                   user=recipient)
+
     class Meta:
         verbose_name_plural="Entries"
         ordering = ('sequence_id',)
@@ -257,7 +266,15 @@ class Tag(models.Model):
         return self.name
 
 
-def entry_tagger(sender, **kwargs):
-    instance = kwargs.get('instance')
-    instance.tags = instance.transition.tags.all()
-post_save.connect(entry_tagger, sender=Entry)
+class TagNotification(models.Model):
+    tag = models.ForeignKey(Tag)
+    user = models.ForeignKey(User)
+    entry = models.ForeignKey(Entry)
+    sent = models.BooleanField(default=False)
+    date_added = models.DateTimeField()
+    date_sent = models.DateTimeField(null=True, blank=True)
+
+    def save(self, **kwargs):
+        if not self.pk:
+            self.date_added = datetime.datetime.now()
+        super(TagNotification, self).save(**kwargs)
