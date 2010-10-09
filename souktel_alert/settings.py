@@ -76,6 +76,8 @@ INSTALLED_APPS = [
     "djtables",
     "rapidsms",
     "pagination",
+    
+    "require_registration",
 
     # common dependencies (which don't clutter up the ui).
     "rapidsms.contrib.handlers",
