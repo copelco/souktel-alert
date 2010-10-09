@@ -68,7 +68,7 @@ class AnswerSearchForm(forms.Form):
     # )
     # answer = forms.ModelChoiceField(queryset=Answer.objects.none())
     # analysis = forms.ChoiceField(choices=ANALYSIS_TYPES)
-    tag = forms.ModelChoiceField(queryset=Tag.objects.none())
+    tag = forms.ModelChoiceField(queryset=Tag.objects.none(), required=False)
 
     def __init__(self, *args, **kwargs):
         tree = kwargs.pop('tree')

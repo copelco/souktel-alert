@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.db import transaction
+from django.utils.datastructures import SortedDict
 
 from decisiontree.forms import *
 from decisiontree.models import *
@@ -33,6 +34,7 @@ def index(request):
 @contact_required
 def data(request, id):
     tree = get_object_or_404(Tree, pk=id)
+    tag = None
     if request.method == 'POST':
         form = AnswerSearchForm(request.POST, tree=tree)
         if form.is_valid():
@@ -40,7 +42,6 @@ def data(request, id):
             # what now?
     else:
         form = AnswerSearchForm(tree=tree)
-        tag = None
 
     entry_tags = Entry.tags.through.objects
     entry_tags = entry_tags.filter(entry__session__tree=tree)
@@ -66,6 +67,9 @@ def data(request, id):
     sessions = tree.sessions.select_related('connection__contact',
                                             'connection__backend')
     sessions = sessions.order_by('-start_date')
+    columns = SortedDict()
+    for state in states:
+        columns[state.pk] = []
     # for each session, created an ordered list of (state, entry) pairs
     # using the map from above. this will ease template display.
     for session in sessions:
@@ -76,8 +80,13 @@ def data(request, id):
             except KeyError:
                 entry = None
             session.ordered_states.append((state, entry))
+            if entry:
+                columns[state.pk].append(entry.transition.answer.answer)
+            else:
+                columns[state.pk].append(None)
     # count answers grouped by state
-    stats = Transition.objects.filter(entries__session__tree=tree)
+    stats = Transition.objects.filter(entries__session__tree=tree,
+                                      entries__in=entries)
     stats = stats.values('current_state', 'answer__answer')
     stats = stats.annotate(count=Count('answer'))
     stat_map = {}
@@ -89,6 +98,7 @@ def data(request, id):
             stat_map[current_state] = {'answers': {}, 'total': 0}
         stat_map[current_state]['answers'][answer] = count
         stat_map[current_state]['total'] += count
+        stat_map[current_state]['values'] = columns[current_state]
     for state in states:
         state.stats = stat_map.get(state.pk, {})
     context = {

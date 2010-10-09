@@ -1,5 +1,5 @@
 {% extends "tree/report/base.html" %}
-{% load i18n %}
+{% load i18n tree-tags %}
 
 {% block content %}
 
@@ -69,117 +69,13 @@
                 {% for answer, count in state.stats.answers.iteritems %}
                     <span class='stat-answer'>{{ answer }}</span>: <span class='stat-count'>{{ count }} ({% widthratio count state.stats.total 100 %}%)</span>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
-            </div>    
+            </div>
+            <div class='median'>Median: {{ state.stats.values|mean }}</div>
+            <div class='mode'>Mode: {{ state.stats.values|mode|join:", " }}</div>
             {% endif %}
         </td>
         {% endfor %}
     </tr>
     </tbody>
 </table>
-
-
-
-{% comment %}
-
-<h2>Recent sessions for "{{ tree.trigger }}"</h2>
-
-<table class='auto'>
-    <thead>
-        <th>Connection</th>
-        <th>Date</th>
-    </thead>
-    <tbody>
-    {% for session in ordered_sessions %}
-        <tr>
-            <td>{{ session.connection }}</td>
-            <td>{{ session.start_date|date:"Y-m-d h:i a" }}</td>
-            {% for entry in session.entries.select_related %}
-                <td scope="row">
-                    <span class='question'>{{ entry.transition.current_state.question.text }}</span>
-                    <span class='answer'>{{ entry.transition.answer.answer }}</span>
-                </td>
-                {% if not forloop.last %}
-                    <td class='transition'>&rarr;</td>
-                {% endif %}
-            {% endfor %}
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-        
-        
-
-<!--        {% else %}
-
-       {% if sessions and paths and loops %}
-        <thead>
-            <tr>
-                <th scope="col">Person</th>
-                <th scope="col">Start Date</th>
-                {% for path in paths.keys %}
-                
-                <th scope="col">{{ path }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-        
-   			{% for session in sessions %}
-            <tr>
-                <th scope="row">{{ session.person.phone }}</th>
-                <td>{{ session.start_date }}</td>
-                {% for path, map in paths.items %}
-                <td>
-                    <!--  this is really ugly but it works.  does a lot of unneccessary iteration 
-                           because django templates don't seem to support an easy way to do this correctly. -->
-    <!--                {% for map_session, value in map.items %}
-                        {% ifequal session map_session %}
-                            {{ value }}
-                        {% endifequal %}
-                    {% endfor %}
-                </td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-         </tbody>
-        {% else %}
-         
-        
-		
-        	<thead>
-			<tr class="no-data">
-				<td colspan="2">
-					No Data Yet.
-				</td>
-			</tr>
-			</thead>
-	   {% endif %}
-       
-        
-		<tfoot>
-		    {% if sessions %}
-			<tr>
-				<td colspan="2">
-					<a href="export/{{t.id}}">
-						Export to Excel
-					</a>
-				</td>
-			</tr>
-			{% endif %}
-		</tfoot>
-		{% endif %}
-	</table>
-	{% endif %}
-</div>
-
-<div class="module dt">
-	<h2>Edit a Decision Tree</h2>
-	{% if t and not loops %}{% render_state t.root_state %}
-	{% else %} 
-	  Sorry this tree has loops.  This is not yet supported!
-	{% endif %}
-	
-</div>-->
-{% endcomment %}
 {% endblock %}
