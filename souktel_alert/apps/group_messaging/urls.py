@@ -13,7 +13,7 @@ from views import incominglog
 
 urlpatterns = patterns('',
     url(r'^$', index.index, name='index'),
-    url(r'^group-messaging/messages/$', incominglog.export_to_csv, name='export'),
+    url(r'^group-messaging/messages/export/$', incominglog.export_to_csv, name='export'),
     url(r'^group-messaging/messages/$', messages.list, name='messages_list'),
     url(r'^group-messaging/incominglog/$', incominglog.message_log, name='incoming_log'),
     url(r'^group-messaging/messages/add/$', messages.messageform, name='messages_add'),
