@@ -11,15 +11,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.db.models import Count
+from django.contrib.auth.decorators import login_required
 
 from rapidsms.models import Contact
 
-from group_messaging.decorators import contact_required
 from group_messaging.models import Group, Site
 from group_messaging.forms import GroupForm
 
 
-@contact_required
+@login_required
 def list(request):
     groups = Group.objects.annotate(count=Count('recipients'))
     context = {
@@ -29,7 +29,7 @@ def list(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def add(request):
     ''' add function '''
     if request.method == 'POST':  # If the form has been submitted...
@@ -44,7 +44,7 @@ def add(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def delete(request, group_id):
 
     ''' add function '''
@@ -58,7 +58,7 @@ def delete(request, group_id):
     return redirect(list)
 
 
-@contact_required
+@login_required
 def update(request, group_id):
     group = get_object_or_404(Group, pk=group_id)
 

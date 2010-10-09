@@ -6,14 +6,14 @@ from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 
-from group_messaging.decorators import contact_required
 from group_messaging.models import SendingLog, Group, OutgoingLog
 
 from rapidsms.models import Contact
 
 
-@contact_required
+@login_required
 def index(request):
     context = {}
     contact = request.contact

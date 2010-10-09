@@ -9,14 +9,14 @@ from django.utils.translation import ugettext as _
 from django.shortcuts import redirect, render_to_response
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.decorators import login_required
 
-from group_messaging.decorators import contact_required
 from group_messaging.models import Message, Site, Group
 from group_messaging.utils import send_message
 
 
 
-@contact_required
+@login_required
 def list(request):
     ''' List all the Messages'''
     messages = Message.objects.all()
@@ -27,7 +27,7 @@ def list(request):
     return render_to_response('messages.html', context, context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def messageform(request, messageid=None):
     '''form for Add/Edit messages'''
     if not messageid or int(messageid) == 0:
@@ -73,7 +73,7 @@ def messageform(request, messageid=None):
     return render_to_response("messages_form.html", context, context_instance=RequestContext(request))
 
 
-@contact_required    
+@login_required    
 def delete(request, messageid):
     
     message = Message.objects.get(id=messageid)
@@ -84,7 +84,7 @@ def delete(request, messageid):
     return redirect(list)
 
 
-@contact_required
+@login_required
 def send(request):
     
     messages = Message.objects.all()

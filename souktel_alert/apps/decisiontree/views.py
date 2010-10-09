@@ -18,9 +18,10 @@ from django.utils.datastructures import SortedDict
 from decisiontree.forms import *
 from decisiontree.models import *
 
-from group_messaging.decorators import contact_required
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def index(request):
     trees = Tree.objects.select_related('root_state__question')
     trees = trees.annotate(count=Count('sessions'))
@@ -31,7 +32,7 @@ def index(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def data(request, id):
     tree = get_object_or_404(Tree, pk=id)
     tag = None
@@ -111,6 +112,7 @@ def data(request, id):
                               context_instance=RequestContext(request))
 
 
+@login_required
 def recent_sessions(request, tree_id):
     tree = get_object_or_404(Tree, pk=tree_id)
     sessions = tree.sessions.select_related()
@@ -122,6 +124,7 @@ def recent_sessions(request, tree_id):
                               context_instance=RequestContext(request))
 
 
+@login_required
 def update_tree_summary(request, tree_id):
     tree = get_object_or_404(Tree, pk=tree_id)
     
@@ -142,6 +145,7 @@ def update_tree_summary(request, tree_id):
                               context_instance=RequestContext(request))
 
 
+@login_required
 def export(req, id = None):
     t = get_tree(id)
     all_states = t.get_all_states()
@@ -175,7 +179,7 @@ def export(req, id = None):
         return render_to_response("tree/index.html", request_context=RequestContext(req))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def addtree(request, treeid=None):
     tree = None
@@ -203,7 +207,7 @@ def addtree(request, treeid=None):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def deletetree(request, treeid):
     tree = get_object_or_404(Tree, pk=treeid)
@@ -212,7 +216,7 @@ def deletetree(request, treeid):
     return HttpResponseRedirect(reverse('list-surveys'))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def addquestion(request, questionid=None):
     question = None
@@ -241,7 +245,7 @@ def addquestion(request, questionid=None):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def questionlist(request):
     context = {
         'questions': Question.objects.order_by('text')
@@ -250,7 +254,7 @@ def questionlist(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def deletequestion(request, questionid):
     tree = get_object_or_404(Question, pk=questionid)
@@ -259,7 +263,7 @@ def deletequestion(request, questionid):
     return HttpResponseRedirect(reverse('list-questions'))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def addanswer(request, answerid=None):
     answer = None
@@ -290,7 +294,7 @@ def addanswer(request, answerid=None):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def deleteanswer(request, answerid):
     answer = get_object_or_404(Answer, pk=answerid)
@@ -299,7 +303,7 @@ def deleteanswer(request, answerid):
     return HttpResponseRedirect(reverse('answer_list'))
 
 
-@contact_required
+@login_required
 def answerlist(request):
     context = {
         'answers': Answer.objects.order_by('name'),
@@ -308,7 +312,7 @@ def answerlist(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def list_entries(request):
     """ List most recent survey activity """
     entries = Entry.objects.select_related().order_by('-time')[:25]
@@ -319,7 +323,7 @@ def list_entries(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def update_entry(request, entry_id):
     """ Manually update survey entry tags """
@@ -341,7 +345,7 @@ def update_entry(request, entry_id):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def addstate(request, stateid=None):
     state = None
@@ -370,7 +374,7 @@ def addstate(request, stateid=None):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def statelist(request):
     states = TreeState.objects.select_related('question').order_by('question')
     context = {
@@ -380,7 +384,7 @@ def statelist(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def deletestate(request, stateid):
     state = get_object_or_404(TreeState, pk=stateid)
@@ -389,7 +393,7 @@ def deletestate(request, stateid):
     return HttpResponseRedirect(reverse('state_list'))
 
 
-@contact_required
+@login_required
 def questionpathlist(request):
     paths = Transition.objects.select_related('current_state__question',
                                               'next_state__question',
@@ -412,7 +416,7 @@ def questionpathlist(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def deletepath(request, pathid):
     path = get_object_or_404(Transition, pk=pathid)
@@ -421,7 +425,7 @@ def deletepath(request, pathid):
     return HttpResponseRedirect(reverse('path_list'))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def questionpath(request, pathid=None):
     path = None
@@ -450,7 +454,7 @@ def questionpath(request, pathid=None):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def list_tags(request):
     context = {
         'tags': Tag.objects.order_by('name'),
@@ -459,7 +463,7 @@ def list_tags(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def create_edit_tag(request, tag_id=None):
     tag = None

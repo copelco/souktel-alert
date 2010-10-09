@@ -16,19 +16,19 @@ from django.db import transaction
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponseRedirect
 
 from rapidsms.models import Contact, Connection, Backend
 
 from group_messaging.models import Site, Group
-from group_messaging.decorators import contact_required
 
 from group_messaging.forms import RecipientForm, ConnectionFormset,\
                                   CSVUploadForm, UserForm
 
 
-@contact_required
+@login_required
 def list_recipients(request):
     identity_map = {}
     for connection in Connection.objects.exclude(contact__isnull=True):
@@ -46,7 +46,7 @@ def list_recipients(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def recipient(request, recipientid=None):
     instance = Contact()
@@ -82,7 +82,7 @@ def recipient(request, recipientid=None):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 def delete(request, recipientid):
     recipient = get_object_or_404(Contact, pk=recipientid)
     recipient.delete()
@@ -91,7 +91,7 @@ def delete(request, recipientid):
     return HttpResponseRedirect(reverse('list_recipients'))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def manage_recipients(request):
     if request.method == 'POST':
@@ -123,7 +123,7 @@ def manage_recipients(request):
 
 
 
-@contact_required
+@login_required
 def list_users(request):
     context = {
       'users': User.objects.order_by('username'),
@@ -132,7 +132,7 @@ def list_users(request):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def create_edit_user(request, user_id=None):
     user = None
@@ -154,7 +154,7 @@ def create_edit_user(request, user_id=None):
                               context_instance=RequestContext(request))
 
 
-@contact_required
+@login_required
 @transaction.commit_on_success
 def delete_user(request, user_id):
     user = get_object_or_404(User, pk=user_id)

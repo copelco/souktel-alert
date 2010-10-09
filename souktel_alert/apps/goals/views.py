@@ -6,14 +6,13 @@ from django.db.models import Count, Max
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 
 from goals.models import Goal, Answer
 from goals.forms import ScheduleForm, GoalFormSet
 
-from group_messaging.decorators import contact_required
 
-
-@contact_required
+@login_required
 def summary(request):
     goals = Goal.objects.order_by('-date_last_notified', '-date_created')
     if request.POST:

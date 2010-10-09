@@ -12,9 +12,9 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
+from django.contrib.auth.decorators import login_required
 
 from group_messaging.models import OutgoingLog
-from group_messaging.decorators import contact_required
 from rapidsms.contrib.messagelog import *
 
 from django.template import RequestContext
@@ -24,7 +24,7 @@ from rapidsms.contrib.messagelog.models import Message
 from group_messaging.forms import messageslogFilter
 
 
-@contact_required
+@login_required
 def message_log(request):
     messages = Message.objects.select_related('contact',
                                               'connection__backend')
@@ -62,6 +62,7 @@ def message_log(request):
 
 import csv
 
+@login_required
 def export_to_csv(request):
     # get the response object, this can be used as a stream.
     response = HttpResponse(mimetype='text/csv')

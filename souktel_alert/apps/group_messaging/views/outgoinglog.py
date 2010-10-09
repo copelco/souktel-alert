@@ -11,14 +11,14 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.forms.formsets import formset_factory
+from django.contrib.auth.decorators import login_required
 
 from group_messaging.models import OutgoingLog
-from group_messaging.decorators import contact_required
 from group_messaging.forms import logFilter
 
 
 
-@contact_required
+@login_required
 def list(request):
     
     outgoinglog = OutgoingLog.objects.all()
@@ -27,7 +27,7 @@ def list(request):
     context = (mycontext)
     return render_to_response('filter.html', context, context_instance=RequestContext(request))
 
-#@contact_required
+#@login_required
 #def log_search(request):
     
  #   log = logFilter(request.GET, queryset=OutgoingLog.objects.all())
