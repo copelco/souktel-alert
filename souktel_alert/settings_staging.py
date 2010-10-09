@@ -1,5 +1,12 @@
 from souktel_alert.settings import *
 
+ADMINS = (
+    ('Colin Copeland', 'copelco@caktusgroup.com'),
+)
+MANAGERS = ADMINS
+
+DEFAULT_FROM_EMAIL = 'no-reply@souktel.com'
+EMAIL_SUBJECT_PREFIX = '[twb-nigeria] '
 
 DATABASES = {
     "default": {
