@@ -86,7 +86,7 @@ def data(request, id):
                 columns[state.pk].append(None)
     # count answers grouped by state
     stats = Transition.objects.filter(entries__session__tree=tree,
-                                      entries__in=entries)
+                                      entries__in=[e.pk for e in entries])
     stats = stats.values('current_state', 'answer__answer')
     stats = stats.annotate(count=Count('answer'))
     stat_map = {}
