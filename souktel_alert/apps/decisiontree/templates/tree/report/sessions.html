@@ -18,7 +18,7 @@
             {% for entry in session.entries.select_related %}
                 <td scope="row">
                     <span class='question'>{{ entry.transition.current_state.question.text }}</span>
-                    <span class='answer'>{{ entry.transition.answer.answer }}</span>
+                    <span class='answer'>{{ entry.text }}</span>
                 </td>
                 {% if not forloop.last %}
                     <td class='transition'>&rarr;</td>
