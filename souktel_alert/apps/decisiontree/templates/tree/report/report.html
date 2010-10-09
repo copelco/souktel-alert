@@ -70,7 +70,8 @@
                     <span class='stat-answer'>{{ answer }}</span>: <span class='stat-count'>{{ count }} ({% widthratio count state.stats.total 100 %}%)</span>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
             </div>
-            <div class='median'>Median: {{ state.stats.values|mean }}</div>
+            <div class='mean'>Mean: {{ state.stats.values|mean }}</div>
+            <div class='median'>Median: {{ state.stats.values|median }}</div>
             <div class='mode'>Mode: {{ state.stats.values|mode|join:", " }}</div>
             {% endif %}
         </td>

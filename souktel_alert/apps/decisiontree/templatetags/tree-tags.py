@@ -7,12 +7,25 @@ register = template.Library()
 
 @register.filter
 def mean(values):
+    try:
+        integers = [int(v) for v in sorted(values)]
+    except TypeError:
+        return None
+    return sum(integers)/len(integers)*1.0
+
+
+@register.filter
+def median(values):
     copy = sorted(values)
     size = len(copy)
-    if size % 2 == 1:
-        return copy[(size - 1) / 2]
-    else:
-        return (copy[size/2 - 1] + copy[size/2]) / 2
+    try:
+        if size % 2 == 1:
+            return copy[(size - 1) / 2]
+        else:
+            integers = [int(v) for v in copy]
+            return (integers[size/2 - 1] + integers[size/2]) / 2
+    except TypeError:
+        return None
 
 
 @register.filter
