@@ -67,7 +67,7 @@ class ConnectionInlineForm(forms.ModelForm):
         self.fields['identity'].required = True
 
 
-ConnectionFormset = inlineformset_factory(Contact, Connection, extra=1,
+ConnectionFormset = inlineformset_factory(Contact, Connection, extra=0,
                                           form=ConnectionInlineForm)
 
 
