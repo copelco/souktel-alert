@@ -224,7 +224,7 @@ class Entry(models.Model):
     session = models.ForeignKey(Session, related_name='entries')
     sequence_id = models.IntegerField()
     transition = models.ForeignKey(Transition, related_name='entries')
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True, db_index=True)
     text = models.CharField(max_length=160)
     
     tags = models.ManyToManyField('Tag', related_name='entries')

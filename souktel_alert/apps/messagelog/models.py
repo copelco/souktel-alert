@@ -20,7 +20,7 @@ class Message(models.Model):
     contact    = models.ForeignKey(Contact, null=True)
     connection = models.ForeignKey(Connection, null=True)
     direction  = models.CharField(max_length=1, choices=DIRECTION_CHOICES)
-    date       = models.DateTimeField()
+    date       = models.DateTimeField(db_index=True)
     text       = models.TextField()
     entry = models.ForeignKey(Entry, null=True, blank=True)
 
