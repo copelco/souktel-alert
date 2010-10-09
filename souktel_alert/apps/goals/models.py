@@ -24,8 +24,10 @@ class Goal(models.Model):
     
     contact = models.ForeignKey(Contact, related_name='goals')
     date_created = models.DateTimeField()
-    date_last_notified = models.DateTimeField(null=True, blank=True)
-    date_next_notified = models.DateTimeField(null=True, blank=True)
+    date_last_notified = models.DateTimeField(null=True, blank=True,
+                                              db_index=True)
+    date_next_notified = models.DateTimeField(null=True, blank=True,
+                                              db_index=True)
     schedule_start_date = models.DateTimeField(null=True, blank=True)
     schedule_frequency = models.CharField(max_length=16, blank=True,
                                           choices=REPEAT_CHOICES)
