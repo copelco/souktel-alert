@@ -49,3 +49,19 @@ class DigestTest(TestCase):
         self.assertEqual(msg.responses[0].text, 'Thank you for registering')
         conn = Connection.objects.all()[0]
         self.assertEqual(conn.contact_id, msg.connection.contact_id)
+
+    def test_second_backend(self):
+        # original connection
+        contact = Contact.objects.create(first_name='John', last_name='Doe')
+        connection = Connection.objects.create(backend=self.backend,
+                                               identity='1112223333',
+                                               contact=contact)
+        # second connection
+        new_backend = Backend.objects.create(name='new-backend')
+        connection = Connection.objects.create(backend=new_backend,
+                                               identity='1112223333')
+        msg = IncomingMessage(connection, 'foo')
+        handled = self.app.handle(msg)
+        self.assertEqual(msg.connection.contact_id, contact.pk)
+        self.assertFalse(handled)
+        

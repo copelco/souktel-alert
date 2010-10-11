@@ -1,7 +1,7 @@
 import re
 
 from rapidsms.apps.base import AppBase
-from rapidsms.models import Contact
+from rapidsms.models import Contact, Connection
 
 
 reg_re = re.compile(r'reg [\s\w]+')
@@ -14,6 +14,20 @@ class RegApp(AppBase):
 
     def handle(self, msg):
         if not msg.connection.contact_id:
+            # first search for another connection with same identity
+            identity = msg.connection.identity
+            try:
+                conn = Connection.objects.filter(identity=identity)
+                conn = conn.exclude(contact__isnull=True)[0]
+            except IndexError:
+                conn = None
+            if conn:
+                # the same number was found on a seperate backend, so
+                # associate the contact and pass the message along
+                msg.connection.contact = conn.contact
+                msg.connection.save()
+                return False
+            # if no existing connection is found, see if user is registering
             if reg_re.match(msg.text):
                 try:
                     keyword, name = msg.text.split(' ', 1)
