@@ -18,6 +18,11 @@
             <th>Comment</th>
             <th># Groups</th>
             <th>Number(s)</th>
+            <th>Country</th>
+            <th>City</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Type</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -30,6 +35,15 @@
                 <td>{{ recipient.comment }}</td>
                 <td>{{ recipient.count }}</td>
                 <td>{{ recipient.identities|join:', ' }}</td>
+                <td>{{ recipient.country }}</td>
+                <td>{{ recipient.city }}</td>
+                <td>
+                    {% if recipient.age %}
+                        {{ recipient.age }}
+                    {% endif %}
+                </td>
+                <td>{{ recipient.gender }}</td>
+                <td>{{ recipient.type }}</td>
                 <td>
                     <a href="{% url update_recipient recipient.id %}" title="Edit" class="edit-link">
                         <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />

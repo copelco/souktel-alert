@@ -9,6 +9,11 @@ class ContactExtra(models.Model):
     site = models.ForeignKey('group_messaging.Site', null=True, blank=True)
     first_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)
+    gender = models.CharField(max_length=16, blank=True)
+    age = models.PositiveIntegerField(null=True, blank=True)
+    country = models.CharField(max_length=64, blank=True)
+    city = models.CharField(max_length=64, blank=True)
+    user_type = models.CharField(max_length=64, blank=True)
     comment = models.CharField(max_length=100, blank=True,
                                verbose_name=_(u"Comment"))
     active = models.BooleanField(default=True, verbose_name=_(u"Enabled?"))

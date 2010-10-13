@@ -47,8 +47,6 @@ class RecipientForm(forms.ModelForm):
         self.fields['user'].queryset = self.fields['user'].queryset.order_by('username')
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
-        self.fields.keyOrder = ('first_name', 'last_name', 'comment', 'groups',
-                                'user')
 
     def save(self):
         instance = super(RecipientForm, self).save()
