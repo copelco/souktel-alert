@@ -52,13 +52,6 @@ class TestGoals(TestScript):
         1112223333 < You don't currently have any open goal sessions
         """)
 
-    def test_unrecognized(self):
-        """ Users must register before using the goals app """
-        self.assertInteraction("""
-        5555555555 > goal my new goal
-        5555555555 < You must register before using the goals app
-        """)
-
     def test_next_non_staff(self):
         """ Non-staff cannot use the "next" command """
         goal = Goal.objects.create(contact=self.contact, body='test')
