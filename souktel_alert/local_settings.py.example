@@ -1,8 +1,15 @@
 from souktel_alert.settings import *
 
-
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'souktel.db'
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "souktel",
+        "USER": "",
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
 
 INSTALLED_BACKENDS['clickatell'].update({
     'user': '',
@@ -10,4 +17,7 @@ INSTALLED_BACKENDS['clickatell'].update({
     'api_id': '',
 })
 
-LOG_FILE = '/tmp/rapidsms.log'
+INSTALLED_BACKENDS['javna'].update({
+    'host': '',
+    'port': '',
+})
