@@ -11,6 +11,33 @@
         <legend>
             {% trans "CSV Upload" %}
         </legend>
+        
+        <h4>Example Column Layout</h4>
+        <table class='list auto'>
+            <thead>
+                <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Number</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tr>
+                <td>John</td>
+                <td>Doe</td>
+                <td>12223334444</td>
+                <td>USA</td>
+                <td>Raleigh</td>
+                <td>40</td>
+                <td>M</td>
+                <td>"Works for TWB"</td>
+            </tr>
+        </table>
+        
         <table>
             {{ form }}
         </table>

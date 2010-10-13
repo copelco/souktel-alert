@@ -106,7 +106,7 @@ class messageslogFilter(django_filters.FilterSet):
 
 
 class CSVUploadForm(forms.Form):
-    csv_file = forms.FileField(label='CSV File')
+    csv_file = forms.FileField(label='CSV File', help_text='One line per contact: John,Doe,12223334444,USA,Raleigh,40,M,"Works for TWB"')
     group = forms.ModelChoiceField(queryset=gm.Group.objects.all(),
                                    required=False)
 

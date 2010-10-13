@@ -28,6 +28,9 @@ from group_messaging.forms import RecipientForm, ConnectionFormset,\
                                   CSVUploadForm, UserForm
 
 
+logger = logging.getLogger(__file__)
+
+
 @login_required
 def list_recipients(request):
     identity_map = {}
@@ -92,7 +95,7 @@ def delete(request, recipientid):
 
 
 @login_required
-@transaction.commit_on_success
+@transaction.commit_manually
 def manage_recipients(request):
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
@@ -100,15 +103,39 @@ def manage_recipients(request):
             backend = Backend.objects.get(name='javna')
             rows = form.save()
             for row in rows:
-                first_name, last_name, identity = row
-                contact, _ = Contact.objects.get_or_create(first_name=first_name,
-                                                           last_name=last_name)
+                first_name = row[0]
+                last_name = row[1]
+                identity = row[2]
+                country = row[3]
+                city = row[4]
+                age = row[5]
+                gender = row[6]
+                comment = row[7]
+                contact, created = Contact.objects.get_or_create(
+                    first_name=first_name,
+                    last_name=last_name
+                )
+                if created:
+                    contact.country = country
+                    contact.city = city
+                    contact.age = age
+                    contact.gender = gender
+                    contact.comment = comment
+                    try:
+                        contact.save()
+                    except Exception, e:
+                        transaction.rollback()
+                        logger.exception(e)
+                        msg = "CSV import failed: %s" % e
+                        messages.error(request, msg)
+                        return HttpResponseRedirect(reverse('manage_recipients'))
                 if form.cleaned_data['group']:
                     contact.group_recipients.add(form.cleaned_data['group'])
                 conn, _ = Connection.objects.get_or_create(identity=identity,
                                                            backend=backend)
                 conn.contact = contact
                 conn.save()
+            transaction.commit()
             msg = "Import successful"
             messages.info(request, msg)
             return HttpResponseRedirect(reverse('list_recipients'))
