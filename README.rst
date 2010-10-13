@@ -43,7 +43,8 @@ Production Environment Setup
 ----------------------------
 
 To bootstrap a remote environment, modify the fabfile to include the
-appropriate configuration for your server.
+appropriate configuration for your server. The "staging" environment can be
+used as an example for deployment setup.
 
 **Settings**
 
