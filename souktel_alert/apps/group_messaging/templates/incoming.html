@@ -22,6 +22,7 @@
     <col class='number' />
     <col class='name' />
     <col class='name' />
+    <col class='name' />
 </colgroup>
 <tr class='secondRow doNotFilter'>
 <th class='name' >Date</th>
@@ -29,6 +30,7 @@
 <th class='name' >Direction</th>
 <th class='name' >Connection</th>
 <th class='name' >Text</th>
+<th class='name' >Tags</th>
 </tr>
 <tr>
      
@@ -38,6 +40,11 @@
     <td class='name'>{{message.direction}}</td>
     <td class='name'>{{message.connection}}</td>
     <td class='name'>{{message.text}}</td>
+    <td class='name'>
+        {% if message.entry %}
+            {{ message.entry.tags.all|join:", " }}
+        {% endif %}
+    </td>
 </tr>
     {% endfor %}
     
