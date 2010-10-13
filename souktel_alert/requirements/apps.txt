@@ -1,12 +1,7 @@
 django==1.2.3
-#rapidsms==0.9.5a
-django-uni-form==0.7
-rapidsms-xforms==0.1.1
-pygooglechart==0.3.0
 python-dateutil==1.5
 django-filter==0.5.3
-django-pagination==1.0.7
 FeedParser==4.1
--e git+http://github.com/caktus/rapidsms-rerouter.git#egg=rerouter
--e git+http://github.com/caktus/rapidsms-clickatell.git#egg=rclickatell
--e git+http://github.com/rapidsms/rapidsms.git#egg=rapidsms
+-e git+http://github.com/caktus/rapidsms-rerouter.git@33c2d18c64232c495883#egg=rerouter
+-e git+http://github.com/caktus/rapidsms-clickatell.git@95f964ff21c836c67be2#egg=rclickatell
+-e git+http://github.com/rapidsms/rapidsms.git@fe9119a5cddad127ad7d#egg=rapidsms

@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     "django_nose",
     "djtables",
     "rapidsms",
-    "pagination",
     
     "require_registration",
 
@@ -108,7 +107,6 @@ INSTALLED_APPS = [
     
     "messagelog",
     # "contact_plus",
-    "uni_form",
     "rjavna",
     "rclickatell",
     "rerouter",
@@ -199,7 +197,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'group_messaging.middleware.ContactRequestMiddleware',
-    'pagination.middleware.PaginationMiddleware',
 )
 
 TEMPLATE_DIRS = [
