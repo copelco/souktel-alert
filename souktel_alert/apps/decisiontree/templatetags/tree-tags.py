@@ -16,6 +16,10 @@ def mean(values):
 
 @register.filter
 def median(values):
+    try:
+        values = [int(v) for v in values]
+    except (TypeError, ValueError):
+        pass
     values = sorted(values)
     size = len(values)
     try:

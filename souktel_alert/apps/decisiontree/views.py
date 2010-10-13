@@ -82,18 +82,16 @@ def data(request, id):
                 entry = None
             session.ordered_states.append((state, entry))
             if entry:
-                columns[state.pk].append(entry.transition.answer.answer)
-            else:
-                columns[state.pk].append(None)
+                columns[state.pk].append(entry.text)
     # count answers grouped by state
     stats = Transition.objects.filter(entries__session__tree=tree,
                                       entries__in=[e.pk for e in entries])
-    stats = stats.values('current_state', 'answer__answer')
+    stats = stats.values('current_state', 'answer__name')
     stats = stats.annotate(count=Count('answer'))
     stat_map = {}
     for stat in stats:
         current_state = stat['current_state']
-        answer = stat['answer__answer']
+        answer = stat['answer__name']
         count = stat['count']
         if current_state not in stat_map:
             stat_map[current_state] = {'answers': {}, 'total': 0}
