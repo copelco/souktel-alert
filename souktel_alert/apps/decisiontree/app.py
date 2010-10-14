@@ -37,7 +37,7 @@ class App(AppBase):
         except EventSchedule.DoesNotExist:
             schedule = EventSchedule(description=SCHEDULE_DESC)
         schedule.callback = CALLBACK
-        schedule.minutes = '*'
+        schedule.minutes = set([0, 30])
         schedule.save()
         self.info('started')
 
