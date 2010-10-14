@@ -2,5 +2,5 @@ Hello,
 
 The following survey responses were tagged recently:
 {% for notification in notifications %}
-{{ notification.tag.name }} on "{{ notification.entry.transition.current_state.question.text }} -> {{ notification.entry.transition.answer.answer }}" by {{ notification.entry.session.connection.contact }}
+{{ notification.tag.name }} on "{{ notification.entry.transition.current_state.question.text }} -> {{ notification.entry.text }}" by {{ notification.entry.session.connection.contact }}
 {% endfor %}
