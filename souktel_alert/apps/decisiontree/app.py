@@ -6,6 +6,7 @@ import datetime
 from django.utils.translation import ugettext as _
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from django.utils.datastructures import MultiValueDict
 
 from rapidsms.apps.base import AppBase
 from rapidsms.models import Connection
@@ -263,7 +264,10 @@ class App(AppBase):
                 users[email] = []
             users[email].append(notification)
         for email, notifications in users.iteritems():
-            context = {'notifications': notifications}
+            tags = MultiValueDict()
+            for notification in notifications:
+                tags.appendlist(notification.tag, notification)
+            context = {'tags': tags}
             body = render_to_string('tree/digest.txt', context)
             try:
                 send_mail(subject='Survey Response Report', message=body,

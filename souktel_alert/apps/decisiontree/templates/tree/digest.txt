@@ -1,6 +1,8 @@
 Hello,
 
-The following survey responses were tagged recently:
+The following survey responses were tagged recently:{% for tag, notifications in tags.lists %}
+
+{{ tag.name }}
 {% for notification in notifications %}
-{{ notification.tag.name }} on "{{ notification.entry.transition.current_state.question.text }} -> {{ notification.entry.text }}" by {{ notification.entry.session.connection.contact }}
+{{ notification.entry.time|date:"Y-m-d h:i a" }} "{{ notification.entry.transition.current_state.question.text }} -> {{ notification.entry.text }}" by {{ notification.entry.session.connection.contact }}{% endfor %}
 {% endfor %}
