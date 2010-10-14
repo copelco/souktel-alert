@@ -8,6 +8,8 @@ MANAGERS = ADMINS
 DEFAULT_FROM_EMAIL = 'no-reply@souktel.com'
 EMAIL_SUBJECT_PREFIX = '[twb-nigeria] '
 
+EMAIL_HOST = 's2smtpout.secureserver.net'
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
