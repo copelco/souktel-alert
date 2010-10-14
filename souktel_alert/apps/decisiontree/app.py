@@ -121,6 +121,11 @@ class App(AppBase):
                                      text=msg.text)
         self.debug("entry %s saved" % entry)
 
+        # apply auto tags
+        entry.tags = entry.transition.tags.all()
+        # create tag notifications
+        TagNotification.create_from_entry(entry)
+
         # link message log to entry for tag relationship
         if hasattr(msg, 'logger_msg'):
             msg.logger_msg.entry = entry

@@ -20,40 +20,6 @@ from decisiontree.handlers.results import ResultsHandler
 from decisiontree.app import App as DecisionApp
 
 
-class TaggingTest(TestCase):
-    def setUp(self):
-        self.backend = Backend.objects.create(name='test-backend')
-        self.contact = Contact.objects.create(first_name='John',
-                                              last_name='Doe')
-        self.connection = Connection.objects.create(contact=self.contact,
-                                                    backend=self.backend,
-                                                    identity='1112223333')
-        text = 'Do you like apples or squash more?'
-        self.q1 = dt.Question.objects.create(text=text)
-        self.fruit = dt.Answer.objects.create(type='A', name='apples',
-                                              answer='apples')
-        self.state1 = dt.TreeState.objects.create(name='food',
-                                                  question=self.q1)
-        self.tree1 = dt.Tree.objects.create(trigger='food',
-                                            root_state=self.state1)
-        self.trans1 = dt.Transition.objects.create(current_state=self.state1,
-                                                   answer=self.fruit)
-        self.session = dt.Session.objects.create(connection=self.connection,
-                                                 tree=self.tree1,
-                                                 state=self.state1,
-                                                 num_tries=1)
-        self.fruit_tag = dt.Tag.objects.create(name='fruit')
-        self.vegetable_tag = dt.Tag.objects.create(name='vegetable')
-
-    def test_entry_tagging_on_save(self):
-        self.trans1.tags = [self.fruit_tag]
-        self.trans1.save()
-        entry = dt.Entry.objects.create(session=self.session, sequence_id=1,
-                                        transition=self.trans1, text='apples')
-        self.assertTrue(self.fruit_tag in entry.tags.all(),
-                        '%s not in %s' % (self.fruit_tag, entry.tags.all()))
-
-
 class ResultsTest(TestCase):
     def setUp(self):
         self.backend = Backend.objects.create(name='test-backend')
@@ -152,6 +118,13 @@ class CreateDataTest(TestCase):
         }
         defaults.update(data)
         return dt.Answer.objects.create(**defaults)
+    
+    def create_tag(self, data={}):
+        defaults = {
+            'name': self.random_string(15),
+        }
+        defaults.update(data)
+        return dt.Tag.objects.create(**defaults)
 
 
 class BasicSurveyTest(CreateDataTest):
@@ -246,6 +219,17 @@ class DigestTest(CreateDataTest):
         msg = IncomingMessage(self.connection, text)
         self.app.handle(msg)
         return msg
+    
+    def test_auto_tag_notification(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans1 = self.create_trans(data={'current_state': tree.root_state})
+        trans1.tags.add(self.fruit_tag)
+        self._send('food')
+        msg = self._send(trans1.answer.answer)
+        entry = trans1.entries.order_by('-sequence_id')[0]
+        self.assertTrue(self.fruit_tag.pk in entry.tags.values_list('pk', flat=True))
+        notification = dt.TagNotification.objects.all()[0]
+        self.assertEqual(notification.entry.pk, entry.pk)
 
     def test_cron_job(self):
         tree = self.create_tree(data={'trigger': 'food'})

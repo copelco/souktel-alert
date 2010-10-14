@@ -242,16 +242,6 @@ class Entry(models.Model):
         # assume that the display text is just the text,
         # since this is what it is for free text entries
         return self.text
-    
-    def save(self, **kwargs):
-        super(Entry, self).save(**kwargs)
-        tags = self.transition.tags.all()
-        if tags.count() > 0:
-            self.tags = tags
-            for tag in tags:
-                for recipient in tag.recipients.all():
-                    TagNotification.objects.create(tag=tag, entry=self,
-                                                   user=recipient)
 
     class Meta:
         verbose_name_plural="Entries"
@@ -274,7 +264,17 @@ class TagNotification(models.Model):
     date_added = models.DateTimeField()
     date_sent = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        unique_together = ('tag', 'user', 'entry')
+
     def save(self, **kwargs):
         if not self.pk:
             self.date_added = datetime.datetime.now()
         super(TagNotification, self).save(**kwargs)
+
+    @classmethod
+    def create_from_entry(cls, entry):
+        for tag in entry.tags.all():
+            for user in tag.recipients.all():
+                TagNotification.objects.get_or_create(tag=tag, entry=entry,
+                                                      user=user)

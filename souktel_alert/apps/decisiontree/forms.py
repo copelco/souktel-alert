@@ -111,6 +111,12 @@ class EntryTagForm(forms.ModelForm):
     class Meta:
         model = Entry
         fields = ('tags',)
+    
+    def save(self):
+        entry = super(EntryTagForm, self).save()
+        # create tag notifications
+        TagNotification.create_from_entry(entry)
+        return entry
 
 
 class PathForm(forms.ModelForm):
