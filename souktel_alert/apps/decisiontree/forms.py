@@ -93,6 +93,11 @@ class TagWidget(forms.TextInput):
 class TagField(forms.CharField):
     widget = TagWidget
 
+    def __init__(self, *args, **kwargs):
+        if 'help_text' not in kwargs:
+            kwargs['help_text'] = """Tags with spaces must be quoted, for example: apple "ball cat" dog, will result in "apple", "ball cat", and "dog" tags"""
+        super(TagField, self).__init__(self, *args, **kwargs)
+
     def clean(self, value):
         try:
             tag_names = parse_tags(value)
