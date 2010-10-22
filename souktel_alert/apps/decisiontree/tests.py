@@ -200,6 +200,19 @@ class BasicSurveyTest(CreateDataTest):
         entry = trans2.entries.order_by('-sequence_id')[0]
         self.assertEqual(entry.sequence_id, 2)
 
+    def test_sequence_end(self):
+        tree = self.create_tree(data={'trigger': 'food'})
+        trans1 = self.create_trans(data={'current_state': tree.root_state})
+        self._send('food')
+        session = self.connection.session_set.all()[0]
+        self.assertNotEqual(session.state, None)
+        msg = self._send('end')
+        session = self.connection.session_set.all()[0]
+        self.assertEqual(session.state, None)
+        self.assertTrue(session.canceled)
+        self.assertEqual(msg.responses[0].text,
+                         "Your session with 'food' has ended")
+
 
 class DigestTest(CreateDataTest):
     def setUp(self):

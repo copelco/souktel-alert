@@ -63,9 +63,11 @@ class App(AppBase):
         state = session.state
         self.debug(state)
 
-        if msg.text == "reset":
-          self._end_session(session)
-          return True
+        if msg.text == "end":
+            response = _("Your session with '%s' has ended")
+            msg.respond(response % session.tree.trigger)
+            self._end_session(session, True)
+            return True
 
         # loop through all transitions starting with  
         # this state and try each one depending on the type
