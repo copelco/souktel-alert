@@ -23,6 +23,7 @@ class Message(models.Model):
     date       = models.DateTimeField(db_index=True)
     text       = models.TextField()
     entry = models.ForeignKey(Entry, null=True, blank=True)
+    free_text = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         """

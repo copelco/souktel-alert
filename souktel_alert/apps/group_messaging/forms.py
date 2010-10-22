@@ -89,6 +89,7 @@ class messageslogFilter(django_filters.FilterSet):
     date = django_filters.CharFilter(name='date')
     text = django_filters.CharFilter(name='text', lookup_type='icontains')
     tag = django_filters.ModelChoiceFilter(name='tag')
+    free_text = django_filters.BooleanFilter(name='free_text')
 
     def __init__(self, *args, **kwargs):
         super(messageslogFilter, self).__init__(*args, **kwargs)

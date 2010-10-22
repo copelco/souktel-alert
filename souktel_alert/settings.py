@@ -116,6 +116,7 @@ INSTALLED_APPS = [
     #"poll",
     "decisiontree",
     "django_filters",
+    "catch_all",
     
 ]
 
