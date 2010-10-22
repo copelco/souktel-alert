@@ -11,15 +11,22 @@ Clone project and bootstrap virtual environment::
     ~$ git clone git@github.com:copelco/souktel-alert.git
     ~$ cd souktel-alert/souktel_alert/
     ~/souktel-alert/souktel_alert$ mkvirtualenv --distribute souktel
-    ~/souktel-alert/souktel_alert$ ./bootstrap.py
+    (souktel)~/souktel-alert/souktel_alert$ ./bootstrap.py
 
 Create local_settings.py file, syncdb, and runserver::
 
-    ~/souktel-alert/souktel_alert$ cp local_settings.py.example local_settings.py
-    ~/souktel-alert/souktel_alert$ ./manage.py syncdb
-    ~/souktel-alert/souktel_alert$ ./manage.py runserver
+    (souktel)~/souktel-alert/souktel_alert$ cp local_settings.py.example local_settings.py
+    (souktel)~/souktel-alert/souktel_alert$ ./manage.py syncdb
+    (souktel)~/souktel-alert/souktel_alert$ ./manage.py runserver
 
 Visit http://localhost:8000/ in your browser.
+
+**Test Suite**
+
+To run the project test suite, rename `local_test_settings.py.example` to
+`local_test_settings.py` and use the following command::
+
+    (souktel)~/souktel-alert/souktel_alert$ ./manage.py test --settings=souktel_alert.local_test_settings decisiontree group_messaging require_registration goals
 
 Deployment
 ----------

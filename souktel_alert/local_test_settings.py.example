@@ -1,0 +1,13 @@
+from souktel_alert.local_settings import *
+
+DATABASES = {
+    "default": {
+        "ENGINE": "sqlite3",
+        "NAME": "twb-nigeria.db",
+        "USER": "",
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+        'TEST_NAME': 'test-twb-nigeria.db',
+    }
+}
