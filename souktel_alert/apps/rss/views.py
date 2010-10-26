@@ -20,7 +20,7 @@ def summary(request, posts_to_show=5):
     for i in range(posts_to_show):
         pub_date = feed['entries'][i].updated_parsed
         published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
-        print feed['entries'][i].title
+        #print feed['entries'][i].title
         posts.append({
             'title': feed['entries'][i].title,
             'summary': feed['entries'][i].summary,
