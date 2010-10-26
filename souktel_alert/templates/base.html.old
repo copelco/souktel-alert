@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="/static/group_messaging/blueprint/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/static/group_messaging/blueprint/plugins/buttons/screen.css" type="text/css" media="screen, projection">
-    <link rel="stylesheet" href="/static/group_messaging/blueprint/print.css" type="text/css" media="print">  
+    <link rel="stylesheet" href="/static/group_messaging/lueprint/print.css" type="text/css" media="print">  
     <!--[if lt IE 8]><link rel="stylesheet" href="/static/group_messaging/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
     <link rel="stylesheet" media="screen" type="text/css" href="/static/group_messaging/chrome.css" title="Default" />
     <link rel="stylesheet" media="screen" type="text/css" href="/static/group_messaging/main.css" title="Default" />

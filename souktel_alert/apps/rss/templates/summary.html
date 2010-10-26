@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>RSS Feeds</h1>
+
+   <table class='auto list'>
+       <tr>
+            <th>Title</th>                     
+            <th>link</th>
+            <th>Published Date</th>
+       </tr>
+       <tr>
+       {% for post in posts %}
+           <td>{{ post.title }}</td>          
+           <td>{{ post.link }}</td>
+           <td>{{ post.date }}</td>
+       </tr>
+               
+      {% endfor %}
+      </table>
+
+{% endblock %}

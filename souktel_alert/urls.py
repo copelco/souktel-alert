@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     
     (r'^', include('group_messaging.urls')),
     (r'^', include('goals.urls')),
+    (r'^', include('rss.urls')),
     (r'^', include('decisiontree.urls')),
     
     # RapidSMS core URLs
