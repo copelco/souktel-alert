@@ -13,14 +13,16 @@ from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 
 def summary(request, posts_to_show=5):
-    feed_url = 'http://news.google.com/news?ned=us&topic=h&output=rss'
+
+    # Feed url to fecth the RSS feeds from TWB
+    feed_url = 'http://twbtools.org/demos/OABETA8/testsendrss'
     
     feed = feedparser.parse(feed_url)
     posts = []
     for i in range(posts_to_show):
         pub_date = feed['entries'][i].updated_parsed
         published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
-        #print feed['entries'][i].title
+        
         posts.append({
             'title': feed['entries'][i].title,
             'summary': feed['entries'][i].summary,
