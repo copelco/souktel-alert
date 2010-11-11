@@ -155,3 +155,10 @@ class UserForm(forms.ModelForm):
             user.set_password(password1)
         user.save()
         return user
+
+
+class MessageTemplateForm(forms.ModelForm):
+
+    class Meta:
+        model = gm.Message
+

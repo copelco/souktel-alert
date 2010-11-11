@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Message Templates" %}{% endblock %}
+
+{% block content %}
+<h2>{% trans "Message Templates" %}</h2>
+<ul class='horizontal'>
+    <li><a href="{% url messages_add %}" >Add message template</a></li>
+    <li><a href="{% url messages_send %}" >Send message template</a></li>
+</ul>
+
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Text</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for template in templates %}
+            <tr>
+                <td>{{ template.pk }}</td>
+                <td>{{ template.name }}</td>
+                <td>{{ template.code }}</td>
+                <td>{{ template.text|truncatewords:10 }}</td>
+                <td>
+                    <a href="{% url messages_form template.id %}" title="Edit" class="edit-link">
+                        <img class='action' alt='Edit' src="{{ MEDIA_URL }}group_messaging/edit-icon.jpeg" />
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url messages_delete template.id %}" title="Edit" class="delete-link">
+                        <img class='action' alt='Delete' src="{{ MEDIA_URL }}group_messaging/delete-icon.png" />
+                    </a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan='5'>No message templates</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+

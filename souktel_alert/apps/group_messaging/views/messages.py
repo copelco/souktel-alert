@@ -4,84 +4,59 @@ import logging
 from datetime import datetime
 
 from django import forms
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.utils.translation import ugettext as _
-from django.shortcuts import redirect, render_to_response
+from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from group_messaging.models import Message, Site, Group
 from group_messaging.utils import send_message
-
+from group_messaging.forms import MessageTemplateForm
 
 
 @login_required
 def list(request):
-    ''' List all the Messages'''
-    messages = Message.objects.all()
-    count = Message.objects.count()
-    mycontext = {'messages': messages, 'count': count}
-    context = (mycontext)
-
-    return render_to_response('messages.html', context, context_instance=RequestContext(request))
+    context = {
+        'templates': Message.objects.order_by('name'),
+    }
+    return render_to_response('messages/list.html', context,
+                              context_instance=RequestContext(request))
 
 
 @login_required
+@transaction.commit_on_success
 def messageform(request, messageid=None):
-    '''form for Add/Edit messages'''
-    if not messageid or int(messageid) == 0:
-        mess = None
-    else:
-        mess = Message.objects.get(id=messageid)
-        
+    message = None
+    if messageid:
+           message = get_object_or_404(Message, pk=messageid)
     if request.method == 'POST':
-        form = MessageForm(request.POST)
+        form = MessageTemplateForm(request.POST, instance=message)
         if form.is_valid():
-            if mess:         
-  
-                mess.code = form.cleaned_data['code']
-                mess.name = form.cleaned_data['name']
-                mess.text = form.cleaned_data['text']
-                mess.site = request.contact.site
-                mess.save()
-                                
-            else: 
-            
-                mess = Message(code=form.cleaned_data['code'],\
-                                           name=form.cleaned_data['name'],\
-                                            text=form.cleaned_data['text'],\
-                                            site=request.contact.site)           
-                mess.save()
-                mess = Message.objects.all()
-                mycontext = {'mess': mess}
-                context = (mycontext)
-                return redirect(list)
-           
+            user = form.save()
+            messages.info(request, "Message saved successfully")
+            return HttpResponseRedirect(reverse('messages_list'))
     else:
-        if mess:
-            data = {'name': mess.name, 'text': mess.text, 'code': mess.code}          
-        else:
-            data = {'code': '', 'name': '', 'test': ''}
-        form = MessageForm(data) 
-            
-    if not messageid:
-        messageid = 0
-    
-    mycontext = {'mess': mess, 'form': form, 'messageid': messageid}
-    context = (mycontext)
-    return render_to_response("messages_form.html", context, context_instance=RequestContext(request))
+        form = MessageTemplateForm(instance=message)
+    context = {
+        'message': message,
+        'form': form,
+    }
+    return render_to_response('messages/create_edit.html', context,
+                              context_instance=RequestContext(request))
 
 
-@login_required    
+@login_required
+@transaction.commit_on_success
 def delete(request, messageid):
-    
-    message = Message.objects.get(id=messageid)
+    message = get_object_or_404(Message, pk=messageid)
     message.delete()
-    mycontext = {'message': message}
-    context = (mycontext)
-       
-    return redirect(list)
+    messages.info(request, "Message deleted successfully")
+    return HttpResponseRedirect(reverse('messages_list'))
 
 
 @login_required

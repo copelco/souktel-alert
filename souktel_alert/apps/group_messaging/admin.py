@@ -20,8 +20,7 @@ class SendingLogAdmin(admin.ModelAdmin):
 
 class MessageAdmin(admin.ModelAdmin):
 
-    list_display = ('name', 'code', 'site', 'short_text')
-    list_filter = ('site',)
+    list_display = ('name', 'code', 'short_text')
     ordering = [('-id')]
     search_fields = ['name', 'text']
 

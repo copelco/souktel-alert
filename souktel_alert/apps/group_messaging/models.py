@@ -57,12 +57,9 @@ class Group(models.Model):
 
 
 class Message(models.Model):
-    ''' Message Model '''
-
     name = models.CharField(max_length=50)
+    code = models.CharField(max_length=20, unique=True)
     text = models.TextField()
-    code = models.CharField(max_length=20, blank=True, null=True)
-    site = models.ForeignKey('Site')
 
     @property
     def short_text(self):
