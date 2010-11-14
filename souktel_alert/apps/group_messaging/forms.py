@@ -22,7 +22,7 @@ class GroupForm(forms.ModelForm):
         model = gm.Group
         exclude = ('managers', 'site')
 
-    def __init__(self, site, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(GroupForm, self).__init__(*args, **kwargs)
         self.fields['code'].label = _(u"Group code")
         self.fields['name'].label = _(u"Group name")

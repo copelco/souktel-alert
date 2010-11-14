@@ -4,10 +4,10 @@
 {% block title %}{% trans "Groups" %}{% endblock %}
 
 {% block content %}
-<form action="{% url new_group %}" method="POST" class="pretty">{% csrf_token %}
+<form action="#" method="POST" class="pretty">{% csrf_token %}
     <fieldset>
         <legend>
-            {% trans "New Group Form" %}
+            {% trans "Group Form" %}
         </legend>
         <table>
             {% for field in form %}
