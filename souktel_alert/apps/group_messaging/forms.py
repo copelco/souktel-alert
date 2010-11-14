@@ -1,4 +1,5 @@
 import csv
+import datetime
 
 import django_filters
 from django import forms
@@ -161,4 +162,24 @@ class MessageTemplateForm(forms.ModelForm):
 
     class Meta:
         model = gm.Message
+
+
+class SendMessageForm(forms.Form):
+    groups = forms.ModelMultipleChoiceField(label=_(u"Group(s)"),
+                                            queryset=gm.Group.objects.filter(active=True),
+                                            widget=forms.CheckboxSelectMultiple)
+    template = forms.ModelChoiceField(queryset=gm.Message.objects.all())
+    text = forms.CharField(label=_(u"Text"),widget=forms.Textarea())
+
+    def send_message(self, sender):
+        text = self.cleaned_data['text']
+        groups = self.cleaned_data['groups']
+        message = gm.SendingLog.objects.create(sender=sender, text=text)
+        recipients = Contact.objects.distinct().filter(group_recipients__in=groups,
+                                                       active=True)
+        message.recipients = recipients
+        for recipient in recipients:
+            gm.OutgoingLog.objects.create(sender=sender, recipient=recipient,
+                                          text=message.text,
+                                          status=gm.OutgoingLog.QUEUED)
 

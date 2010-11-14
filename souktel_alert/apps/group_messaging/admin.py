@@ -6,10 +6,10 @@ from models import *
 
 class OutgoingLogAdmin(admin.ModelAdmin):
 
-    list_display = ('short_text', 'sender', 'identity', 'text', 'status_text')
+    list_display = ('id', 'sender', 'recipient', 'status_text')
     list_filter = ('status', 'sender')
     ordering = [('-sent_on')]
-    search_fields = ['sender', 'identity', 'text']
+    search_fields = ['sender', 'text']
 
 class SendingLogAdmin(admin.ModelAdmin):
 

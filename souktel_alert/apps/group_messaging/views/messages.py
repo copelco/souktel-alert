@@ -13,10 +13,10 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.utils import simplejson as json
 
 from group_messaging.models import Message, Site, Group
-from group_messaging.utils import send_message
-from group_messaging.forms import MessageTemplateForm
+from group_messaging.forms import MessageTemplateForm, SendMessageForm
 
 
 @login_required
@@ -60,34 +60,23 @@ def delete(request, messageid):
 
 
 @login_required
+@transaction.commit_on_success
 def send(request):
-    
-    messages = Message.objects.all()
     if request.method == 'POST':
-        form = SendMessageForm(request.contact.site, request.POST)
+        form = SendMessageForm(request.POST)
         if form.is_valid():
-            text = form.cleaned_data['text']
-            date = datetime.now()
-            groups = Group.objects.filter(id__in=form.cleaned_data['groups'])
-            logging.debug(groups)
-            send_message(request.contact, groups, text, date)
-            redirect(list)
+            form.send_message(request.contact)
+            messages.info(request, "Message queued for delivery")
+            return HttpResponseRedirect(reverse('messages_list'))
     else:
-        form = SendMessageForm(site=request.contact.site)
-    
-    context = {'messages': messages, 'form': form}
-    
-    return render_to_response("messages_send.html", context, context_instance=RequestContext(request))
+        form = SendMessageForm()
+    templates = {}
+    for pk, text in Message.objects.values_list('id', 'text'):
+        templates[pk] = text
+    context = {
+        'templates': json.dumps(templates),
+        'form': form,
+    }
+    return render_to_response("messages/send.html", context,
+                              context_instance=RequestContext(request))
 
-
-class SendMessageForm(forms.Form):
-
-    def __init__(self, site, *args, **kwargs):
-        super(SendMessageForm, self).__init__(*args, **kwargs)
-
-        self.fields['groups'].choices = \
-                [(group.id, group.name) for group \
-                in Group.objects.filter(active=True, site=site)]
-                
-    groups = forms.MultipleChoiceField(label=_(u"Groups"))
-    text = forms.CharField(label=_(u"Text"),widget=forms.Textarea())

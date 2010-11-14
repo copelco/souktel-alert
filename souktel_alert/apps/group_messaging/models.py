@@ -35,7 +35,7 @@ class Group(models.Model):
     Group holds recipients and Messages '''
 
     class Meta:
-
+        ordering = ('name',)
         unique_together = ('code', 'site')
 
     code = models.CharField(max_length='15', \
@@ -60,6 +60,9 @@ class Message(models.Model):
     name = models.CharField(max_length=50)
     code = models.CharField(max_length=20, unique=True)
     text = models.TextField()
+    
+    class Meta:
+        ordering = ('name',)
 
     @property
     def short_text(self):
@@ -133,9 +136,10 @@ class OutgoingLog(models.Model):
     RAW_STATUSES = [VERBOSE_PENDING, VERBOSE_DELIVERED, \
                     VERBOSE_TIMEOUT, VERBOSE_FAILED,VERBOSE_QUEUED]
 
-    sender = models.ForeignKey(Contact, verbose_name=_(u"Sender"))
-    identity = models.CharField(max_length=30, verbose_name=_(u"Identity"))
-    backend = models.ForeignKey(Backend, verbose_name=_(u"Backend"))
+    sender = models.ForeignKey(Contact, verbose_name=_(u"Sender"),
+                               related_name='outgoing_sender', blank=True, null=True)
+    recipient = models.ForeignKey(Contact, verbose_name=_(u"Recipient"),
+                                  related_name='outoing_recipient')
     text = models.TextField(verbose_name=_(u"Content"))
     status = models.CharField(max_length=1, choices=STATUSES, default=QUEUED,
                               verbose_name=_(u"Status"))
