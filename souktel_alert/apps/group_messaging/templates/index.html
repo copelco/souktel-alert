@@ -7,47 +7,45 @@
 
 <h2>{% trans "Latest Messages" %}</h2>
 
-<table class='list'> 
-    <colgroup> 
-    <col class='number' />
-    <col class='name' />
-    <col class='name' />
-    <col class='number' />
-    </colgroup> 
-<tr class='secondRow doNotFilter'>
-    <th class='name'>{% trans "From" %}</th> 
-    <th class='name'>{% trans "To (Groups)" %}</th>
-    <th class='name'>{% trans "Message" %}</th>
-    <th class='name'>{% trans "Date" %}</th>
-</tr>
-{% for message in latest_messages %}
-<tr{% if forloop.last %} class=""{% endif %}>
-<td>{{ message.sender.user.first_name }}</td> 
-<td>{{ message.groups_list }}</td>
-<td>{{ message.short_text }}</td>
-<td>{{ message.date|naturalday }}</td>
-</tr>
-{% endfor %}
-<tr></tr>
+<table class='list auto'>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Direction</th>
+            <th>Contact</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for message in latest_messages %}
+            <tr>
+                <td>{{ message.date|date:"Y-m-d h:i a" }}</td>
+                <td>{{ message.direction }}</td>
+                <td>{{ message.contact }}</td>
+                <td>{{ message.text|truncatewords:10 }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 <h2>{% trans "Statistics" %}</h2>
 
-<table class='list' dir="rtl"> 
-    <colgroup> 
-    <col class='name' />
-    <col class='number' />
-    </colgroup> 
-<tr class='secondRow doNotFilter'>
-    <th style="text-align:{% trans 'left;' %}" class='name'>{% trans "Description" %}</th> 
-    <th style="text-align:{% trans 'left;' %}" class='number'>{% trans "Value" %}</th>
-</tr>
-{% for stat in stats %}
-<tr>
-<td style="text-align:{% trans 'left;' %}" class="name">{{ stat.0 }}</td> 
-<td style="text-align:{% trans 'left;' %}" class="number">{{ stat.1 }}</td>
-</tr>
-{% endfor %}
+<table class='list auto'> 
+    <thead>
+        <tr>
+            <th>{% trans "Value" %}</th>
+            <th>{% trans "Description" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stat in stats %}
+            <tr>
+                <td>{{ stat.1 }}</td> 
+                <td>{{ stat.0 }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 {% endblock %}
+

@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 
 from group_messaging.models import SendingLog, Group, OutgoingLog
+from rapidsms.contrib.messagelog.models import Message
 
 from rapidsms.models import Contact
 
@@ -21,7 +22,7 @@ def index(request):
     logging.debug('webuser site: %s' % contact.site)
 
     # Latest messages (5)
-    latest_messages = SendingLog.objects.all()[:5]
+    latest_messages = Message.objects.order_by('-date')[:10]
 
     # Statistics
     stats = []
