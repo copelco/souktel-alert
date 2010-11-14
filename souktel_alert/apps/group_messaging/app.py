@@ -59,7 +59,7 @@ class App(AppBase):
         schedule.save()
         self.info('started')
 
-    def send_messages(self):
+    def send_messages(self, dry_run=False):
         self.debug('{0} running'.format(self.cron_name))
         messages = OutgoingLog.objects.filter(status=OutgoingLog.QUEUED)[:10]
         self.info('found {0} messages'.format(messages.count()))
@@ -67,11 +67,12 @@ class App(AppBase):
             recipient = message.recipient.default_connection
             msg = OutgoingMessage(connection=recipient, template=message.text)
             success = True
-            try:
-                msg.send()
-            except Exception, e:
-                self.exception(e)
-                success = False
+            if not dry_run:
+                try:
+                    msg.send()
+                except Exception, e:
+                    self.exception(e)
+                    success = False
             if success:
                 message.status = str(OutgoingLog.DELIVERED)
             else:
