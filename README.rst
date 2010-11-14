@@ -26,7 +26,7 @@ Visit http://localhost:8000/ in your browser.
 To run the project test suite, rename `local_test_settings.py.example` to
 `local_test_settings.py` and use the following command::
 
-    (souktel)~/souktel-alert/souktel_alert$ ./manage.py test --settings=souktel_alert.local_test_settings decisiontree group_messaging require_registration goals
+    (souktel)~/souktel-alert/souktel_alert$ ./manage.py test --settings=souktel_alert.local_test_settings decisiontree group_messaging require_registration goals group_messaging
 
 Deployment
 ----------
