@@ -79,14 +79,6 @@ def send(request):
     
     return render_to_response("messages_send.html", context, context_instance=RequestContext(request))
 
-    
-class MessageForm(forms.Form):
-
-    code = forms.CharField(label=_(u"Message code"),max_length=20)
-    name = forms.CharField(label=_(u"Message name"),max_length=50)
-    text = forms.CharField(label=_(u"Message text"),widget=forms.Textarea(), 
-            initial=_(u"Please enter your message here"))
-
 
 class SendMessageForm(forms.Form):
 
