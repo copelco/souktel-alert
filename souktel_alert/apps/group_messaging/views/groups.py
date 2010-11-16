@@ -36,7 +36,6 @@ def create_edit_group(request, group_id=None):
     group = None
     if group_id:
         group = get_object_or_404(Group, pk=group_id)
-        print group
     if request.method == 'POST':
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
