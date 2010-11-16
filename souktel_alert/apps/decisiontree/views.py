@@ -481,3 +481,13 @@ def create_edit_tag(request, tag_id=None):
     }
     return render_to_response("tree/tags/edit.html", context,
                               context_instance=RequestContext(request))
+
+
+@login_required
+@transaction.commit_on_success
+def delete_tag(request, tag_id):
+    tag = get_object_or_404(Tag, pk=tag_id)
+    tag.delete()
+    messages.info(request, 'Tag successfully deleted')
+    return HttpResponseRedirect(reverse('list-tags'))
+

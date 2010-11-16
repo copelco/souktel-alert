@@ -26,6 +26,8 @@ urlpatterns = patterns('',
         name='create-tag'),
     url(r'^tree/tags/(?P<tag_id>\d+)/edit/$', views.create_edit_tag,
         name='edit-tag'),
+    url(r'^tree/tags/(?P<tag_id>\d+)/delete/$', views.delete_tag,
+        name='delete-tag'),
     
     (r'^tree/data/export$', views.export),
     (r'^tree/data/export/(?P<id>\d+)$', views.export),
