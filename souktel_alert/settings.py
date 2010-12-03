@@ -116,8 +116,9 @@ INSTALLED_APPS = [
     #"poll",
     "decisiontree",
     "django_filters",
-    "catch_all",
     "rss",
+    # all apps must preceed catch all
+    "catch_all",
 ]
 
 
