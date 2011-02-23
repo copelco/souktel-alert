@@ -14,24 +14,38 @@ from django.contrib.auth.decorators import login_required
 
 from rss.models import NewsFeed
 
-def summary(request, posts_to_show=1):
+def summary(request, posts_to_show=2):
 
     # Feed url to fecth the RSS feeds from TWB
-    feed_url = 'http://feedparser.org/docs/examples/atom10.xml'
+    feed_url = 'http://twbtools.org/demos/OABETA8/testsendrss'
+    channels = feedparser.parse(feed.url)
+    url = ''
+    summary = ''
+    title = ''
+
+    for entry in channels.entries:
+     try:
+      url = unicode(entry.link, channels.encoding)
+      summary = unicode(entry.description, channels.encoding)
+      title = unicode(entry.title, channels.encoding)
+     except:
+      url = entry.link
+      summary = entry.description
+      title = entry.title
     
     feed = feedparser.parse(feed_url)
     
     #feed2 = NewsFeed.
     #feed2.save()
     posts = []
-    for i in range(posts_to_show):
+    for i in range(channels.entries):
         pub_date = feed['entries'][i].updated_parsed
         published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
         
         posts.append({
-            'title': feed['entries'][i].title,
-            'summary': feed['entries'][i].summary,
-            'link': feed['entries'][i].link,
+            'title': title,
+            'summary': summary,
+            'link': url,
             'date': published,
         })
        
