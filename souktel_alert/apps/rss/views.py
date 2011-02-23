@@ -46,17 +46,17 @@ def summary(request):
     #feed2 = NewsFeed.
     #feed2.save()
     
-    #for i in range(channels.entries):
+    for i in range(2):
         
         
         
        
-    #feed2 = NewsFeed(title=title,\
-    #description=summary,group=channels['entries'][1].group,pub_date=published)
+    feed2 = NewsFeed(title=title,\
+    description=summary,group=channels['entries'][i].group,pub_date=published)
     #feed2 = NewsFeed(description=feed['entries'][i].summary)
     #feed2 = NewsFeed(group=feed['entries'][i].group)
     #feed2 = NewsFeed(group=published)
-    #feed2.save()
+    feed2.save()
     context = {'posts': posts}
     return render_to_response('summary.html', context,
                               context_instance=RequestContext(request))
