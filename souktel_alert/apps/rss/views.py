@@ -22,12 +22,20 @@ def summary(request):
     url = ''
     summary = ''
     title = ''
-
+    posts = []
     for entry in channels.entries:
      try:
       url = unicode(entry.link, channels.encoding)
       summary = unicode(entry.description, channels.encoding)
       title = unicode(entry.title, channels.encoding)
+      pub_date = channels['entries'][i].updated_parsed
+      published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
+      posts.append({
+            'title': title,
+            'summary': summary,
+            'link': url,
+            'date': published,
+        })
      except:
       url = entry.link
       summary = entry.description
@@ -37,17 +45,11 @@ def summary(request):
     
     #feed2 = NewsFeed.
     #feed2.save()
-    posts = []
-    for i in range(channels.entries):
-        pub_date = channels['entries'][i].updated_parsed
-        published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
+    
+    #for i in range(channels.entries):
         
-        posts.append({
-            'title': title,
-            'summary': summary,
-            'link': url,
-            'date': published,
-        })
+        
+        
        
     feed2 = NewsFeed(title=title,\
     description=summary,group=feed['entries'][i].group,pub_date=published)
