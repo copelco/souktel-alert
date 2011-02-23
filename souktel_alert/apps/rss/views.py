@@ -14,45 +14,29 @@ from django.contrib.auth.decorators import login_required
 
 from rss.models import NewsFeed
 
-def summary(request):
+def summary(request, posts_to_show=2):
 
     # Feed url to fecth the RSS feeds from TWB
     feed_url = 'http://twbtools.org/demos/OABETA8/testsendrss'
-    channels = feedparser.parse(feed_url)
-    url = ''
-    summary = ''
-    title = ''
-    posts = []
-    for entry in channels.entries:
-     try:
-      url = unicode(entry.link, channels.encoding)
-      summary = unicode(entry.description, channels.encoding)
-      title = unicode(entry.title, channels.encoding)
-      pub_date = channels['entries'][i].updated_parsed
-      published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
-      posts.append({
-            'title': title,
-            'summary': summary,
-            'link': url,
-            'date': published,
-        })
-     except:
-      url = entry.link
-      summary = entry.description
-      title = entry.title
     
-    #feed = feedparser.parse(feed_url)
+    feed = feedparser.parse(feed_url)
     
     #feed2 = NewsFeed.
     #feed2.save()
-    
-    for i in range(2):
+    posts = []
+    for i in range(posts_to_show):
+        pub_date = feed['entries'][i].updated_parsed
+        published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
         
-        
-        
+        posts.append({
+            'title': feed['entries'][i].title,
+            'summary': feed['entries'][i].summary,
+            'link': feed['entries'][i].link,
+            'date': published,
+        })
        
-    feed2 = NewsFeed(title=title,\
-    description=summary,group=channels['entries'][i].group,pub_date=published)
+    feed2 = NewsFeed(title=feed['entries'][i].title,\
+    description=feed['entries'][i].summary,group=feed['entries'][i].group,pub_date=published)
     #feed2 = NewsFeed(description=feed['entries'][i].summary)
     #feed2 = NewsFeed(group=feed['entries'][i].group)
     #feed2 = NewsFeed(group=published)
