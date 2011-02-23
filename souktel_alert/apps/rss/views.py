@@ -17,7 +17,7 @@ from rss.models import NewsFeed
 def summary(request, posts_to_show=2):
 
     # Feed url to fecth the RSS feeds from TWB
-    feed_url = 'http://twbtools.org/demos/OABETA8/testsendrss'
+    feed_url = 'http://feedparser.org/docs/examples/atom10.xml'
     
     feed = feedparser.parse(feed_url)
     
