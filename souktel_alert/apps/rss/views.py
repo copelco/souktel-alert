@@ -14,7 +14,7 @@ from django.contrib.auth.decorators import login_required
 
 from rss.models import NewsFeed
 
-def summary(request, posts_to_show=5):
+def summary(request, posts_to_show=2):
 
     # Feed url to fecth the RSS feeds from TWB
     feed_url = 'http://twbtools.org/demos/OABETA8/testsendrss'
