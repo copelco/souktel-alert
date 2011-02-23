@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 
+
 from rss.models import NewsFeed
 
 def summary(request, posts_to_show=2):
@@ -19,6 +20,7 @@ def summary(request, posts_to_show=2):
     feed_url = 'http://twbtools.org/demos/OABETA8/testsendrss'
     
     feed = feedparser.parse(feed_url)
+    
     #feed2 = NewsFeed.
     #feed2.save()
     posts = []

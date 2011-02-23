@@ -18,4 +18,4 @@ class RssHandler(KeywordHandler):
 
     def handle(self, text):        
         feed = NewsFeed.objects.latest()
-        self.respond(feed.title)
+        self.respond(feed.description)
