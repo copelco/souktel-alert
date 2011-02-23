@@ -33,13 +33,13 @@ def summary(request, posts_to_show=2):
       summary = entry.description
       title = entry.title
     
-    feed = feedparser.parse(feed_url)
+    #feed = feedparser.parse(feed_url)
     
     #feed2 = NewsFeed.
     #feed2.save()
     posts = []
     for i in range(channels.entries):
-        pub_date = feed['entries'][i].updated_parsed
+        pub_date = channels['entries'][i].updated_parsed
         published = datetime.date(pub_date[0], pub_date[1], pub_date[2] )
         
         posts.append({
@@ -49,8 +49,8 @@ def summary(request, posts_to_show=2):
             'date': published,
         })
        
-    feed2 = NewsFeed(title=feed['entries'][i].title,\
-    description=feed['entries'][i].summary,group=feed['entries'][i].group,pub_date=published)
+    feed2 = NewsFeed(title=title,\
+    description=summary,group=feed['entries'][i].group,pub_date=published)
     #feed2 = NewsFeed(description=feed['entries'][i].summary)
     #feed2 = NewsFeed(group=feed['entries'][i].group)
     #feed2 = NewsFeed(group=published)
