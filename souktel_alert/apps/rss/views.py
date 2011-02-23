@@ -52,7 +52,7 @@ def summary(request):
         
        
     feed2 = NewsFeed(title=title,\
-    description=summary,group=channels['entries'][i].group,pub_date=published)
+    description=summary,group=channels['entries'][1].group,pub_date=published)
     #feed2 = NewsFeed(description=feed['entries'][i].summary)
     #feed2 = NewsFeed(group=feed['entries'][i].group)
     #feed2 = NewsFeed(group=published)
